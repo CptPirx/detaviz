@@ -55,7 +55,7 @@ class HapDev(object):
         """
         self.sensor_list = [x for x in self.sensor_list if x.id != sensor_id]
 
-    def receive_data(self, sensor_id):
+    def receive_data(self, sensor_id, source):
         """
         Receive sample from a sensor
         :param sensor_id:
@@ -63,11 +63,14 @@ class HapDev(object):
         """
         sensor = [x for x in self.sensor_list if x.id == sensor_id][0]
 
-        sample, label = sensor.send_sample()
+        if source == 'sample':
+            sample = sensor.send_sample()
+        elif source == 'label':
+            sample = sensor.send_label()
 
         # print("Received sample number {sample_nr}".format(sample_nr=sensor.sample_counter))
 
-        return sample, label
+        return sample
 
     def predict_values(self, sensor, data):
         """
@@ -99,35 +102,24 @@ class HapDev(object):
         errors = []
         sent_samples = 0
 
-        # Inverse scale the buffer and predictions
-        # buffer = sensor.scaler.inverse_transform(buffer.reshape(-1, 1))
-        # predictions = sensor.scaler.inverse_transform(np.asarray(predictions).reshape(-1, 1))
+        print(buffer)
+        print(predictions)
+        predictions = np.argmax(predictions)
 
         # Calculate individual errors and how many samples would have been sent
-        for i in range(len(predictions)):
-            actual = buffer[i]
-            predicted = predictions[i]
-            # rse = math.sqrt((actual - predicted) ** 2)
+        actual = buffer
+        predicted = predictions
 
-            # real_error = rse / sensor.sensor_range
-            if actual != predicted:
-                real_error = True
-                errors.append(real_error)
-                sent_samples += 1
+        if actual != predicted:
+            real_error = True
+            errors.append(real_error)
+            sent_samples += 1
 
-        # print('Predicted values')
-        # print(predictions)
-        # print('----')
-        # print('Actual values')
-        # print(buffer[:len(predictions)])
-
-        # Calculate mean error
-        # mean_error = math.sqrt(mean_squared_error(buffer[:len(predictions)], predictions)) / sensor.sensor_range
         mean_error = 0
 
         return errors, mean_error, sent_samples
 
-    def add_to_buffer(self, sensor_id, length):
+    def add_to_buffer(self, sensor_id, length, source):
         """
         Populate the buffer with samples
         :param sensor_id: int, which sensor to use
@@ -135,13 +127,11 @@ class HapDev(object):
         """
         stop = False
         sample_buffer = []
-        label_buffer = []
         for i in range(length):
-            sample, label = self.receive_data(sensor_id)
+            sample = self.receive_data(sensor_id, source=source)
             sample_buffer.append(sample)
-            label_buffer.append(label)
 
-        return np.asarray(sample_buffer), np.asarray(label_buffer)
+        return np.asarray(sample_buffer)
 
     def run_one_cycle(self, sensor_id):
         """
@@ -155,16 +145,18 @@ class HapDev(object):
         start = time.time()
 
         # First step is to fill the buffer with samples
-        sample_buffer, label_buffer = self.add_to_buffer(sensor_id, self.window)
+        sample_buffer = self.add_to_buffer(sensor_id, self.window, 'sample')
+        label_buffer = self.add_to_buffer(sensor_id, self.horizon, 'label')
 
         # Make prediction
         predictions = self.predict_values(sensor, sample_buffer)
 
-        # Now fill buffer again with new samples
-        sample_buffer, label_buffer = self.add_to_buffer(sensor_id, self.window)
-
         # Evaluate the predictions
         errors_list, mean_error, sent_samples = self.compare_data(sensor, label_buffer, predictions)
+
+        # Now fill buffer again with new samples
+        sample_buffer = self.add_to_buffer(sensor_id, self.window, 'sample')
+        label_buffer = self.add_to_buffer(sensor_id, self.horizon, 'label')
 
         end = time.time()
         run_time = (end - start) * 1000

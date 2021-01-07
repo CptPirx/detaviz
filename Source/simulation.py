@@ -18,8 +18,8 @@ import numpy as np
 
 def plot_simulation_history(sent_samples, errors, run_times, horizon, model_path, threshold, domain):
     # Turn sent samples to percentage
-    sent_samples = (np.asarray(sent_samples) / horizon) * 100
-    errors = [x * 100 for x in errors]
+    # sent_samples = (np.asarray(sent_samples) / horizon) * 100
+    # errors = [x * 100 for x in errors]
 
     # Calculate mean of sent samples, errors and run times
     sent_samples_mean = [np.mean(sent_samples)] * len(sent_samples)

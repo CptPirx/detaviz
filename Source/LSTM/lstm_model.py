@@ -60,7 +60,7 @@ class LSTMModel(object):
         """
         self.model = Sequential()
         self.model.add(layers.LSTM(self.lstm_size, input_shape=(self.window, self.train_x.shape[2])))
-        self.model.add(layers.Dense(self.train_y.shape[1]))
+        self.model.add(layers.Dense(self.train_y.shape[1], activation='softmax'))
         self.model.compile(loss=losses.CategoricalCrossentropy(), optimizer='adam')
         self.model.summary()
 

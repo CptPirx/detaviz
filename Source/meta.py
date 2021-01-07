@@ -7,7 +7,7 @@ Holds different values common for the project.
 
 # PC
 data_path = "C:/Users/au614889/PycharmProjects/robot_dataset/created_dataset/robot_data.h5"
-results_path = "C:/Users/au614889/PycharmProjects/smart_industry/Results"
+results_path = "C:/Users/au614889/PycharmProjects/anomaly_simulation/Results"
 
 # LSTM parameters
 epochs = 100

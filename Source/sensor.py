@@ -16,6 +16,7 @@ class Sensor(object):
         self.dataset = dataset
         self.dataset_labels = dataset_labels
         self.sample_counter = 0
+        self.label_counter = 0
         self.buffer_size = buffer_size
 
     def send_sample(self):
@@ -24,11 +25,21 @@ class Sensor(object):
         :return: float, single sample
         """
         to_send_sample = self.dataset[self.sample_counter]
-        to_send_label = self.dataset_labels[self.sample_counter]
 
         self.sample_counter += 1
 
-        return to_send_sample, to_send_label
+        return to_send_sample
+
+    def send_label(self):
+        """
+        Send single label
+        :return: float, single sample
+        """
+        to_send_label = self.dataset_labels[self.sample_counter]
+
+        self.label_counter += 1
+
+        return to_send_label
 
     def check_end(self):
         if self.sample_counter > self.dataset.shape[0] - 2 * self.buffer_size:
