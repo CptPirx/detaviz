@@ -16,43 +16,52 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_simulation_history(sent_samples, errors, run_times, horizon, model_path, threshold, domain):
-    # Turn sent samples to percentage
-    # sent_samples = (np.asarray(sent_samples) / horizon) * 100
-    # errors = [x * 100 for x in errors]
+def plot_simulation_history(predicted_labels, true_labels, errors, run_times, model_path, threshold, domain):
+    """
 
+    :param predicted_labels:
+    :param errors:
+    :param run_times:
+    :param model_path:
+    :param threshold:
+    :param domain:
+    """
     # Calculate mean of sent samples, errors and run times
-    sent_samples_mean = [np.mean(sent_samples)] * len(sent_samples)
+    sent_samples_mean = [np.mean(predicted_labels)] * len(predicted_labels)
     mean_errors = [np.mean(errors)] * len(errors)
     mean_time = [np.mean(run_times)] * len(run_times)
-    run_times[0] = mean_time[0]
+
+    print(len(predicted_labels))
+    print(predicted_labels)
+    print(len(true_labels))
+    print(true_labels)
 
     # Plot the data
     fig, ax = plt.subplots(nrows=3, ncols=1, figsize=(10, 10), sharex=True)
 
     # Plot the samples
-    ax[0].plot(sent_samples[0], label='Samples')
-    ax[0].plot(sent_samples_mean, label='Sent samples mean value', linestyle='--')
+    ax[0].plot(predicted_labels, label='Predicted labels')
+    ax[0].plot(true_labels, label='True labels')
     ax[0].legend(loc='upper left')
-    ax[0].set(xlabel='Cycle', ylabel='%', title='Number of sent samples per cycle')
+    ax[0].set(xlabel='Cycle', ylabel='Label', title='True and predicted labels')
 
-    # Add text box
-    text_0 = 'Mean value={mean} %'.format(mean=np.round(sent_samples_mean[0], decimals=3))
-    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-    ax[0].text(0.7, 0.95, text_0, transform=ax[0].transAxes, fontsize=14,
-               verticalalignment='top', bbox=props)
+    # # Add text box
+    # text_0 = 'Mean value={mean} %'.format(mean=np.round(sent_samples_mean[0], decimals=3))
+    # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+    # ax[0].text(0.7, 0.95, text_0, transform=ax[0].transAxes, fontsize=14,
+    #            verticalalignment='top', bbox=props)
 
-    # Plot the RMS
-    ax[1].plot(errors, label='RMSE')
-    ax[1].plot(mean_errors, label='Mean RMSE', linestyle='--')
+    # Plot the errors
+    ax[1].plot(errors, label='Errors')
+    ax[1].plot(mean_errors, label='Accuracy', linestyle='--')
     ax[1].legend(loc='upper left')
-    ax[1].set(xlabel='Cycle', ylabel='%', title='RMSE per cycle')
+    ax[1].set(xlabel='Cycle', ylabel='%', title='Accuracy per cycle')
 
     # Add text box
-    text_1 = 'Mean value={mean} %'.format(mean=np.round(np.round(mean_errors[0], decimals=3)))
-    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-    ax[1].text(0.7, 0.95, text_1, transform=ax[1].transAxes, fontsize=14,
-               verticalalignment='top', bbox=props)
+    # text_1 = 'Mean value={mean} %'.format(mean=np.round(np.round(mean_errors[0], decimals=3)))
+    # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+    # ax[1].text(0.7, 0.95, text_1, transform=ax[1].transAxes, fontsize=14,
+    #            verticalalignment='top', bbox=props)
 
     # Plot the run time
     ax[2].plot(run_times, label='Time')
@@ -77,6 +86,10 @@ def plot_simulation_history(sent_samples, errors, run_times, horizon, model_path
 
 
 def main():
+    """
+
+    :return:
+    """
     # print(device_lib.list_local_devices())
     # Define simulation parameters
     print('Define the simulation parameters')
@@ -230,7 +243,7 @@ def main():
         run_times.append(run_time)
 
     # Plot the results
-    plot_simulation_history(sent_samples, mean_errors, run_times, horizon, model_path, threshold, domain)
+    plot_simulation_history(sent_samples, dataset_labels[window:cycle_count], mean_errors, run_times, model_path, threshold, domain)
 
 
 if __name__ == '__main__':

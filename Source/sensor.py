@@ -30,14 +30,14 @@ class Sensor(object):
 
         return to_send_sample
 
-    def send_label(self):
+    def send_label(self, window):
         """
         Send single label
         :return: float, single sample
         """
-        to_send_label = self.dataset_labels[self.sample_counter]
+        to_send_label = self.dataset_labels[self.label_counter]
 
-        self.label_counter += 1
+        self.label_counter += window
 
         return to_send_label
 

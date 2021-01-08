@@ -17,6 +17,7 @@ class HapDev(object):
     def __init__(self, buffer_size, network_delay, window, horizon, threshold):
         """
         Initialisation
+
         :param buffer_size: int, buffer to hold samples
         :param network_delay: float, the network delay in the device
         :param window: int, how many prior samples to base the prediction on
@@ -35,6 +36,7 @@ class HapDev(object):
     def receive_model(self, model):
         """
         Receive model from the cloud
+
         :param model: keras model
         """
         self.model = model
@@ -42,6 +44,7 @@ class HapDev(object):
     def add_sensor(self, sensor):
         """
         Add sensor to the device
+
         :param sensor:
         :return:
         """
@@ -50,23 +53,23 @@ class HapDev(object):
     def remove_sensor(self, sensor_id):
         """
         Remove sensor from the device
+
         :param sensor_id:
         :return:
         """
         self.sensor_list = [x for x in self.sensor_list if x.id != sensor_id]
 
-    def receive_data(self, sensor_id, source):
+    def receive_data(self, sensor, source):
         """
         Receive sample from a sensor
-        :param sensor_id:
+
+        :param sensor:
         :return: single sample
         """
-        sensor = [x for x in self.sensor_list if x.id == sensor_id][0]
-
         if source == 'sample':
             sample = sensor.send_sample()
         elif source == 'label':
-            sample = sensor.send_label()
+            sample = sensor.send_label(self.window)
 
         # print("Received sample number {sample_nr}".format(sample_nr=sensor.sample_counter))
 
@@ -75,6 +78,7 @@ class HapDev(object):
     def predict_values(self, sensor, data):
         """
         Predicts the next #horizon samples based on #window past buffers
+
         :param sensor_id: int, which sensor are we predicting
         :return: the predicted values as an array
         """
@@ -94,41 +98,39 @@ class HapDev(object):
     def compare_data(self, sensor, buffer, predictions):
         """
         Compare the predicted values to the actual measures stored in the buffer
+
         :param sensor_id:
         :return:    list of errors
                     average error
                     number of sent samples
         """
         errors = []
-        sent_samples = 0
+        predictions = np.argmax(predictions)
 
         print(buffer)
         print(predictions)
-        predictions = np.argmax(predictions)
 
-        # Calculate individual errors and how many samples would have been sent
         actual = buffer
         predicted = predictions
 
         if actual != predicted:
-            real_error = True
-            errors.append(real_error)
-            sent_samples += 1
+            errors.append(True)
 
         mean_error = 0
 
-        return errors, mean_error, sent_samples
+        return errors, mean_error, predicted
 
-    def add_to_buffer(self, sensor_id, length, source):
+    def add_to_buffer(self, sensor, length, source):
         """
         Populate the buffer with samples
+
         :param sensor_id: int, which sensor to use
         :return: array of #buffer_size length
         """
         stop = False
         sample_buffer = []
         for i in range(length):
-            sample = self.receive_data(sensor_id, source=source)
+            sample = self.receive_data(sensor, source=source)
             sample_buffer.append(sample)
 
         return np.asarray(sample_buffer)
@@ -145,18 +147,14 @@ class HapDev(object):
         start = time.time()
 
         # First step is to fill the buffer with samples
-        sample_buffer = self.add_to_buffer(sensor_id, self.window, 'sample')
-        label_buffer = self.add_to_buffer(sensor_id, self.horizon, 'label')
+        sample_buffer = self.add_to_buffer(sensor, self.window, 'sample')
+        label_buffer = self.add_to_buffer(sensor, self.horizon, 'label')
 
         # Make prediction
         predictions = self.predict_values(sensor, sample_buffer)
 
         # Evaluate the predictions
         errors_list, mean_error, sent_samples = self.compare_data(sensor, label_buffer, predictions)
-
-        # Now fill buffer again with new samples
-        sample_buffer = self.add_to_buffer(sensor_id, self.window, 'sample')
-        label_buffer = self.add_to_buffer(sensor_id, self.horizon, 'label')
 
         end = time.time()
         run_time = (end - start) * 1000
