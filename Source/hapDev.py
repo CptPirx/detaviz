@@ -105,16 +105,16 @@ class HapDev(object):
                     number of sent samples
         """
         predictions = np.argmax(predictions)
-        errors = 0
+        errors = 1
 
-        print(buffer)
-        print(predictions)
+        # print(buffer)
+        # print(predictions)
 
         actual = buffer[0]
         predicted = predictions
 
         if actual != predicted:
-            errors = 1
+            errors = 0
 
         return errors, predicted
 
@@ -161,11 +161,9 @@ class HapDev(object):
         run_time = (end - start) * 1000
 
         # Print the error values, the average error and how many samples would have been sent
-        print("The error values for each sample are: {errors_list}".format(errors_list=errors_list))
-        print("The number of samples that would have been sent with threshold value of {threshold}% "
-              "is {sent_samples}".format(threshold=self.threshold*100, sent_samples=sent_samples))
-        print("Cycle runtime is {time}ms".format(time=run_time))
-        print("\n")
+        # print("The error values for each sample are: {errors_list}".format(errors_list=errors_list))
+        # print("Cycle runtime is {time}ms".format(time=run_time))
+        # print("\n")
 
         return errors_list, sent_samples, run_time
 

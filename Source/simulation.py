@@ -9,6 +9,7 @@ from hapDev import HapDev
 from LSTM.lstm_model import LSTMModel
 from TABL.tabl_model import TABLModel
 from TABL.Layers import BL, TABL
+from Support.evaluator import Evaluator
 from Data_loaders.robot_data_loader import get_dataset_numpy
 
 import tensorflow as tf
@@ -17,9 +18,10 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import tqdm
 
 
-def plot_simulation_history(predicted_labels, true_labels, errors, run_times, model_path, threshold, domain):
+def plot_simulation_history(predicted_labels, true_labels, errors, run_times, model_path, domain, cycle_count):
     """
 
     :param predicted_labels:
@@ -28,10 +30,10 @@ def plot_simulation_history(predicted_labels, true_labels, errors, run_times, mo
     :param model_path:
     :param threshold:
     :param domain:
+    :param cycle_count:
     """
     # Calculate mean of sent samples, errors and run times
     run_times[0] = 0
-    sent_samples_mean = [np.mean(predicted_labels)] * len(predicted_labels)
     mean_errors = [np.mean(errors)] * len(errors)
     mean_time = [np.mean(run_times)] * len(run_times)
 
@@ -51,16 +53,16 @@ def plot_simulation_history(predicted_labels, true_labels, errors, run_times, mo
     #            verticalalignment='top', bbox=props)
 
     # Plot the errors
-    ax[1].plot(errors, label='Errors')
-    ax[1].plot(mean_errors, label='Accuracy', linestyle='--')
+    ax[1].plot(errors, label='Accuracy')
+    ax[1].plot(mean_errors, label='Mean accuracy', linestyle='--')
     ax[1].legend(loc='upper left')
     ax[1].set(xlabel='Cycle', ylabel='%', title='Accuracy per cycle')
 
     # Add text box
-    # text_1 = 'Mean value={mean} %'.format(mean=np.round(np.round(mean_errors[0], decimals=3)))
-    # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-    # ax[1].text(0.7, 0.95, text_1, transform=ax[1].transAxes, fontsize=14,
-    #            verticalalignment='top', bbox=props)
+    text_1 = 'Mean value={mean} %'.format(mean=(np.round(mean_errors[0], decimals=2) * 100))
+    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+    ax[1].text(0.7, 0.95, text_1, transform=ax[1].transAxes, fontsize=14,
+               verticalalignment='top', bbox=props)
 
     # Plot the run time
     ax[2].plot(run_times, label='Time')
@@ -75,8 +77,8 @@ def plot_simulation_history(predicted_labels, true_labels, errors, run_times, mo
                verticalalignment='top', bbox=props)
 
     # Save the figure
-    fig.savefig((model_path + '/Results_threshold-{threshold}_sensorID-{sensor}.png').format(
-            threshold=threshold,
+    fig.savefig((model_path + '/Results_cycles-{cycle_count}_sensorID-{sensor}.png').format(
+            cycle_count=cycle_count,
             sensor=domain
     ),
             bbox_inches='tight')
@@ -207,6 +209,10 @@ def main():
                               'TABL': TABL,
                               'MaxNorm': tf.keras.constraints.max_norm}
             model = load_model(model_path + '/model.h5', custom_objects=custom_objects)
+            evaluator = Evaluator()
+            predicted_labels = model.predict(test_x)
+            metrics = evaluator.lob_evaluator(test_labels=test_y, predicted_labels=predicted_labels)
+            evaluator.print_metrics(metrics)
         except Exception:
             print('No such model found. Commencing training.')
             if model_type == 'LSTM':
@@ -269,21 +275,20 @@ def main():
     run_times = []
 
     # Run x steps of simulation
-    for i in range(cycle_count):
+    for i in tqdm.tqdm(range(cycle_count), desc='Running simulation cycles'):
         if sensor.check_end():
             print('Reached the end of the dataset!')
             break
-        print("Cycle number {i}".format(i=i))
+        # print("Cycle number {i}".format(i=i))
         error, samples, run_time = device.run_one_cycle(domain, i)
         errors.append(error)
         sent_samples.append(samples)
         run_times.append(run_time)
 
-    # plot_labels = dataset_labels[100::window]
     plot_labels = dataset_labels[window:(cycle_count + window)]
 
     # Plot the results
-    plot_simulation_history(sent_samples, plot_labels, errors, run_times, model_path, threshold, domain)
+    plot_simulation_history(sent_samples, plot_labels, errors, run_times, model_path, domain, cycle_count)
 
 
 if __name__ == '__main__':

@@ -43,9 +43,7 @@ def get_dataset_numpy(path, onehot_labels=True, sliding_window=False, window_siz
     :param start_frac: int, starting point for loaded data as the percentage of length
     :return: np arrays, train and test data & labels
     """
-    data = load_dataset(path=path, start_frac=start_frac)
-
-    print_info(data)
+    data = load_dataset(path=path)
 
     if label_full:
         drop_loosen = False
@@ -82,6 +80,11 @@ def get_dataset_numpy(path, onehot_labels=True, sliding_window=False, window_siz
     else:
         train_x, train_y, test_x, test_y, dataset, dataset_labels = create_window_samples(data,
                                                                                           window=window_size)
+
+        n_samples = dataset.shape[0]
+        start_point = int(n_samples * start_frac)
+        dataset = dataset[start_point:]
+        dataset_labels = dataset_labels[start_point:]
 
     print_info(data)
 

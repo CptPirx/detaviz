@@ -10,6 +10,7 @@ import pandas as pd
 
 import Source.TABL.Layers as Layers
 import Source.TABL.tabl_meta as tabl_meta
+from Source.Support.evaluator import Evaluator
 
 from tensorflow import keras as k
 from matplotlib import pyplot as plt
@@ -129,52 +130,8 @@ class TABLModel(object):
         # convert to array
         return [x for x in forecast[0, :]]
 
-    def evaluate_forecasts(self, forecasts):
-        """
-        Evaluate the accuracy for each forecast time step
-
-        :param forecasts: array of forecasts
-        :return:
-        """
-        for i in range(self.horizon):
-            actual = [row[i] for row in self.dataset_labels]
-            predicted = [forecast[i] for forecast in forecasts]
-            if actual == predicted:
-                score = True
-            else:
-                score = False
-            print('t+%d score: %f ' % ((i + 1), score))
-
     def return_model(self):
         return self.model
-
-    def plot_single_horizon(self, forecasts):
-        """
-        Plot results of forecasting with horizon size 1
-
-        :param forecasts: data
-        :return:
-        """
-        plt.plot(self.dataset_labels[:meta.plot_length], label='Original')
-        plt.plot(forecasts[:meta.plot_length], label='Forecasts')
-        plt.legend(loc="upper left")
-        plt.show()
-
-    def plot_multi_horizon(self, forecasts):
-        """
-        Plot results of forecasting with horizon longer than 1
-
-        :param forecasts:
-        :return:
-        """
-        plot_forecasts = []
-        for i in range(0, len(forecasts[:meta.plot_length]), 10):
-            plot_forecasts.append(forecasts[i])
-
-        plt.plot(self.dataset_labels[:meta.plot_length], label='Original')
-        plt.plot(plot_forecasts, label='Forecasts')
-        plt.legend(loc="upper left")
-        plt.show()
 
     def get_config(self):
         config = super().get_config()
@@ -191,9 +148,11 @@ class TABLModel(object):
         if self.type == 'regular' and self.horizon == 1:
             self.create_model_regular()
             self.train_regular()
-            #forecasts = self.model.predict(self.test_x)
-            #self.evaluate_forecasts(forecasts=forecasts)
-            #self.plot_single_horizon(forecasts)
+            predicted_labels = self.model.predict(self.test_x)
+            evaluator = Evaluator()
+            metrics = evaluator.lob_evaluator(predicted_labels=predicted_labels,
+                                              test_labels=self.test_y)
+            evaluator.print_metrics(metrics)
         else:
             self.create_model_regular()
             self.train_regular()

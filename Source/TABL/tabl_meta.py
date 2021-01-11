@@ -14,7 +14,7 @@ class Params:
         self.d = [[240, 5], [120, 2], [4, 1]]
         self.e = [[240, 5], [120, 2], [60, 1], [4, 1]]
 
-        self.param_tabl_1 = {'template': self.a,
+        self.param_tabl_1 = {'template': self.b,
                              'dropout': 0.1,
                              'projection_regularizer': None,
                              'projection_constraint': k.constraints.max_norm(3.0, axis=0),

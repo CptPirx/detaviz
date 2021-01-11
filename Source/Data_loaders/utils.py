@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 
-def load_dataset(path, start_frac):
+def load_dataset(path):
     """
     Load data from the file
 
@@ -15,10 +15,6 @@ def load_dataset(path, start_frac):
     :return: pd dataframes, train & test data
     """
     dataframe = pd.read_hdf(path)
-
-    n_samples = dataframe.shape[0]
-    start_point = int(n_samples * start_frac)
-    dataframe = dataframe[start_point:]
 
     # Make it multiindex
     dataframe['event'] = dataframe.index
@@ -320,13 +316,13 @@ def create_window_samples(df, window=100, train_size=0.7):
     n_sample = len(labels_np)
     n_train = int(n_sample * train_size)
 
-    train_x = data_x[:n_train]
-    train_y = data_y[:n_train]
+    train_x = np.asarray(data_x[:n_train])
+    train_y = np.asarray(data_y[:n_train])
 
-    test_x = data_x[n_train:]
-    test_y = data_y[n_train:]
+    test_x = np.asarray(data_x[n_train:])
+    test_y = np.asarray(data_y[n_train:])
 
-    return np.asarray(train_x), np.asarray(train_y), np.asarray(test_x), np.asarray(test_y), np.asarray(dataframe_np), np.asarray(labels_np)
+    return train_x, train_y, test_x, test_y, dataframe_np, labels_np
 
 
 def print_info(df):
