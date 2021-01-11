@@ -14,7 +14,8 @@ def get_dataset_numpy(path, onehot_labels=True, sliding_window=False, window_siz
                       reduce_dimensionality=False, reduce_method='PCA', n_dimensions=60, subsample_data=True,
                       subsample_freq=5, pad_data=True, train_size=0.7, random_state=42, normal_samples=1,
                       damaged_samples=1, assembly_samples=1, missing_samples=1, damaged_thread_samples=0,
-                      loosening_samples=0, drop_loosen=True, drop_extra_columns=True, label_full=False):
+                      loosening_samples=1, drop_loosen=True, drop_extra_columns=True, label_full=False,
+                      start_frac=0):
     """
     Create a numpy dataset from input dataframe
 
@@ -39,9 +40,10 @@ def get_dataset_numpy(path, onehot_labels=True, sliding_window=False, window_siz
     :param sliding_window: bool, create a sliding window dataset
     :param window_size: int, size of the sliding window
     :param onehot_labels: bool, output onehot encoded labels
+    :param start_frac: int, starting point for loaded data as the percentage of length
     :return: np arrays, train and test data & labels
     """
-    data = load_dataset(path=path)
+    data = load_dataset(path=path, start_frac=start_frac)
 
     print_info(data)
 
@@ -51,7 +53,7 @@ def get_dataset_numpy(path, onehot_labels=True, sliding_window=False, window_siz
 
     data = drop_columns(data, drop_extra_columns=drop_extra_columns, drop_loosen=drop_loosen)
 
-    if normal_samples < 1 or damaged_samples < 1 or assembly_samples < 1 or missing_samples < 1 or damaged_thread_samples < 1:
+    if normal_samples < 1 or damaged_samples < 1 or assembly_samples < 1 or missing_samples < 1 or damaged_thread_samples < 1 or loosening_samples < 1:
         print('Filtering samples')
         data = filter_samples(data, normal_samples, damaged_samples, assembly_samples, missing_samples,
                               damaged_thread_samples, loosening_samples)

@@ -16,7 +16,7 @@ class Sensor(object):
         self.dataset = dataset
         self.dataset_labels = dataset_labels
         self.sample_counter = 0
-        self.label_counter = 0
+        self.label_counter = 100
         self.buffer_size = buffer_size
 
     def send_sample(self):
@@ -37,7 +37,7 @@ class Sensor(object):
         """
         to_send_label = self.dataset_labels[self.label_counter]
 
-        self.label_counter += window
+        self.label_counter += 1
 
         return to_send_label
 

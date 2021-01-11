@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 
-def load_dataset(path):
+def load_dataset(path, start_frac):
     """
     Load data from the file
 
@@ -15,6 +15,10 @@ def load_dataset(path):
     :return: pd dataframes, train & test data
     """
     dataframe = pd.read_hdf(path)
+
+    n_samples = dataframe.shape[0]
+    start_point = int(n_samples * start_frac)
+    dataframe = dataframe[start_point:]
 
     # Make it multiindex
     dataframe['event'] = dataframe.index

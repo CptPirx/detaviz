@@ -104,40 +104,41 @@ class HapDev(object):
                     average error
                     number of sent samples
         """
-        errors = []
         predictions = np.argmax(predictions)
+        errors = 0
 
         print(buffer)
         print(predictions)
 
-        actual = buffer
+        actual = buffer[0]
         predicted = predictions
 
         if actual != predicted:
-            errors.append(True)
+            errors = 1
 
-        mean_error = 0
-
-        return errors, mean_error, predicted
+        return errors, predicted
 
     def add_to_buffer(self, sensor, length, source):
         """
         Populate the buffer with samples
 
         :param sensor_id: int, which sensor to use
-        :return: array of #buffer_size length
+        :return: list of #buffer_size length
         """
-        stop = False
         sample_buffer = []
+
         for i in range(length):
             sample = self.receive_data(sensor, source=source)
             sample_buffer.append(sample)
 
+        if source == 'sample':
+            sensor.sample_counter = sensor.sample_counter - (self.window - 1)
         return np.asarray(sample_buffer)
 
-    def run_one_cycle(self, sensor_id):
+    def run_one_cycle(self, sensor_id, current_cycle):
         """
 
+        :param current_cycle:
         :param sensor_id:
         :return:
         """
@@ -154,20 +155,19 @@ class HapDev(object):
         predictions = self.predict_values(sensor, sample_buffer)
 
         # Evaluate the predictions
-        errors_list, mean_error, sent_samples = self.compare_data(sensor, label_buffer, predictions)
+        errors_list, sent_samples = self.compare_data(sensor, label_buffer, predictions)
 
         end = time.time()
         run_time = (end - start) * 1000
 
         # Print the error values, the average error and how many samples would have been sent
         print("The error values for each sample are: {errors_list}".format(errors_list=errors_list))
-        print("The mean error for this cycle is {mean_error}%".format(mean_error=mean_error*100))
         print("The number of samples that would have been sent with threshold value of {threshold}% "
               "is {sent_samples}".format(threshold=self.threshold*100, sent_samples=sent_samples))
         print("Cycle runtime is {time}ms".format(time=run_time))
         print("\n")
 
-        return mean_error, sent_samples, run_time
+        return errors_list, sent_samples, run_time
 
 
 

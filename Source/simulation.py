@@ -7,8 +7,11 @@ import meta
 from sensor import Sensor
 from hapDev import HapDev
 from LSTM.lstm_model import LSTMModel
+from TABL.tabl_model import TABLModel
+from TABL.Layers import BL, TABL
 from Data_loaders.robot_data_loader import get_dataset_numpy
 
+import tensorflow as tf
 from tensorflow.keras.models import load_model
 from pathlib import Path
 
@@ -27,14 +30,10 @@ def plot_simulation_history(predicted_labels, true_labels, errors, run_times, mo
     :param domain:
     """
     # Calculate mean of sent samples, errors and run times
+    run_times[0] = 0
     sent_samples_mean = [np.mean(predicted_labels)] * len(predicted_labels)
     mean_errors = [np.mean(errors)] * len(errors)
     mean_time = [np.mean(run_times)] * len(run_times)
-
-    print(len(predicted_labels))
-    print(predicted_labels)
-    print(len(true_labels))
-    print(true_labels)
 
     # Plot the data
     fig, ax = plt.subplots(nrows=3, ncols=1, figsize=(10, 10), sharex=True)
@@ -77,10 +76,10 @@ def plot_simulation_history(predicted_labels, true_labels, errors, run_times, mo
 
     # Save the figure
     fig.savefig((model_path + '/Results_threshold-{threshold}_sensorID-{sensor}.png').format(
-        threshold=threshold,
-        sensor=domain
+            threshold=threshold,
+            sensor=domain
     ),
-        bbox_inches='tight')
+            bbox_inches='tight')
 
     plt.show()
 
@@ -106,15 +105,6 @@ def main():
         else:
             break
 
-    # The model type
-    while True:
-        model_type = input('"stateful" or "regular". Default=regular: ') or 'regular'
-        if model_type != 'stateful' and model_type != 'regular':
-            print('Wrong model type.')
-            continue
-        else:
-            break
-
     # The sensor domain
     while True:
         domain = int(input('Which sensor to use, 0 to 4. Default=0: ') or 0)
@@ -130,8 +120,25 @@ def main():
     # The model's prediction horizon
     horizon = int(input('Enter the horizon size. Default=1: ') or 1)
 
-    # The model's complexity
-    lstm_size = int(input('Enter the number of LSTM units. Default=128: ') or 128)
+    # The model type
+    model_type = input('LSTM or TABL. Default=TABL: ') or 'TABL'
+
+    model_name = model_type
+    model_type = 'regular'
+
+    if model_type == 'LSTM':
+        # The model's complexity
+        lstm_size = int(input('Enter the number of LSTM units. Default=256: ') or 256)
+        model_name += f'-{lstm_size}'
+
+        # The model type
+        while True:
+            model_type = input('"stateful" or "regular". Default=regular: ') or 'regular'
+            if model_type != 'stateful' and model_type != 'regular':
+                print('Wrong model type.')
+                continue
+            else:
+                break
 
     # The model's buffer size
     # while True:
@@ -155,11 +162,11 @@ def main():
             break
 
     # Check if the folder exists. If not, create it
-    model_path = meta.results_path + '/model_{model_type}_lstm-{lstm}_window-{window}_horizon-{horizon}'.format(
-        model_type=model_type,
-        window=window,
-        horizon=horizon,
-        lstm=lstm_size)
+    model_path = meta.results_path + '/model_{model_type}_{model_name}_window-{window}_horizon-{horizon}'.format(
+            model_type=model_type,
+            window=window,
+            horizon=horizon,
+            model_name=model_name)
     Path(model_path).mkdir(parents=True, exist_ok=True)
 
     # Load data
@@ -179,7 +186,8 @@ def main():
                                                                                   loosening_samples=0,
                                                                                   drop_loosen=False,
                                                                                   drop_extra_columns=True,
-                                                                                  label_full=False)
+                                                                                  label_full=False,
+                                                                                  start_frac=0.7)
 
     # Create the device
     device = HapDev(buffer_size=buffer,
@@ -195,9 +203,39 @@ def main():
     # Load ot train ML model
     if model_source == 'load':
         try:
-            model = load_model(model_path + '/model.h5')
+            custom_objects = {'BL': BL,
+                              'TABL': TABL,
+                              'MaxNorm': tf.keras.constraints.max_norm}
+            model = load_model(model_path + '/model.h5', custom_objects=custom_objects)
         except Exception:
             print('No such model found. Commencing training.')
+            if model_type == 'LSTM':
+                lstm = LSTMModel(train_x=train_x,
+                                 train_y=train_y,
+                                 test_x=test_x,
+                                 test_y=test_y,
+                                 dataset_labels=dataset_labels,
+                                 type=model_type,
+                                 horizon=horizon,
+                                 window=window,
+                                 lstm_size=lstm_size,
+                                 model_path=model_path)
+                lstm.run_model()
+                model = lstm.return_model()
+            else:
+                tabl = TABLModel(train_x=train_x,
+                                 train_y=train_y,
+                                 test_x=test_x,
+                                 test_y=test_y,
+                                 dataset_labels=dataset_labels,
+                                 type=model_type,
+                                 horizon=horizon,
+                                 window=window,
+                                 model_path=model_path)
+                tabl.run_model()
+                model = tabl.return_model()
+    else:
+        if model_type == 'LSTM':
             lstm = LSTMModel(train_x=train_x,
                              train_y=train_y,
                              test_x=test_x,
@@ -210,24 +248,23 @@ def main():
                              model_path=model_path)
             lstm.run_model()
             model = lstm.return_model()
-    else:
-        lstm = LSTMModel(train_x=train_x,
-                         train_y=train_y,
-                         test_x=test_x,
-                         test_y=test_y,
-                         dataset_labels=dataset_labels,
-                         type=model_type,
-                         horizon=horizon,
-                         window=window,
-                         lstm_size=lstm_size,
-                         model_path=model_path)
-        lstm.run_model()
-        model = lstm.return_model()
+        else:
+            tabl = TABLModel(train_x=train_x,
+                             train_y=train_y,
+                             test_x=test_x,
+                             test_y=test_y,
+                             dataset_labels=dataset_labels,
+                             type=model_type,
+                             horizon=horizon,
+                             window=window,
+                             model_path=model_path)
+            tabl.run_model()
+            model = tabl.return_model()
 
     device.receive_model(model)
 
     # Lists to hold simulation results
-    mean_errors = []
+    errors = []
     sent_samples = []
     run_times = []
 
@@ -237,13 +274,16 @@ def main():
             print('Reached the end of the dataset!')
             break
         print("Cycle number {i}".format(i=i))
-        error, samples, run_time = device.run_one_cycle(domain)
-        mean_errors.append(error)
+        error, samples, run_time = device.run_one_cycle(domain, i)
+        errors.append(error)
         sent_samples.append(samples)
         run_times.append(run_time)
 
+    # plot_labels = dataset_labels[100::window]
+    plot_labels = dataset_labels[window:(cycle_count + window)]
+
     # Plot the results
-    plot_simulation_history(sent_samples, dataset_labels[window:cycle_count], mean_errors, run_times, model_path, threshold, domain)
+    plot_simulation_history(sent_samples, plot_labels, errors, run_times, model_path, threshold, domain)
 
 
 if __name__ == '__main__':
