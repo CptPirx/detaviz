@@ -1,8 +1,12 @@
-from tensorflow.keras import backend as K
-from tensorflow.keras.layers import Layer
-from tensorflow.keras import activations as Activations
-from tensorflow.keras import initializers as Initializers
+__doc__ = """
+Slightly modified version of the original code.
+"""
+
 import tensorflow as tf
+from tensorflow.keras import activations as Activations
+from tensorflow.keras import backend as K
+from tensorflow.keras import initializers as Initializers
+from tensorflow.keras.layers import Layer
 
 
 class Constraint(object):
@@ -93,8 +97,8 @@ class BL(Layer):
         x = nmodeproduct(x, self.W2, 2)
         x = K.bias_add(x, self.bias)
 
-        if self.output_dim[1] == 1:
-            x = K.squeeze(x, axis=-1)
+        # if self.output_dim[1] == 1:
+        #     x = K.squeeze(x, axis=-1)
         return x
 
     def compute_output_shape(self, input_shape):
@@ -102,6 +106,16 @@ class BL(Layer):
             return (input_shape[0], self.output_dim[0])
         else:
             return (input_shape[0], self.output_dim[0], self.output_dim[1])
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({
+            'output_dim': self.output_dim,
+            'kernel_regularizer': self.kernel_regularizer,
+            'kernel_constraint': self.kernel_constraint
+        })
+
+        return config
 
 
 class TABL(Layer):
@@ -191,7 +205,20 @@ class TABL(Layer):
 
     def compute_output_shape(self, input_shape):
         if self.output_dim[1] == 1:
-            return (input_shape[0], self.output_dim[0])
+            return (input_shape[0], self.output_dim[0], self.output_dim[1])
         else:
             return (input_shape[0], self.output_dim[0], self.output_dim[1])
+
+    def get_config(self):
+        config = super().get_config().copy()
+        config.update({
+            'output_dim': self.output_dim,
+            'projection_regularizer': self.projection_regularizer,
+            'projection_constraint': self.projection_constraint,
+            'attention_regularizer': self.attention_regularizer,
+            'attention_constraint': self.attention_constraint
+        })
+
+        return config
+
 
