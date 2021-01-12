@@ -3,8 +3,15 @@ from sklearn import decomposition
 import random
 import tqdm
 
+from Source.Data_loaders.data_generator import DataGenerator
+
+import meta
+
+from sklearn.model_selection import train_test_split
+
 import pandas as pd
 import numpy as np
+import tensorflow.keras as k
 
 
 def load_dataset(path):
@@ -287,13 +294,14 @@ def split_sequence(sequence, window, horizon):
     return np.array(X), np.array(y)
 
 
-def create_window_samples(df, window=100, train_size=0.7):
+def create_window_samples(df, train_size=0.7, window=100, random_state=42):
     """
     Prepare the data as a set of windows
 
-    :param data: df, data
+    :param random_state:
+    :param train_size:
+    :param df: df, data
     :param window: int, window size
-    :param horizon: int, horizon size
     :return: train and test samples
     """
 
@@ -307,22 +315,68 @@ def create_window_samples(df, window=100, train_size=0.7):
     dataframe = df.drop('label', axis=1)
     dataframe_np = dataframe.values
 
-    data_x, data_y = [], []
-    for i in tqdm.tqdm(range(len(dataframe_np) - window - 1), desc='Creating window samples'):
-        a = dataframe_np[i:(i+window)]
-        data_x.append(a)
-        data_y.append(labels_np[i + window])
+    # data_x, data_y = [], []
+    # for i in tqdm.tqdm(range(len(dataframe_np) - window - 1), desc='Creating window samples'):
+    #     a = dataframe_np[i:(i+window)]
+    #     data_x.append(a)
+    #     data_y.append(labels_np[i + window])
+    #
+    # n_sample = len(labels_np)
+    # n_train = int(n_sample * train_size)
+    #
+    # train_x = np.asarray(data_x[:n_train])
+    # train_y = np.asarray(data_y[:n_train])
+    #
+    # test_x = np.asarray(data_x[n_train:])
+    # test_y = np.asarray(data_y[n_train:])
+    #
+    # return train_x, train_y, test_x, test_y, dataframe_np, labels_np
+    np.save(meta.window_path + 'data_x', dataframe_np)
+    np.save(meta.window_path + 'data_y', labels_np)
 
-    n_sample = len(labels_np)
-    n_train = int(n_sample * train_size)
+    train_generator, test_generator = create_window_generator(data_path=meta.window_path,
+                                                              window=window,
+                                                              train_size=train_size,
+                                                              random_state=random_state)
 
-    train_x = np.asarray(data_x[:n_train])
-    train_y = np.asarray(data_y[:n_train])
+    return dataframe_np, labels_np, train_generator, test_generator
 
-    test_x = np.asarray(data_x[n_train:])
-    test_y = np.asarray(data_y[n_train:])
 
-    return train_x, train_y, test_x, test_y, dataframe_np, labels_np
+def create_window_generator(data_path, window, train_size, random_state):
+    """
+    Create a TF generator for sliding window
+
+    :param train_size:
+    :param window:
+    :param data_path:
+    :return:
+    """
+    data_x = np.load(data_path + 'data_x.npy')
+    data_y = np.load(data_path + 'data_y.npy')
+
+    # Split the data
+    train_x, test_x, train_y, test_y = train_test_split(data_x,
+                                                        data_y,
+                                                        train_size=train_size,
+                                                        random_state=random_state,
+                                                        stratify=data_y)
+
+    # Shift the target samples by one step
+    train_y = np.insert(train_y, 0, 0)
+    test_y = np.insert(test_y, 0, 0)
+
+    train_y = k.utils.to_categorical(train_y[:-1], num_classes=len(np.unique(train_y)))
+    test_y = k.utils.to_categorical(test_y[:-1], num_classes=len(np.unique(test_y)))
+
+    train_generator = k.preprocessing.sequence.TimeseriesGenerator(train_x, train_y,
+                                                                   length=window,
+                                                                   batch_size=meta.batch_size)
+
+    test_generator = k.preprocessing.sequence.TimeseriesGenerator(test_x, test_y,
+                                                                  length=window,
+                                                                  batch_size=meta.batch_size)
+
+    return train_generator, test_generator
 
 
 def print_info(df):

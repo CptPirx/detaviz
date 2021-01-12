@@ -7,13 +7,15 @@ import time
 import os
 
 import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
 
 import Source.TABL.Layers as Layers
 import Source.TABL.tabl_meta as tabl_meta
 from Source.Support.evaluator import Evaluator
 
 from tensorflow import keras as k
-from matplotlib import pyplot as plt
+from tensorflow.keras.mixed_precision import experimental as mixed_precision
 from tensorflow import keras
 
 # Tensorflow logging level
@@ -25,16 +27,16 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 
 class TABLModel(object):
-    def __init__(self, type, window, horizon, model_path, train_x, train_y, test_x, test_y, dataset_labels):
-        self.train_x = train_x
-        self.train_y = train_y
-        self.test_x = test_x
-        self.test_y = test_y
+    def __init__(self, type, window, horizon, dimensions, model_path, train_generator, test_generator, dataset_labels):
+        self.train_generator = train_generator
+        self.test_generator = test_generator
         self.dataset_labels = dataset_labels
         self.type = type
         self.horizon = horizon
         self.window = window
         self.model_path = model_path
+        self.dimensions = dimensions
+        self.classes = np.unique(dataset_labels)
 
         params = tabl_meta.Params()
         self.params = params.params_list[0]
@@ -46,8 +48,8 @@ class TABLModel(object):
         :return:
         """
         # Classifier
-        inputs_class = k.layers.Input(shape=(self.window, self.train_x.shape[2]))
-        x = Layers.BL((self.window, self.train_x.shape[2]),
+        inputs_class = k.layers.Input(shape=(self.window, self.dimensions))
+        x = Layers.BL((self.window, self.dimensions),
                       self.params['projection_regularizer'],
                       self.params['projection_constraint'])(inputs_class)
         x = k.layers.Activation('relu')(x)
@@ -96,12 +98,11 @@ class TABLModel(object):
                                                                              min_lr=0.0001)
 
         start = time.time()
-        history = self.model.fit(self.train_x, self.train_y,
+        history = self.model.fit(self.train_generator,
                                  epochs=meta.epochs,
-                                 batch_size=meta.batch_size,
                                  callbacks=[earlystop_callback,
                                             learning_rate_reduction_callback],
-                                 use_multiprocessing=True,
+                                 use_multiprocessing=False,
                                  workers=3)
         end = time.time()
 
@@ -148,11 +149,6 @@ class TABLModel(object):
         if self.type == 'regular' and self.horizon == 1:
             self.create_model_regular()
             self.train_regular()
-            predicted_labels = self.model.predict(self.test_x)
-            evaluator = Evaluator()
-            metrics = evaluator.lob_evaluator(predicted_labels=predicted_labels,
-                                              test_labels=self.test_y)
-            evaluator.print_metrics(metrics)
         else:
             self.create_model_regular()
             self.train_regular()

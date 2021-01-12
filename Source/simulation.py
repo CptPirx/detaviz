@@ -6,9 +6,11 @@ import meta
 
 from sensor import Sensor
 from hapDev import HapDev
+
 from LSTM.lstm_model import LSTMModel
 from TABL.tabl_model import TABLModel
 from TABL.Layers import BL, TABL
+
 from Support.evaluator import Evaluator
 from Data_loaders.robot_data_loader import get_dataset_numpy
 
@@ -122,6 +124,9 @@ def main():
     # The model's prediction horizon
     horizon = int(input('Enter the horizon size. Default=1: ') or 1)
 
+    # The data's dimensionality
+    n_dim = int(input('Enter the data dimensionality. Default=60: ') or 60)
+
     # The model type
     model_type = input('LSTM or TABL. Default=TABL: ') or 'TABL'
 
@@ -172,24 +177,43 @@ def main():
     Path(model_path).mkdir(parents=True, exist_ok=True)
 
     # Load data
-    train_x, train_y, test_x, test_y, dataset, dataset_labels = get_dataset_numpy(path=Path(meta.data_path),
-                                                                                  sliding_window=True,
-                                                                                  window_size=window,
-                                                                                  reduce_dimensionality=True,
-                                                                                  n_dimensions=60,
-                                                                                  subsample_data=True,
-                                                                                  subsample_freq=5,
-                                                                                  pad_data=False,
-                                                                                  normal_samples=1,
-                                                                                  damaged_samples=1,
-                                                                                  assembly_samples=1,
-                                                                                  missing_samples=1,
-                                                                                  damaged_thread_samples=0,
-                                                                                  loosening_samples=0,
-                                                                                  drop_loosen=False,
-                                                                                  drop_extra_columns=True,
-                                                                                  label_full=False,
-                                                                                  start_frac=0.7)
+    # train_x, train_y, test_x, test_y, dataset, dataset_labels = get_dataset_numpy(path=Path(meta.data_path),
+    #                                                                               sliding_window=True,
+    #                                                                               window_size=window,
+    #                                                                               reduce_dimensionality=True,
+    #                                                                               n_dimensions=60,
+    #                                                                               subsample_data=False,
+    #                                                                               subsample_freq=2,
+    #                                                                               pad_data=False,
+    #                                                                               normal_samples=1,
+    #                                                                               damaged_samples=1,
+    #                                                                               assembly_samples=1,
+    #                                                                               missing_samples=1,
+    #                                                                               damaged_thread_samples=0,
+    #                                                                               loosening_samples=0,
+    #                                                                               drop_loosen=False,
+    #                                                                               drop_extra_columns=True,
+    #                                                                               label_full=False,
+    #                                                                               start_frac=0.0)
+
+    dataset, dataset_labels, train_generator, test_generator = get_dataset_numpy(path=Path(meta.data_path),
+                                                                                 sliding_window=True,
+                                                                                 window_size=window,
+                                                                                 reduce_dimensionality=True,
+                                                                                 n_dimensions=n_dim,
+                                                                                 subsample_data=True,
+                                                                                 subsample_freq=2,
+                                                                                 pad_data=False,
+                                                                                 normal_samples=1,
+                                                                                 damaged_samples=1,
+                                                                                 assembly_samples=1,
+                                                                                 missing_samples=1,
+                                                                                 damaged_thread_samples=0,
+                                                                                 loosening_samples=0,
+                                                                                 drop_loosen=False,
+                                                                                 drop_extra_columns=True,
+                                                                                 label_full=False,
+                                                                                 start_frac=0.7)
 
     # Create the device
     device = HapDev(buffer_size=buffer,
@@ -209,63 +233,61 @@ def main():
                               'TABL': TABL,
                               'MaxNorm': tf.keras.constraints.max_norm}
             model = load_model(model_path + '/model.h5', custom_objects=custom_objects)
-            evaluator = Evaluator()
-            predicted_labels = model.predict(test_x)
-            metrics = evaluator.lob_evaluator(test_labels=test_y, predicted_labels=predicted_labels)
-            evaluator.print_metrics(metrics)
         except Exception:
             print('No such model found. Commencing training.')
             if model_type == 'LSTM':
-                lstm = LSTMModel(train_x=train_x,
-                                 train_y=train_y,
-                                 test_x=test_x,
-                                 test_y=test_y,
+                lstm = LSTMModel(train_generator=train_generator,
+                                 test_generator=test_generator,
                                  dataset_labels=dataset_labels,
                                  type=model_type,
                                  horizon=horizon,
+                                 dimensions=n_dim,
                                  window=window,
                                  lstm_size=lstm_size,
                                  model_path=model_path)
                 lstm.run_model()
                 model = lstm.return_model()
             else:
-                tabl = TABLModel(train_x=train_x,
-                                 train_y=train_y,
-                                 test_x=test_x,
-                                 test_y=test_y,
+                tabl = TABLModel(train_generator=train_generator,
+                                 test_generator=test_generator,
                                  dataset_labels=dataset_labels,
                                  type=model_type,
                                  horizon=horizon,
                                  window=window,
+                                 dimensions=n_dim,
                                  model_path=model_path)
                 tabl.run_model()
                 model = tabl.return_model()
     else:
         if model_type == 'LSTM':
-            lstm = LSTMModel(train_x=train_x,
-                             train_y=train_y,
-                             test_x=test_x,
-                             test_y=test_y,
+            lstm = LSTMModel(train_generator=train_generator,
+                             test_generator=test_generator,
                              dataset_labels=dataset_labels,
                              type=model_type,
                              horizon=horizon,
                              window=window,
+                             dimensions=n_dim,
                              lstm_size=lstm_size,
                              model_path=model_path)
             lstm.run_model()
             model = lstm.return_model()
         else:
-            tabl = TABLModel(train_x=train_x,
-                             train_y=train_y,
-                             test_x=test_x,
-                             test_y=test_y,
+            tabl = TABLModel(train_generator=train_generator,
+                             test_generator=test_generator,
                              dataset_labels=dataset_labels,
                              type=model_type,
                              horizon=horizon,
                              window=window,
+                             dimensions=n_dim,
                              model_path=model_path)
             tabl.run_model()
             model = tabl.return_model()
+
+    # Evaluate the model
+    evaluator = Evaluator()
+    predicted_labels = model.predict(test_generator)
+    metrics = evaluator.lob_evaluator(test_labels=dataset_labels, predicted_labels=predicted_labels)
+    evaluator.print_metrics(metrics)
 
     device.receive_model(model)
 

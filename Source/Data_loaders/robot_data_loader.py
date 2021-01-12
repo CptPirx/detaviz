@@ -5,7 +5,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 
-from .utils import load_dataset, reduce_dimensions, subsample, pad_df, pd_to_np, filter_samples, relabel, drop_columns, print_info, create_window_samples
+from .utils import load_dataset, reduce_dimensions, subsample, pad_df, pd_to_np, filter_samples, relabel, drop_columns, \
+    print_info, create_window_samples
 
 sys.path.append("../../")
 
@@ -51,6 +52,10 @@ def get_dataset_numpy(path, onehot_labels=True, sliding_window=False, window_siz
 
     data = drop_columns(data, drop_extra_columns=drop_extra_columns, drop_loosen=drop_loosen)
 
+    if subsample_data:
+        print('Subsampling data')
+        data = subsample(data, subsample_freq)
+
     if normal_samples < 1 or damaged_samples < 1 or assembly_samples < 1 or missing_samples < 1 or damaged_thread_samples < 1 or loosening_samples < 1:
         print('Filtering samples')
         data = filter_samples(data, normal_samples, damaged_samples, assembly_samples, missing_samples,
@@ -59,10 +64,6 @@ def get_dataset_numpy(path, onehot_labels=True, sliding_window=False, window_siz
     if reduce_dimensionality:
         print('Reducing dimensionality')
         data = reduce_dimensions(data, method=reduce_method, dimensions=n_dimensions)
-
-    if subsample_data:
-        print('Subsampling data')
-        data = subsample(data, subsample_freq)
 
     if not sliding_window:
         if pad_data:
@@ -77,9 +78,17 @@ def get_dataset_numpy(path, onehot_labels=True, sliding_window=False, window_siz
                                                                 train_size=train_size,
                                                                 random_state=random_state,
                                                                 stratify=labels)
+
+            if onehot_labels:
+                encoder = OneHotEncoder()
+                train_y = encoder.fit_transform(X=train_y.reshape(-1, 1)).toarray()
+                test_y = encoder.fit_transform(X=test_y.reshape(-1, 1)).toarray()
+
     else:
-        train_x, train_y, test_x, test_y, dataset, dataset_labels = create_window_samples(data,
-                                                                                          window=window_size)
+        dataset, dataset_labels, train_generator, test_generator = create_window_samples(data,
+                                                                                         window=window_size,
+                                                                                         train_size=train_size,
+                                                                                         random_state=random_state)
 
         n_samples = dataset.shape[0]
         start_point = int(n_samples * start_frac)
@@ -88,15 +97,10 @@ def get_dataset_numpy(path, onehot_labels=True, sliding_window=False, window_siz
 
     print_info(data)
 
-    if onehot_labels:
-        encoder = OneHotEncoder()
-        train_y = encoder.fit_transform(X=train_y.reshape(-1, 1)).toarray()
-        test_y = encoder.fit_transform(X=test_y.reshape(-1, 1)).toarray()
-
     if not sliding_window:
         return train_x, train_y, test_x, test_y
     else:
-        return train_x, train_y, test_x, test_y, dataset, dataset_labels
+        return dataset, dataset_labels, train_generator, test_generator
 
 
 if __name__ == '__main__':

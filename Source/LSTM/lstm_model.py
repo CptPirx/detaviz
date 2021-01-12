@@ -3,11 +3,9 @@ Lightweight LSTM model for anomaly detection
 """
 
 import meta
-import math
 import time
 import os
 
-from Data_loaders.data_loader import get_dataset_tf
 
 import numpy as np
 import pandas as pd
@@ -28,17 +26,17 @@ from tensorflow import keras
 
 
 class LSTMModel(object):
-    def __init__(self, type, window, horizon, lstm_size, model_path, train_x, train_y, test_x, test_y, dataset_labels):
-        self.train_x = train_x
-        self.train_y = train_y
-        self.test_x = test_x
-        self.test_y = test_y
+    def __init__(self, type, window, horizon, dimensions, lstm_size, model_path, train_generator, test_generator, dataset_labels):
+        self.train_generator = train_generator
+        self.test_generator = test_generator
         self.dataset_labels = dataset_labels
         self.type = type
         self.horizon = horizon
         self.window = window
         self.lstm_size = lstm_size
         self.model_path = model_path
+        self.dimensions = dimensions
+        self.classes = np.unique(dataset_labels)
 
     def create_model_stateful(self):
         """
@@ -47,7 +45,7 @@ class LSTMModel(object):
         :return:
         """
         self.model = Sequential()
-        self.model.add(layers.LSTM(self.lstm_size, batch_input_shape=(1, self.window, self.train_x.shape[1]), stateful=True))
+        self.model.add(layers.LSTM(self.lstm_size, batch_input_shape=(1, self.window, self.dimensions), stateful=True))
         self.model.add(layers.Dense(self.horizon))
         self.model.compile(loss=losses.CategoricalCrossentropy(), optimizer='adam')
         self.model.summary()
@@ -59,8 +57,8 @@ class LSTMModel(object):
         :return:
         """
         self.model = Sequential()
-        self.model.add(layers.LSTM(self.lstm_size, input_shape=(self.window, self.train_x.shape[2])))
-        self.model.add(layers.Dense(self.train_y.shape[1], activation='softmax'))
+        self.model.add(layers.LSTM(self.lstm_size, input_shape=(self.window, self.dimensions)))
+        self.model.add(layers.Dense(self.classes, activation='softmax'))
         self.model.compile(loss=losses.CategoricalCrossentropy(), optimizer='adam')
         self.model.summary()
 
@@ -71,7 +69,7 @@ class LSTMModel(object):
         :return:
         """
         for i in range(meta.epochs):
-            self.model.fit(self.train_x, self.train_y, epochs=1, batch_size=1, shuffle=False)
+            self.model.fit(self.train_generator, epochs=1, batch_size=1, shuffle=False)
             self.model.reset_states()
 
         self.model.save("model_stateful.h5")
@@ -97,7 +95,7 @@ class LSTMModel(object):
                                                                              min_lr=0.0001)
 
         start = time.time()
-        history = self.model.fit(self.train_x, self.train_y,
+        history = self.model.fit(self.train_generator,
                                  epochs=meta.epochs,
                                  batch_size=meta.batch_size,
                                  callbacks=[earlystop_callback,
@@ -203,9 +201,6 @@ class LSTMModel(object):
         elif self.type == 'regular' and self.horizon == 1:
             self.create_model_regular()
             self.train_regular()
-            forecasts = self.model.predict(self.test_x)
-            #self.evaluate_forecasts(forecasts=forecasts)
-            self.plot_single_horizon(forecasts)
         else:
             self.create_model_regular()
             self.train_regular()
