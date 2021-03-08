@@ -1,0 +1,10 @@
+file:abstract_classifier.py:
+  file:abstract_classifier.py:
+    paths:
+    - ..\..\..\Zoo\abstract_classifier.py
+    uri: file:abstract_classifier.py
+file:meta.py:
+  file:meta.py:
+    paths:
+    - ..\..\..\Zoo\meta.py
+    uri: file:meta.py
