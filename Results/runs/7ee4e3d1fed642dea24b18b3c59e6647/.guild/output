@@ -1,44 +1,0 @@
-INFO: [numexpr.utils] Note: NumExpr detected 12 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
-INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
-Loaded data
-Filtering samples
-There are 368 samples in total.
-The types and counts of different labels : 
- {0: 142, 2: 183, 3: 21, 1: 22}
-The types and counts of different labels as percentage of the total data : 
- {0: 0.39, 2: 0.5, 3: 0.06, 1: 0.06}
-Reducing dimensionality
-Padding data:   0%|          | 0/368 [00:00<?, ?it/s]Padding data:  29%|##9       | 108/368 [00:00<00:00, 1073.22it/s]Padding data:  59%|#####8    | 216/368 [00:00<00:00, 1074.35it/s]Padding data:  87%|########6 | 320/368 [00:00<00:00, 1063.74it/s]Padding data: 100%|##########| 368/368 [00:00<00:00, 1069.95it/s]
-Model: "model"
-_________________________________________________________________
-Layer (type)                 Output Shape              Param #   
-=================================================================
-input_1 (InputLayer)         [(None, 100, 60)]         0         
-_________________________________________________________________
-bl_1 (BL)                    (None, 120, 5)            12900     
-_________________________________________________________________
-activation_1 (Activation)    (None, 120, 5)            0         
-_________________________________________________________________
-dropout_1 (Dropout)          (None, 120, 5)            0         
-_________________________________________________________________
-bl_2 (BL)                    (None, 60, 2)             7330      
-_________________________________________________________________
-activation_2 (Activation)    (None, 60, 2)             0         
-_________________________________________________________________
-dropout_2 (Dropout)          (None, 60, 2)             0         
-_________________________________________________________________
-tabl (TABL)                  (None, 4)                 251       
-_________________________________________________________________
-activation_3 (Activation)    (None, 4)                 0         
-=================================================================
-Total params: 20,481
-Trainable params: 20,481
-Non-trainable params: 0
-_________________________________________________________________
-Epoch 1/2
-345/345 - 6s - loss: 1.6110
-Epoch 2/2
-345/345 - 4s - loss: 1.1276
-INFO: [tensorflow] Assets written to: model\assets
-Train f1_avg: 0.27663924160509634
-Test f1_avg: 0.2348346982308997

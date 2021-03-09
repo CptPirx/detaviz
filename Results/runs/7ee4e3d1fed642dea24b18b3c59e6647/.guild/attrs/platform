@@ -1,6 +1,0 @@
-architecture: 64bit WindowsPE
-cpus: 12
-processor: AMD64 Family 23 Model 1 Stepping 1, AuthenticAMD
-python_version: 3.8.5 (default, Sep  3 2020, 21:29:08) [MSC v.1916 64 bit (AMD64)]
-uname: Windows DESKTOP-15MS05H 10 10.0.19041 AMD64 AMD64 Family 23 Model 1 Stepping
-  1, AuthenticAMD

@@ -1,0 +1,1 @@
+{"n_feature_maps": {"default": 64, "type": "number", "arg-split": null}, "dev": {"default": true, "type": "boolean", "arg-split": null}, "$dest": "globals"}

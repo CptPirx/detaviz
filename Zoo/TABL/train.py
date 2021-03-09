@@ -3,7 +3,6 @@ import os
 # Tensorflow logging level
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
-# tf.get_logger().setLevel(2)
 
 # Use mixed precision
 # policy = mixed_precision.Policy('mixed_float16')
