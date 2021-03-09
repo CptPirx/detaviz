@@ -1,2 +1,0 @@
-dev=yes dimensionality=60 first_layer_size=256 horizon=1 learning_rate=0.001 n_layers=2
-  optimizer=adam window=100

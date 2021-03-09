@@ -1,84 +1,0 @@
-2021-03-08 18:51:11.364389: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cudart64_110.dll
-2021-03-08 18:51:14.679371: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
-2021-03-08 18:51:14.680320: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library nvcuda.dll
-2021-03-08 18:51:14.705404: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
-pciBusID: 0000:08:00.0 name: GeForce RTX 2060 SUPER computeCapability: 7.5
-coreClock: 1.665GHz coreCount: 34 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 417.29GiB/s
-2021-03-08 18:51:14.705678: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cudart64_110.dll
-2021-03-08 18:51:14.712739: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cublas64_11.dll
-2021-03-08 18:51:14.712845: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cublasLt64_11.dll
-2021-03-08 18:51:14.717291: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cufft64_10.dll
-2021-03-08 18:51:14.719333: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library curand64_10.dll
-2021-03-08 18:51:14.724267: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cusolver64_10.dll
-2021-03-08 18:51:14.727406: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cusparse64_11.dll
-2021-03-08 18:51:14.728536: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cudnn64_8.dll
-2021-03-08 18:51:14.728729: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0
-2021-03-08 18:51:15.166987: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
-INFO: [tensorflow] Mixed precision compatibility check (mixed_float16): OK
-Your GPU will likely run quickly with dtype policy mixed_float16 as it has compute capability of at least 7.0. Your GPU: GeForce RTX 2060 SUPER, compute capability 7.5
-WARNING: [tensorflow] From c:\users\blepo\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\python\keras\mixed_precision\loss_scale.py:56: DynamicLossScale.__init__ (from tensorflow.python.training.experimental.loss_scale) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use tf.keras.mixed_precision.LossScaleOptimizer instead. LossScaleOptimizer now has all the functionality of DynamicLossScale
-2021-03-08 18:51:15.168386: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2
-To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2021-03-08 18:51:15.169350: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
-pciBusID: 0000:08:00.0 name: GeForce RTX 2060 SUPER computeCapability: 7.5
-coreClock: 1.665GHz coreCount: 34 deviceMemorySize: 8.00GiB deviceMemoryBandwidth: 417.29GiB/s
-2021-03-08 18:51:15.169602: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cudart64_110.dll
-2021-03-08 18:51:15.169753: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cublas64_11.dll
-2021-03-08 18:51:15.169892: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cublasLt64_11.dll
-2021-03-08 18:51:15.170037: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cufft64_10.dll
-2021-03-08 18:51:15.170152: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library curand64_10.dll
-2021-03-08 18:51:15.170289: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cusolver64_10.dll
-2021-03-08 18:51:15.170380: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cusparse64_11.dll
-2021-03-08 18:51:15.170518: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cudnn64_8.dll
-2021-03-08 18:51:15.170637: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1862] Adding visible gpu devices: 0
-2021-03-08 18:51:15.747920: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1261] Device interconnect StreamExecutor with strength 1 edge matrix:
-2021-03-08 18:51:15.748129: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1267]      0 
-2021-03-08 18:51:15.748255: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1280] 0:   N 
-2021-03-08 18:51:15.748527: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1406] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 6640 MB memory) -> physical GPU (device: 0, name: GeForce RTX 2060 SUPER, pci bus id: 0000:08:00.0, compute capability: 7.5)
-2021-03-08 18:51:15.749328: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set
-INFO: [numexpr.utils] Note: NumExpr detected 12 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
-INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
-Loaded data
-Filtering samples
-There are 2042 samples in total.
-The types and counts of different labels : 
- {0: 1420, 1: 221, 2: 183, 3: 218}
-The types and counts of different labels as percentage of the total data : 
- {0: 0.7, 1: 0.11, 2: 0.09, 3: 0.11}
-Reducing dimensionality
-Padding data:   0%|          | 0/2042 [00:00<?, ?it/s]Padding data:   2%|1         | 39/2042 [00:00<00:05, 389.77it/s]Padding data:   4%|3         | 77/2042 [00:00<00:05, 384.47it/s]Padding data:   6%|5         | 113/2042 [00:00<00:05, 376.76it/s]Padding data:   7%|7         | 150/2042 [00:00<00:05, 374.68it/s]Padding data:   9%|9         | 189/2042 [00:00<00:04, 376.93it/s]Padding data:  11%|#1        | 226/2042 [00:00<00:04, 374.79it/s]Padding data:  13%|#2        | 265/2042 [00:00<00:04, 379.21it/s]Padding data:  15%|#4        | 306/2042 [00:00<00:04, 387.92it/s]Padding data:  17%|#7        | 348/2042 [00:00<00:04, 395.87it/s]Padding data:  19%|#9        | 390/2042 [00:01<00:04, 401.67it/s]Padding data:  21%|##1       | 432/2042 [00:01<00:03, 406.97it/s]Padding data:  23%|##3       | 473/2042 [00:01<00:03, 404.23it/s]Padding data:  25%|##5       | 513/2042 [00:01<00:03, 402.92it/s]Padding data:  27%|##7       | 553/2042 [00:01<00:03, 394.87it/s]Padding data:  29%|##9       | 595/2042 [00:01<00:03, 401.02it/s]Padding data:  31%|###1      | 640/2042 [00:01<00:03, 413.94it/s]Padding data:  34%|###3      | 686/2042 [00:01<00:03, 425.63it/s]Padding data:  36%|###5      | 730/2042 [00:01<00:03, 429.22it/s]Padding data:  38%|###8      | 776/2042 [00:01<00:02, 436.75it/s]Padding data:  40%|####      | 820/2042 [00:02<00:02, 437.69it/s]Padding data:  42%|####2     | 865/2042 [00:02<00:02, 439.99it/s]Padding data:  45%|####4     | 910/2042 [00:02<00:02, 440.31it/s]Padding data:  47%|####6     | 955/2042 [00:02<00:02, 441.83it/s]Padding data:  49%|####8     | 1000/2042 [00:02<00:02, 435.21it/s]Padding data:  51%|#####1    | 1044/2042 [00:02<00:02, 436.61it/s]Padding data:  53%|#####3    | 1090/2042 [00:02<00:02, 441.52it/s]Padding data:  56%|#####5    | 1135/2042 [00:02<00:02, 432.67it/s]Padding data:  58%|#####7    | 1179/2042 [00:02<00:02, 419.09it/s]Padding data:  60%|#####9    | 1222/2042 [00:02<00:02, 407.85it/s]Padding data:  62%|######1   | 1263/2042 [00:03<00:01, 402.45it/s]Padding data:  64%|######3   | 1305/2042 [00:03<00:01, 407.53it/s]Padding data:  66%|######6   | 1348/2042 [00:03<00:01, 412.80it/s]Padding data:  68%|######8   | 1391/2042 [00:03<00:01, 417.79it/s]Padding data:  70%|#######   | 1434/2042 [00:03<00:01, 418.89it/s]Padding data:  72%|#######2  | 1477/2042 [00:03<00:01, 420.89it/s]Padding data:  74%|#######4  | 1521/2042 [00:03<00:01, 425.18it/s]Padding data:  77%|#######6  | 1565/2042 [00:03<00:01, 429.48it/s]Padding data:  79%|#######8  | 1610/2042 [00:03<00:00, 435.42it/s]Padding data:  81%|########1 | 1655/2042 [00:03<00:00, 439.67it/s]Padding data:  83%|########3 | 1700/2042 [00:04<00:00, 441.37it/s]Padding data:  85%|########5 | 1745/2042 [00:04<00:00, 441.30it/s]Padding data:  88%|########7 | 1790/2042 [00:04<00:00, 439.94it/s]Padding data:  90%|########9 | 1835/2042 [00:04<00:00, 432.73it/s]Padding data:  92%|#########2| 1879/2042 [00:04<00:00, 431.01it/s]Padding data:  94%|#########4| 1924/2042 [00:04<00:00, 436.52it/s]Padding data:  96%|#########6| 1968/2042 [00:04<00:00, 429.83it/s]Padding data:  99%|#########8| 2012/2042 [00:04<00:00, 420.40it/s]Padding data: 100%|##########| 2042/2042 [00:04<00:00, 418.55it/s]
-WARNING: [tensorflow] tf.keras.mixed_precision.experimental.LossScaleOptimizer is deprecated. Please use tf.keras.mixed_precision.LossScaleOptimizer instead. Note that the non-experimental LossScaleOptimizer does not take a DynamicLossScale but instead takes the dynamic configuration directly in the constructor. For example:
-  opt = tf.keras.mixed_precision.experimental.LossScaleOptimizer(opt)
-
-Model: "model"
-_________________________________________________________________
-Layer (type)                 Output Shape              Param #   
-=================================================================
-input_1 (InputLayer)         [(None, 100, 60)]         0         
-_________________________________________________________________
-lstm (LSTM)                  (None, 100, 256)          324608    
-_________________________________________________________________
-batch_normalization (BatchNo (None, 100, 256)          1024      
-_________________________________________________________________
-lstm_1 (LSTM)                (None, 128)               197120    
-_________________________________________________________________
-batch_normalization_1 (Batch (None, 128)               512       
-_________________________________________________________________
-dense (Dense)                (None, 4)                 516       
-=================================================================
-Total params: 523,780
-Trainable params: 523,012
-Non-trainable params: 768
-_________________________________________________________________
-2021-03-08 18:52:39.115731: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:116] None of the MLIR optimization passes are enabled (registered 2)
-Epoch 1/2
-2021-03-08 18:52:43.315133: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cublas64_11.dll
-2021-03-08 18:52:44.213586: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cublasLt64_11.dll
-2021-03-08 18:52:44.297666: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library cudnn64_8.dll
-4388/4388 - 170s - loss: 0.9996
-Epoch 2/2
-4388/4388 - 165s - loss: 0.9656
-Train f1_avg: 0.20485456741254757
-Test f1_avg: 0.20476951755544714
