@@ -1,10 +1,10 @@
 import abc
 import numpy as np
+import pickle
 
 import evaluator
 
 import tensorflow.keras as k
-
 
 
 class Abstract_Classifier:
@@ -31,6 +31,9 @@ class Abstract_Classifier:
         :param epochs:
         :return:
         """
+        # Tensorboard Callback
+        tb_callback = k.callbacks.TensorBoard('./logs', update_freq=1)
+
         # Early stopping callback
         earlystop_callback = k.callbacks.EarlyStopping(
                 monitor='loss',
@@ -45,13 +48,14 @@ class Abstract_Classifier:
                                                                          factor=0.5,
                                                                          min_lr=0.0001)
 
-        self.model.fit(train_generator,
-                       epochs=epochs,
-                       callbacks=[earlystop_callback,
-                                  learning_rate_reduction_callback],
-                       use_multiprocessing=False,
-                       verbose=2,
-                       workers=8)
+        history = self.model.fit(train_generator,
+                                 epochs=epochs,
+                                 callbacks=[earlystop_callback,
+                                            learning_rate_reduction_callback,
+                                            tb_callback],
+                                 use_multiprocessing=False,
+                                 verbose=2,
+                                 workers=8)
 
         self.model.save("model")
 

@@ -1,16 +1,8 @@
 __doc__ = """
 Class emulating the HapTech device. 
 """
-
-import meta
-
 import numpy as np
-
-import math
 import time
-
-from sklearn.metrics import mean_squared_error
-from sklearn.preprocessing import MinMaxScaler
 
 
 class HapDev(object):

@@ -2,8 +2,6 @@ __doc__ = """
 Class emulating the sensor. Responsible for loading the data and sending it further.
 """
 
-from Data_loaders.robot_data_loader import get_dataset_numpy
-
 
 class Sensor(object):
     def __init__(self, axle_nr, buffer_size, dataset, dataset_labels):
