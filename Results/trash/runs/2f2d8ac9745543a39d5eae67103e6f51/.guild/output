@@ -1,0 +1,56 @@
+INFO: [queue] 2021-03-09 18:36:41 Waiting for staged runs
+INFO: [queue] 2021-03-09 18:37:21 Starting staged run 0593e6a46c484cbdb4f8e40c5900ae25
+INFO: [guild] Running trial 7bcaf79f9bfb4c80af04877906b0396f: TABL:train (attention_constraint=None, attention_regularizer=None, bl_dimensions={0: [120, 5], 1: [60, 2]}, dev=no, dimensionality=60, horizon=1, learning_rate=0.001, n_bl_layers=2, n_tabl_layers=1, optimizer=adam, projection_constraint=None, projection_regularizer=None, tabl_dimensions={0: [4, 1]}, window=100)
+Traceback (most recent call last):
+  File "C:\Users\au614889\PycharmProjects\anomaly_simulation\Results\runs\7bcaf79f9bfb4c80af04877906b0396f\.guild\sourcecode\TABL\train.py", line 5, in <module>
+    import tensorflow as tf
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\__init__.py", line 49, in <module>
+    from ._api.v2 import __internal__
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\_api\v2\__internal__\__init__.py", line 11, in <module>
+    from . import distribute
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\_api\v2\__internal__\distribute\__init__.py", line 10, in <module>
+    from . import combinations
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\_api\v2\__internal__\distribute\combinations\__init__.py", line 11, in <module>
+    from tensorflow.python.distribute.strategy_combinations import central_storage_strategy_with_gpu_and_cpu
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\python\distribute\strategy_combinations.py", line 202, in <module>
+    multi_worker_mirrored_2x1_cpu = combinations.NamedDistribution(
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\python\distribute\combinations.py", line 259, in __init__
+    cluster_spec = multi_worker_test_base.create_cluster_spec(
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\python\distribute\multi_worker_test_base.py", line 367, in create_cluster_spec
+    raise _portpicker_import_error  # pylint: disable=raising-bad-type
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\python\distribute\multi_worker_test_base.py", line 34, in <module>
+    import portpicker  # pylint: disable=g-import-not-at-top
+ModuleNotFoundError: No module named 'portpicker'
+ERROR: [guild] Trial 7bcaf79f9bfb4c80af04877906b0396f exited with an error (1) - see log for details
+INFO: [guild] Running trial 634c1825e31f4fd8a3a3751b69375192: TABL:train (attention_constraint=None, attention_regularizer=None, bl_dimensions={0: [120, 5], 1: [60, 2]}, dev=no, dimensionality=60, horizon=1, learning_rate=0.001, n_bl_layers=2, n_tabl_layers=1, optimizer=adam, projection_constraint=None, projection_regularizer=None, tabl_dimensions={0: [4, 1]}, window=200)
+INFO: [guild] Operation interrupted - waiting for process to exit
+ERROR: [guild] Trial 634c1825e31f4fd8a3a3751b69375192 exited with an error (-15) - see log for details
+INFO: [guild] Running trial 669d3f04adc64b4984ef3af15436f98b: TABL:train (attention_constraint=None, attention_regularizer=None, bl_dimensions={0: [120, 5], 1: [60, 2]}, dev=no, dimensionality=60, horizon=1, learning_rate=0.001, n_bl_layers=2, n_tabl_layers=1, optimizer=adam, projection_constraint=None, projection_regularizer=None, tabl_dimensions={0: [4, 1]}, window=500)
+Traceback (most recent call last):
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\runpy.py", line 194, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\op_main.py", line 33, in <module>
+    from guild import op_util
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\op_util.py", line 34, in <module>
+    from guild import guildfile
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\guildfile.py", line 29, in <module>
+    from guild import opref
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\opref.py", line 23, in <module>
+    from guild import util
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\util.py", line 25, in <module>
+    import shutil
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\shutil.py", line 41, in <module>
+    from grp import getgrnam
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 971, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 914, in _find_spec
+  File "<frozen importlib._bootstrap_external>", line 1342, in find_spec
+  File "<frozen importlib._bootstrap_external>", line 1314, in _get_spec
+  File "<frozen importlib._bootstrap_external>", line 1439, in find_spec
+  File "<frozen importlib._bootstrap_external>", line 87, in _path_stat
+KeyboardInterrupt
+INFO: [guild] Operation interrupted - waiting for process to exit
+ERROR: [guild] Trial 669d3f04adc64b4984ef3af15436f98b exited with an error (-15) - see log for details
+Operation interrupted - waiting for process to exit

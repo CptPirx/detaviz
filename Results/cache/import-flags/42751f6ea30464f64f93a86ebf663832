@@ -1,0 +1,1 @@
+{"n_layers": {"default": 2, "type": "number", "arg-split": null}, "start_size": {"default": 256, "type": "number", "arg-split": null}, "dev": {"default": true, "type": "boolean", "arg-split": null}, "$dest": "globals"}

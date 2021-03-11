@@ -1,0 +1,19 @@
+- c:\users\au614889\anaconda3\envs\anomaly_detection\python.exe
+- -um
+- guild.op_main
+- ResNet/train
+- --
+- --dev
+- 'false'
+- --dimensionality
+- '60'
+- --horizon
+- '1'
+- --learning_rate
+- '0.001'
+- --n_feature_maps
+- '64'
+- --optimizer
+- adam
+- --window
+- '[100, 200, 500]'

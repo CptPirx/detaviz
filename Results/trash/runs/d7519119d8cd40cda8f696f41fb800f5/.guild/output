@@ -1,0 +1,50 @@
+INFO: [queue] 2021-03-09 18:33:25 Waiting for staged runs
+INFO: [queue] 2021-03-09 18:34:04 Starting staged run 9b861b35ca7041c387c02cec64ca25fb
+Traceback (most recent call last):
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\runpy.py", line 194, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_main.py", line 40, in <module>
+    main()
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_main.py", line 26, in main
+    batch_util.handle_trials(batch_run, trials)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 63, in handle_trials
+    _run_trials(batch_run, trials)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 125, in _run_trials
+    trial_runs = _init_trial_runs(batch_run, trials)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 132, in _init_trial_runs
+    return [init_trial_run(batch_run, trial) for trial in trials]
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 132, in <listcomp>
+    return [init_trial_run(batch_run, trial) for trial in trials]
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 137, in init_trial_run
+    _link_to_trial(batch_run, run)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 155, in _link_to_trial
+    os.symlink(rel_trial_path, trial_link)
+OSError: [WinError 1314] A required privilege is not held by the client: '..\\ee87a8cb80b842a095b0eb6f45598baa' -> 'C:\\Users\\au614889\\PycharmProjects\\anomaly_simulation\\Results\\runs\\9b861b35ca7041c387c02cec64ca25fb\\ee87a8cb80b842a095b0eb6f45598baa'
+ERROR: [queue] 2021-03-09 18:34:35 9b861b35ca7041c387c02cec64ca25fb failed with exit code 1
+INFO: [queue] 2021-03-09 18:34:35 Starting staged run 598b07e5e1324ee087a18ca8f5f466af
+Traceback (most recent call last):
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\runpy.py", line 194, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_main.py", line 40, in <module>
+    main()
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_main.py", line 26, in main
+    batch_util.handle_trials(batch_run, trials)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 63, in handle_trials
+    _run_trials(batch_run, trials)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 125, in _run_trials
+    trial_runs = _init_trial_runs(batch_run, trials)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 132, in _init_trial_runs
+    return [init_trial_run(batch_run, trial) for trial in trials]
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 132, in <listcomp>
+    return [init_trial_run(batch_run, trial) for trial in trials]
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 137, in init_trial_run
+    _link_to_trial(batch_run, run)
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\batch_util.py", line 155, in _link_to_trial
+    os.symlink(rel_trial_path, trial_link)
+OSError: [WinError 1314] A required privilege is not held by the client: '..\\47fef06eb93449279d2af31b19c90eb8' -> 'C:\\Users\\au614889\\PycharmProjects\\anomaly_simulation\\Results\\runs\\598b07e5e1324ee087a18ca8f5f466af\\47fef06eb93449279d2af31b19c90eb8'
+ERROR: [queue] 2021-03-09 18:34:44 598b07e5e1324ee087a18ca8f5f466af failed with exit code 1
+INFO: [queue] 2021-03-09 18:34:44 Waiting for staged runs

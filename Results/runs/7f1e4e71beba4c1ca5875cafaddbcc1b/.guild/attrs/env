@@ -1,0 +1,80 @@
+ALLUSERSPROFILE: C:\ProgramData
+APPDATA: C:\Users\au614889\AppData\Roaming
+CMD_DIR: C:\Users\au614889\PycharmProjects\anomaly_simulation\Results\runs\76acac913e7d45da84d119f9dd13ee53
+COMMONPROGRAMFILES: C:\Program Files\Common Files
+COMMONPROGRAMFILES(X86): C:\Program Files (x86)\Common Files
+COMMONPROGRAMW6432: C:\Program Files\Common Files
+COMPUTERNAME: D28246
+COMSPEC: C:\WINDOWS\system32\cmd.exe
+CONDA_DEFAULT_ENV: anomaly_detection
+CONDA_PREFIX: C:\Users\au614889\Anaconda3\envs\anomaly_detection
+CONDA_PROMPT_MODIFIER: '(anomaly_detection) '
+CONDA_SHLVL: '1'
+CUDA_PATH: C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.0
+CUDA_PATH_V11_0: C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.0
+DEFLOGDIR: C:\ProgramData\McAfee\Endpoint Security\Logs
+DRIVERDATA: C:\Windows\System32\Drivers\DriverData
+FLAG_GPUS: ''
+FLAG_POLL_INTERVAL: '10'
+FLAG_RUN_ONCE: ''
+FLAG_WAIT_FOR_RUNNING: ''
+GUILD_HOME: C:\Users\au614889\PycharmProjects\anomaly_simulation\Results
+GUILD_OP: +
+GUILD_PLUGINS: ''
+GUILD_SOURCECODE: .guild\sourcecode
+HOMEDRIVE: 'U:'
+HOMEPATH: \
+HOMESHARE: \\uni.au.dk\users\au614889
+IDEA_INITIAL_DIRECTORY: \\uni.au.dk\Users\au614889\Desktop
+LANG: en_US.UTF-8
+LOCALAPPDATA: C:\Users\au614889\AppData\Local
+LOGONSERVER: \\DC15
+LOG_LEVEL: '20'
+MOZ_PLUGIN_PATH: C:\Program Files\Tracker Software\PDF Viewer\Win32\
+NO_IMPORT_FLAGS_PROGRESS: '1'
+NO_RESTARTING_MSG: '1'
+NUMBER_OF_PROCESSORS: '8'
+NVCUDASAMPLES11_0_ROOT: C:\ProgramData\NVIDIA Corporation\CUDA Samples\v11.0
+NVCUDASAMPLES_ROOT: C:\ProgramData\NVIDIA Corporation\CUDA Samples\v11.0
+ONEDRIVE: C:\Users\au614889\OneDrive
+ONEDRIVECONSUMER: C:\Users\au614889\OneDrive
+OS: Windows_NT
+PATH: C:\Users\au614889\Anaconda3\envs\anomaly_detection;C:\Users\au614889\Anaconda3\envs\anomaly_detection\Library\mingw-w64\bin;C:\Users\au614889\Anaconda3\envs\anomaly_detection\Library\usr\bin;C:\Users\au614889\Anaconda3\envs\anomaly_detection\Library\bin;C:\Users\au614889\Anaconda3\envs\anomaly_detection\Scripts;C:\Users\au614889\Anaconda3\envs\anomaly_detection\bin;C:\Users\au614889\Anaconda3\condabin;C:\Program
+  Files (x86)\VMware\VMware Workstation\bin;C:\Program Files\NVIDIA GPU Computing
+  Toolkit\CUDA\v11.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.0\libnvvp;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;C:\Program
+  Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA
+  NvDLISR;C:\Program Files\Git\cmd;C:\Program Files\Microsoft SQL Server\130\Tools\Binn;C:\Program
+  Files\NVIDIA Corporation\Nsight Compute 2020.1.2;C:\Program Files\dotnet;C:\Users\au614889\AppData\Local\Programs\Python\Python38-32\Scripts;C:\Users\au614889\AppData\Local\Programs\Python\Python38-32;C:\Users\au614889\Anaconda3;C:\Users\au614889\Anaconda3\Library\mingw-w64\bin;C:\Users\au614889\Anaconda3\Library\usr\bin;C:\Users\au614889\Anaconda3\Library\bin;C:\Users\au614889\Anaconda3\Scripts;C:\Users\au614889\AppData\Local\Microsoft\WindowsApps;C:\Program
+  Files\JetBrains\PyCharm 2020.2.2\bin;C:\Users\au614889\AppData\Local\Programs\Microsoft
+  VS Code\bin;C:\Users\au614889\.dotnet\tools
+PATHEXT: .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+PROCESSOR_ARCHITECTURE: AMD64
+PROCESSOR_IDENTIFIER: Intel64 Family 6 Model 158 Stepping 9, GenuineIntel
+PROCESSOR_LEVEL: '6'
+PROCESSOR_REVISION: '9e09'
+PROGRAMDATA: C:\ProgramData
+PROGRAMFILES: C:\Program Files
+PROGRAMFILES(X86): C:\Program Files (x86)
+PROGRAMW6432: C:\Program Files
+PROJECT_DIR: ''
+PROMPT: (anomaly_detection) $P$G
+PSMODULEPATH: C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules
+PUBLIC: C:\Users\Public
+PYCHARM: C:\Program Files\JetBrains\PyCharm 2020.2.2\bin;
+PYTHONPATH: .guild\sourcecode;c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\guild\external;c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages;c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages;C:\Users\au614889\PycharmProjects\anomaly_simulation\Results\runs\7f1e4e71beba4c1ca5875cafaddbcc1b\.guild\job-packages
+RUN_DIR: C:\Users\au614889\PycharmProjects\anomaly_simulation\Results\runs\7f1e4e71beba4c1ca5875cafaddbcc1b
+RUN_ID: 7f1e4e71beba4c1ca5875cafaddbcc1b
+SYNAPROGDIR: Synaptics\SynTP
+SYSTEMDRIVE: 'C:'
+SYSTEMROOT: C:\WINDOWS
+TEMP: C:\Users\au614889\AppData\Local\Temp
+TERMINAL_EMULATOR: JetBrains-JediTerm
+TMP: C:\Users\au614889\AppData\Local\Temp
+UATDATA: C:\WINDOWS\CCM\UATData\D9F8C395-CAB8-491d-B8AC-179A1FE1BE77
+USERDNSDOMAIN: UNI.AU.DK
+USERDOMAIN: UNI
+USERDOMAIN_ROAMINGPROFILE: UNI
+USERNAME: au614889
+USERPROFILE: C:\Users\au614889
+WINDIR: C:\WINDOWS
+__INTELLIJ_COMMAND_HISTFILE__: C:\Users\au614889\AppData\Roaming\JetBrains\PyCharm2020.3\terminal\history\history-1

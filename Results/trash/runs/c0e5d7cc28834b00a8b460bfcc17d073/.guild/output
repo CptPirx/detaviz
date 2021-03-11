@@ -1,0 +1,22 @@
+INFO: [tensorflow] Using local port 18948
+INFO: [tensorflow] Using local port 16733
+INFO: [tensorflow] Using local port 22416
+INFO: [tensorflow] Using local port 23539
+INFO: [tensorflow] Using local port 19144
+INFO: [tensorflow] Using local port 24967
+INFO: [tensorflow] Using local port 18906
+INFO: [tensorflow] Using local port 21194
+INFO: [tensorflow] Using local port 23303
+INFO: [tensorflow] Using local port 19323
+Traceback (most recent call last):
+  File "C:\Users\au614889\PycharmProjects\anomaly_simulation\Results\runs\c0e5d7cc28834b00a8b460bfcc17d073\.guild\sourcecode\ResNet\train.py", line 5, in <module>
+    import tensorflow as tf
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\__init__.py", line 49, in <module>
+    from ._api.v2 import __internal__
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\_api\v2\__internal__\__init__.py", line 11, in <module>
+    from . import distribute
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\_api\v2\__internal__\distribute\__init__.py", line 11, in <module>
+    from . import multi_process_runner
+  File "c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\_api\v2\__internal__\distribute\multi_process_runner\__init__.py", line 10, in <module>
+    from tensorflow.python.distribute.multi_process_runner import NotInitializedError
+ImportError: cannot import name 'NotInitializedError' from 'tensorflow.python.distribute.multi_process_runner' (c:\users\au614889\anaconda3\envs\anomaly_detection\lib\site-packages\tensorflow\python\distribute\multi_process_runner.py)

@@ -1,0 +1,8 @@
+INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
+Loaded data
+forrtl: error (200): program aborting due to control-C event
+Image              PC                Routine            Line        Source             
+libifcoremd.dll    00007FF8DD4E3B58  Unknown               Unknown  Unknown
+KERNELBASE.dll     00007FF9D97662A3  Unknown               Unknown  Unknown
+KERNEL32.DLL       00007FF9DB7F7C24  Unknown               Unknown  Unknown
+ntdll.dll          00007FF9DB94D721  Unknown               Unknown  Unknown
