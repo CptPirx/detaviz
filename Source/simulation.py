@@ -2,6 +2,21 @@ __doc__ = """
 Script responsible for running the entire simulation.
 """
 
+# Tensorflow logging level
+import os
+
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+
+# Use mixed precision
+# policy = mixed_precision.Policy('mixed_float16')
+# mixed_precision.set_policy(policy)
+
+# Allow memory growth
+physical_devices = tf.config.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
+
 import Zoo.meta as meta
 
 from sensor import Sensor
@@ -10,12 +25,9 @@ from hapDev import HapDev
 from Zoo.TABL.Layers import BL, TABL
 from Source.visualisation import plot_simulation_history
 
-import tensorflow as tf
-from tensorflow.keras.models import load_model
 from pathlib import Path
 
 import tqdm
-import os
 import aursad
 
 
@@ -57,7 +69,7 @@ def main():
             break
 
     # The model's window size
-    window = int(input('Enter the model window size.Default=100: ') or 100)
+    window = int(input('Enter the model window size.Default=500: ') or 500)
 
     # The model's prediction horizon
     horizon = int(input('Enter the horizon size. Default=1: ') or 1)
@@ -86,19 +98,20 @@ def main():
         else:
             break
 
-    dataset, dataset_labels, train_generator, test_generator = aursad.get_dataset_numpy(path=Path(meta.data_path),
-                                                                                        reduce_dimensionality=True,
-                                                                                        n_dimensions=n_dim,
-                                                                                        subsample_data=True,
-                                                                                        subsample_freq=2,
-                                                                                        pad_data=False,
-                                                                                        normal_samples=1,
-                                                                                        damaged_samples=1,
-                                                                                        assembly_samples=1,
-                                                                                        missing_samples=1,
-                                                                                        damaged_thread_samples=0,
-                                                                                        loosening_samples=0,
-                                                                                        drop_extra_columns=True)
+    _, _, test_x, test_y = aursad.get_dataset_numpy(path=Path(meta.data_path),
+                                                    reduce_dimensionality=True,
+                                                    n_dimensions=n_dim,
+                                                    subsample_data=True,
+                                                    subsample_freq=2,
+                                                    pad_data=False,
+                                                    normal_samples=1,
+                                                    damaged_samples=1,
+                                                    assembly_samples=1,
+                                                    missing_samples=1,
+                                                    damaged_thread_samples=0,
+                                                    loosening_samples=0,
+                                                    drop_extra_columns=True,
+                                                    onehot_labels=False)
 
     # Create the device
     device = HapDev(buffer_size=buffer,
@@ -108,7 +121,7 @@ def main():
                     threshold=threshold)
 
     # Create a sensor
-    sensor = Sensor(axle_nr=domain, buffer_size=buffer, dataset=dataset, dataset_labels=dataset_labels)
+    sensor = Sensor(axle_nr=domain, buffer_size=buffer, dataset=test_x, dataset_labels=test_y)
     device.add_sensor(sensor)
 
     # Load the ML model
@@ -116,9 +129,9 @@ def main():
         custom_objects = {'BL': BL,
                           'TABL': TABL,
                           'MaxNorm': tf.keras.constraints.max_norm}
-        model = load_model(Path(model_dir + '/model'), custom_objects=custom_objects)
+        model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'), custom_objects=custom_objects)
     else:
-        model = load_model(Path(model_dir + '/model'))
+        model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'))
 
     device.receive_model(model)
 
@@ -141,6 +154,7 @@ def main():
     plot_labels = dataset_labels[window:(cycle_count + window)]
 
     results_path = '../Results/' + model_source
+    Path(results_path).mkdir(parents=False, exist_ok=True)
     # Plot the results
     plot_simulation_history(sent_samples, plot_labels, errors, run_times, results_path, domain, cycle_count)
 
