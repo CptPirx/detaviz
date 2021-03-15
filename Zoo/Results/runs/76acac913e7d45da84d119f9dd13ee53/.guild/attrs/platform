@@ -1,5 +1,0 @@
-architecture: 64bit WindowsPE
-cpus: 8
-processor: Intel64 Family 6 Model 158 Stepping 9, GenuineIntel
-python_version: 3.8.5 (default, Sep  3 2020, 21:29:08) [MSC v.1916 64 bit (AMD64)]
-uname: Windows D28246 10 10.0.18362 AMD64 Intel64 Family 6 Model 158 Stepping 9, GenuineIntel

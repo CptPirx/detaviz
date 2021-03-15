@@ -1,4 +1,0 @@
-gpus: null
-poll-interval: 10
-run-once: false
-wait-for-running: false

@@ -1,0 +1,16 @@
+deps: []
+flag-null-labels: {}
+flags-extra: {}
+label-template: null
+op-cmd:
+  cmd-args:
+  - ${python_exe}
+  - -um
+  - guild.batch_main
+  cmd-env:
+    GUILD_PLUGINS: ''
+    PROJECT_DIR: ''
+  flags-dest: args
+output-scalars: null
+python-requires: null
+sourcecode-root: .guild/sourcecode

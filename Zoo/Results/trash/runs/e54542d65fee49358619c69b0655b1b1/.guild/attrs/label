@@ -1,2 +1,0 @@
-dev=no dimensionality=60 horizon=1 learning_rate=0.001 n_feature_maps=64 optimizer=adam
-  window=500

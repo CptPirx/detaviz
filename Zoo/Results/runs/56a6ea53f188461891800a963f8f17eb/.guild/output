@@ -1,0 +1,732 @@
+INFO: [guild] Running trial f3f53e6a18384204ac829fb2f5378243: TABL:train (attention_constraint=None, attention_regularizer=None, binarize=yes, dev=no, dimensionality=60, horizon=1, learning_rate=0.001, n_bl_layers=2, n_tabl_layers=1, optimizer=adam, projection_constraint=None, projection_regularizer=None, window=100)
+INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
+Loaded data
+Filtering samples
+There are 2042 samples in total.
+The types and counts of different labels : 
+ {0: 1420, 1: 221, 2: 183, 3: 218}
+The types and counts of different labels as percentage of the total data : 
+ {0: 0.7, 1: 0.11, 2: 0.09, 3: 0.11}
+Reducing dimensionality
+Padding data:   0%|          | 0/2042 [00:00<?, ?it/s]Padding data:   3%|▎         | 60/2042 [00:00<00:03, 591.23it/s]Padding data:   6%|▌         | 120/2042 [00:00<00:03, 590.68it/s]Padding data:   9%|▉         | 181/2042 [00:00<00:03, 597.10it/s]Padding data:  12%|█▏        | 241/2042 [00:00<00:03, 598.15it/s]Padding data:  15%|█▍        | 303/2042 [00:00<00:02, 602.60it/s]Padding data:  18%|█▊        | 364/2042 [00:00<00:02, 594.57it/s]Padding data:  21%|██        | 425/2042 [00:00<00:02, 599.09it/s]Padding data:  24%|██▍       | 486/2042 [00:00<00:02, 600.38it/s]Padding data:  27%|██▋       | 547/2042 [00:00<00:02, 601.70it/s]Padding data:  30%|██▉       | 609/2042 [00:01<00:02, 605.33it/s]Padding data:  33%|███▎      | 670/2042 [00:01<00:02, 601.68it/s]Padding data:  36%|███▌      | 732/2042 [00:01<00:02, 604.97it/s]Padding data:  39%|███▉      | 793/2042 [00:01<00:02, 603.05it/s]Padding data:  42%|████▏     | 855/2042 [00:01<00:01, 606.80it/s]Padding data:  45%|████▍     | 916/2042 [00:01<00:01, 599.64it/s]Padding data:  48%|████▊     | 977/2042 [00:01<00:01, 601.26it/s]Padding data:  51%|█████     | 1039/2042 [00:01<00:01, 604.72it/s]Padding data:  54%|█████▍    | 1101/2042 [00:01<00:01, 608.89it/s]Padding data:  57%|█████▋    | 1163/2042 [00:01<00:01, 610.96it/s]Padding data:  60%|█████▉    | 1225/2042 [00:02<00:01, 606.84it/s]Padding data:  63%|██████▎   | 1287/2042 [00:02<00:01, 608.53it/s]Padding data:  66%|██████▌   | 1349/2042 [00:02<00:01, 611.32it/s]Padding data:  69%|██████▉   | 1411/2042 [00:02<00:01, 603.33it/s]Padding data:  72%|███████▏  | 1472/2042 [00:02<00:00, 602.13it/s]Padding data:  75%|███████▌  | 1533/2042 [00:02<00:00, 602.30it/s]Padding data:  78%|███████▊  | 1594/2042 [00:02<00:00, 604.16it/s]Padding data:  81%|████████  | 1656/2042 [00:02<00:00, 607.65it/s]Padding data:  84%|████████▍ | 1719/2042 [00:02<00:00, 611.71it/s]Padding data:  87%|████████▋ | 1781/2042 [00:02<00:00, 612.62it/s]Padding data:  90%|█████████ | 1843/2042 [00:03<00:00, 610.04it/s]Padding data:  93%|█████████▎| 1905/2042 [00:03<00:00, 611.56it/s]Padding data:  96%|█████████▋| 1967/2042 [00:03<00:00, 610.75it/s]Padding data:  99%|█████████▉| 2029/2042 [00:03<00:00, 609.77it/s]Padding data: 100%|██████████| 2042/2042 [00:03<00:00, 605.20it/s]
+Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 100, 60)]         0         
+_________________________________________________________________
+bl_1 (BL)                    (None, 120, 5)            12900     
+_________________________________________________________________
+activation_1 (Activation)    (None, 120, 5)            0         
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 120, 5)            0         
+_________________________________________________________________
+bl_2 (BL)                    (None, 60, 2)             7330      
+_________________________________________________________________
+activation_2 (Activation)    (None, 60, 2)             0         
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 60, 2)             0         
+_________________________________________________________________
+tabl (TABL)                  (None, 2)                 129       
+_________________________________________________________________
+activation_3 (Activation)    (None, 2)                 0         
+=================================================================
+Total params: 20,359
+Trainable params: 20,359
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+4383/4383 - 26s - loss: 0.6414
+Epoch 2/100
+4383/4383 - 25s - loss: 0.5988
+Epoch 3/100
+4383/4383 - 25s - loss: 0.5755
+Epoch 4/100
+4383/4383 - 25s - loss: 0.5614
+Epoch 5/100
+4383/4383 - 25s - loss: 0.5558
+Epoch 6/100
+4383/4383 - 25s - loss: 0.5470
+Epoch 7/100
+4383/4383 - 26s - loss: 0.5430
+Epoch 8/100
+4383/4383 - 26s - loss: 0.5365
+Epoch 9/100
+4383/4383 - 26s - loss: 0.5334
+Epoch 10/100
+4383/4383 - 26s - loss: 0.5302
+Epoch 11/100
+4383/4383 - 26s - loss: 0.5219
+Epoch 12/100
+4383/4383 - 25s - loss: 0.5213
+Epoch 13/100
+4383/4383 - 26s - loss: 0.5161
+Epoch 14/100
+4383/4383 - 26s - loss: 0.5152
+Epoch 15/100
+4383/4383 - 26s - loss: 0.5125
+Epoch 16/100
+4383/4383 - 26s - loss: 0.5124
+Epoch 17/100
+4383/4383 - 26s - loss: 0.5104
+Epoch 18/100
+4383/4383 - 26s - loss: 0.5048
+Epoch 19/100
+4383/4383 - 26s - loss: 0.5040
+Epoch 20/100
+4383/4383 - 26s - loss: 0.5048
+Epoch 21/100
+4383/4383 - 26s - loss: 0.5026
+Epoch 22/100
+4383/4383 - 26s - loss: 0.5002
+Epoch 23/100
+4383/4383 - 26s - loss: 0.5006
+Epoch 24/100
+4383/4383 - 26s - loss: 0.4994
+Epoch 25/100
+4383/4383 - 26s - loss: 0.4968
+Epoch 26/100
+4383/4383 - 26s - loss: 0.4970
+Epoch 27/100
+4383/4383 - 26s - loss: 0.4950
+Epoch 28/100
+4383/4383 - 26s - loss: 0.4934
+Epoch 29/100
+4383/4383 - 25s - loss: 0.4943
+Epoch 30/100
+4383/4383 - 25s - loss: 0.4921
+Epoch 31/100
+4383/4383 - 26s - loss: 0.4939
+Epoch 32/100
+4383/4383 - 26s - loss: 0.4923
+Epoch 33/100
+4383/4383 - 25s - loss: 0.4902
+Epoch 34/100
+4383/4383 - 25s - loss: 0.4901
+Epoch 35/100
+4383/4383 - 25s - loss: 0.4906
+Epoch 36/100
+4383/4383 - 25s - loss: 0.4879
+Epoch 37/100
+4383/4383 - 25s - loss: 0.4915
+Epoch 38/100
+4383/4383 - 25s - loss: 0.4881
+Epoch 39/100
+4383/4383 - 26s - loss: 0.4881
+Epoch 40/100
+4383/4383 - 25s - loss: 0.4851
+Epoch 41/100
+4383/4383 - 25s - loss: 0.4854
+Epoch 42/100
+4383/4383 - 26s - loss: 0.4830
+Epoch 43/100
+4383/4383 - 26s - loss: 0.4837
+Epoch 44/100
+4383/4383 - 26s - loss: 0.4837
+Epoch 45/100
+4383/4383 - 25s - loss: 0.4836
+Epoch 46/100
+4383/4383 - 25s - loss: 0.4833
+
+Epoch 00046: ReduceLROnPlateau reducing learning rate to 0.0005000000237487257.
+Epoch 47/100
+4383/4383 - 25s - loss: 0.4708
+Epoch 48/100
+4383/4383 - 25s - loss: 0.4663
+Epoch 49/100
+4383/4383 - 26s - loss: 0.4658
+Epoch 50/100
+4383/4383 - 25s - loss: 0.4658
+Epoch 51/100
+4383/4383 - 25s - loss: 0.4664
+Epoch 52/100
+4383/4383 - 26s - loss: 0.4653
+Epoch 53/100
+4383/4383 - 26s - loss: 0.4644
+Epoch 54/100
+4383/4383 - 26s - loss: 0.4635
+Epoch 55/100
+4383/4383 - 26s - loss: 0.4638
+Epoch 56/100
+4383/4383 - 26s - loss: 0.4628
+Epoch 57/100
+4383/4383 - 26s - loss: 0.4649
+Epoch 58/100
+4383/4383 - 26s - loss: 0.4629
+Epoch 59/100
+4383/4383 - 26s - loss: 0.4638
+Epoch 60/100
+4383/4383 - 26s - loss: 0.4603
+Epoch 61/100
+4383/4383 - 26s - loss: 0.4629
+Epoch 62/100
+4383/4383 - 26s - loss: 0.4618
+Epoch 63/100
+4383/4383 - 26s - loss: 0.4624
+Epoch 64/100
+4383/4383 - 26s - loss: 0.4613
+
+Epoch 00064: ReduceLROnPlateau reducing learning rate to 0.0002500000118743628.
+Epoch 65/100
+4383/4383 - 26s - loss: 0.4532
+Epoch 66/100
+4383/4383 - 25s - loss: 0.4520
+Epoch 67/100
+4383/4383 - 25s - loss: 0.4527
+Epoch 68/100
+4383/4383 - 25s - loss: 0.4525
+Epoch 69/100
+4383/4383 - 25s - loss: 0.4516
+Epoch 70/100
+4383/4383 - 26s - loss: 0.4521
+Epoch 71/100
+4383/4383 - 26s - loss: 0.4520
+Epoch 72/100
+4383/4383 - 26s - loss: 0.4515
+Epoch 73/100
+4383/4383 - 26s - loss: 0.4515
+Epoch 74/100
+4383/4383 - 26s - loss: 0.4514
+Epoch 75/100
+4383/4383 - 26s - loss: 0.4498
+Epoch 76/100
+4383/4383 - 26s - loss: 0.4510
+Epoch 77/100
+4383/4383 - 26s - loss: 0.4503
+Epoch 78/100
+4383/4383 - 26s - loss: 0.4506
+Epoch 79/100
+4383/4383 - 26s - loss: 0.4510
+
+Epoch 00079: ReduceLROnPlateau reducing learning rate to 0.0001250000059371814.
+Epoch 80/100
+4383/4383 - 26s - loss: 0.4462
+Epoch 81/100
+4383/4383 - 26s - loss: 0.4446
+Epoch 82/100
+4383/4383 - 26s - loss: 0.4459
+Epoch 83/100
+4383/4383 - 26s - loss: 0.4449
+Epoch 84/100
+4383/4383 - 26s - loss: 0.4451
+Epoch 85/100
+4383/4383 - 26s - loss: 0.4439
+Epoch 86/100
+4383/4383 - 26s - loss: 0.4447
+Epoch 87/100
+4383/4383 - 26s - loss: 0.4445
+Epoch 88/100
+4383/4383 - 26s - loss: 0.4444
+Epoch 89/100
+4383/4383 - 26s - loss: 0.4450
+
+Epoch 00089: ReduceLROnPlateau reducing learning rate to 0.0001.
+Epoch 90/100
+4383/4383 - 26s - loss: 0.4436
+Epoch 91/100
+4383/4383 - 26s - loss: 0.4431
+Epoch 92/100
+4383/4383 - 26s - loss: 0.4427
+Epoch 93/100
+4383/4383 - 26s - loss: 0.4429
+Epoch 94/100
+4383/4383 - 26s - loss: 0.4438
+Epoch 95/100
+4383/4383 - 26s - loss: 0.4432
+Epoch 96/100
+4383/4383 - 25s - loss: 0.4434
+Epoch 97/100
+4383/4383 - 25s - loss: 0.4427
+Epoch 98/100
+4383/4383 - 25s - loss: 0.4428
+INFO: [tensorflow] Assets written to: model/assets
+Train f1_avg: 0.73215481231848
+Test f1_avg: 0.7066868244159743
+INFO: [guild] Running trial 98538a253d0d477caabc7b18137e4d54: TABL:train (attention_constraint=None, attention_regularizer=None, binarize=yes, dev=no, dimensionality=60, horizon=1, learning_rate=0.001, n_bl_layers=2, n_tabl_layers=1, optimizer=adam, projection_constraint=None, projection_regularizer=None, window=200)
+INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
+Loaded data
+Filtering samples
+There are 2042 samples in total.
+The types and counts of different labels : 
+ {0: 1420, 1: 221, 2: 183, 3: 218}
+The types and counts of different labels as percentage of the total data : 
+ {0: 0.7, 1: 0.11, 2: 0.09, 3: 0.11}
+Reducing dimensionality
+Padding data:   0%|          | 0/2042 [00:00<?, ?it/s]Padding data:   3%|▎         | 60/2042 [00:00<00:03, 596.10it/s]Padding data:   6%|▌         | 121/2042 [00:00<00:03, 603.99it/s]Padding data:   9%|▉         | 182/2042 [00:00<00:03, 602.91it/s]Padding data:  12%|█▏        | 243/2042 [00:00<00:02, 601.31it/s]Padding data:  15%|█▍        | 304/2042 [00:00<00:02, 603.48it/s]Padding data:  18%|█▊        | 366/2042 [00:00<00:02, 606.24it/s]Padding data:  21%|██        | 427/2042 [00:00<00:02, 606.57it/s]Padding data:  24%|██▍       | 488/2042 [00:00<00:02, 604.39it/s]Padding data:  27%|██▋       | 550/2042 [00:00<00:02, 606.78it/s]Padding data:  30%|███       | 613/2042 [00:01<00:02, 611.94it/s]Padding data:  33%|███▎      | 675/2042 [00:01<00:02, 612.99it/s]Padding data:  36%|███▌      | 737/2042 [00:01<00:02, 610.51it/s]Padding data:  39%|███▉      | 799/2042 [00:01<00:02, 611.36it/s]Padding data:  42%|████▏     | 861/2042 [00:01<00:01, 610.93it/s]Padding data:  45%|████▌     | 923/2042 [00:01<00:01, 611.07it/s]Padding data:  48%|████▊     | 985/2042 [00:01<00:01, 612.14it/s]Padding data:  51%|█████▏    | 1048/2042 [00:01<00:01, 614.67it/s]Padding data:  54%|█████▍    | 1110/2042 [00:01<00:01, 613.61it/s]Padding data:  57%|█████▋    | 1172/2042 [00:01<00:01, 613.97it/s]Padding data:  60%|██████    | 1235/2042 [00:02<00:01, 616.43it/s]Padding data:  64%|██████▎   | 1297/2042 [00:02<00:01, 616.73it/s]Padding data:  67%|██████▋   | 1360/2042 [00:02<00:01, 618.51it/s]Padding data:  70%|██████▉   | 1422/2042 [00:02<00:01, 615.37it/s]Padding data:  73%|███████▎  | 1484/2042 [00:02<00:00, 614.83it/s]Padding data:  76%|███████▌  | 1546/2042 [00:02<00:00, 613.03it/s]Padding data:  79%|███████▊  | 1608/2042 [00:02<00:00, 613.79it/s]Padding data:  82%|████████▏ | 1671/2042 [00:02<00:00, 615.69it/s]Padding data:  85%|████████▍ | 1733/2042 [00:02<00:00, 614.41it/s]Padding data:  88%|████████▊ | 1796/2042 [00:02<00:00, 617.95it/s]Padding data:  91%|█████████ | 1858/2042 [00:03<00:00, 615.47it/s]Padding data:  94%|█████████▍| 1920/2042 [00:03<00:00, 614.30it/s]Padding data:  97%|█████████▋| 1982/2042 [00:03<00:00, 614.33it/s]Padding data: 100%|██████████| 2042/2042 [00:03<00:00, 611.95it/s]
+Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 200, 60)]         0         
+_________________________________________________________________
+bl_1 (BL)                    (None, 120, 5)            24900     
+_________________________________________________________________
+activation_1 (Activation)    (None, 120, 5)            0         
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 120, 5)            0         
+_________________________________________________________________
+bl_2 (BL)                    (None, 60, 2)             7330      
+_________________________________________________________________
+activation_2 (Activation)    (None, 60, 2)             0         
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 60, 2)             0         
+_________________________________________________________________
+tabl (TABL)                  (None, 2)                 129       
+_________________________________________________________________
+activation_3 (Activation)    (None, 2)                 0         
+=================================================================
+Total params: 32,359
+Trainable params: 32,359
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+4383/4383 - 37s - loss: 0.6581
+Epoch 2/100
+4383/4383 - 36s - loss: 0.5983
+Epoch 3/100
+4383/4383 - 36s - loss: 0.5829
+Epoch 4/100
+4383/4383 - 36s - loss: 0.5723
+Epoch 5/100
+4383/4383 - 37s - loss: 0.5622
+Epoch 6/100
+4383/4383 - 36s - loss: 0.5556
+Epoch 7/100
+4383/4383 - 36s - loss: 0.5480
+Epoch 8/100
+4383/4383 - 36s - loss: 0.5410
+Epoch 9/100
+4383/4383 - 36s - loss: 0.5351
+Epoch 10/100
+4383/4383 - 37s - loss: 0.5270
+Epoch 11/100
+4383/4383 - 37s - loss: 0.5229
+Epoch 12/100
+4383/4383 - 36s - loss: 0.5194
+Epoch 13/100
+4383/4383 - 37s - loss: 0.5153
+Epoch 14/100
+4383/4383 - 37s - loss: 0.5094
+Epoch 15/100
+4383/4383 - 37s - loss: 0.5107
+Epoch 16/100
+4383/4383 - 36s - loss: 0.5043
+Epoch 17/100
+4383/4383 - 37s - loss: 0.5013
+Epoch 18/100
+4383/4383 - 37s - loss: 0.5017
+Epoch 19/100
+4383/4383 - 37s - loss: 0.4999
+Epoch 20/100
+4383/4383 - 37s - loss: 0.4968
+Epoch 21/100
+4383/4383 - 37s - loss: 0.4922
+Epoch 22/100
+4383/4383 - 37s - loss: 0.4914
+Epoch 23/100
+4383/4383 - 37s - loss: 0.4917
+Epoch 24/100
+4383/4383 - 37s - loss: 0.4916
+Epoch 25/100
+4383/4383 - 37s - loss: 0.4868
+Epoch 26/100
+4383/4383 - 37s - loss: 0.4866
+Epoch 27/100
+4383/4383 - 37s - loss: 0.4846
+Epoch 28/100
+4383/4383 - 36s - loss: 0.4819
+Epoch 29/100
+4383/4383 - 37s - loss: 0.4819
+Epoch 30/100
+4383/4383 - 37s - loss: 0.4826
+Epoch 31/100
+4383/4383 - 37s - loss: 0.4772
+Epoch 32/100
+4383/4383 - 37s - loss: 0.4758
+Epoch 33/100
+4383/4383 - 37s - loss: 0.4741
+Epoch 34/100
+4383/4383 - 37s - loss: 0.4728
+Epoch 35/100
+4383/4383 - 37s - loss: 0.4740
+Epoch 36/100
+4383/4383 - 36s - loss: 0.4716
+Epoch 37/100
+4383/4383 - 36s - loss: 0.4716
+Epoch 38/100
+4383/4383 - 37s - loss: 0.4676
+Epoch 39/100
+4383/4383 - 36s - loss: 0.4648
+Epoch 40/100
+4383/4383 - 36s - loss: 0.4678
+Epoch 41/100
+4383/4383 - 36s - loss: 0.4667
+Epoch 42/100
+4383/4383 - 36s - loss: 0.4660
+Epoch 43/100
+4383/4383 - 36s - loss: 0.4640
+Epoch 44/100
+4383/4383 - 36s - loss: 0.4632
+Epoch 45/100
+4383/4383 - 36s - loss: 0.4603
+Epoch 46/100
+4383/4383 - 36s - loss: 0.4604
+Epoch 47/100
+4383/4383 - 36s - loss: 0.4578
+Epoch 48/100
+4383/4383 - 36s - loss: 0.4578
+Epoch 49/100
+4383/4383 - 36s - loss: 0.4560
+Epoch 50/100
+4383/4383 - 36s - loss: 0.4561
+Epoch 51/100
+4383/4383 - 36s - loss: 0.4542
+Epoch 52/100
+4383/4383 - 36s - loss: 0.4545
+Epoch 53/100
+4383/4383 - 36s - loss: 0.4574
+Epoch 54/100
+4383/4383 - 36s - loss: 0.4533
+Epoch 55/100
+4383/4383 - 36s - loss: 0.4548
+Epoch 56/100
+4383/4383 - 36s - loss: 0.4528
+Epoch 57/100
+4383/4383 - 36s - loss: 0.4543
+Epoch 58/100
+4383/4383 - 36s - loss: 0.4525
+Epoch 59/100
+4383/4383 - 36s - loss: 0.4525
+Epoch 60/100
+4383/4383 - 36s - loss: 0.4492
+Epoch 61/100
+4383/4383 - 36s - loss: 0.4516
+Epoch 62/100
+4383/4383 - 36s - loss: 0.4491
+Epoch 63/100
+4383/4383 - 36s - loss: 0.4493
+Epoch 64/100
+4383/4383 - 36s - loss: 0.4484
+Epoch 65/100
+4383/4383 - 36s - loss: 0.4516
+Epoch 66/100
+4383/4383 - 36s - loss: 0.4456
+Epoch 67/100
+4383/4383 - 36s - loss: 0.4457
+Epoch 68/100
+4383/4383 - 36s - loss: 0.4467
+Epoch 69/100
+4383/4383 - 36s - loss: 0.4486
+Epoch 70/100
+4383/4383 - 36s - loss: 0.4459
+
+Epoch 00070: ReduceLROnPlateau reducing learning rate to 0.0005000000237487257.
+Epoch 71/100
+4383/4383 - 36s - loss: 0.4291
+Epoch 72/100
+4383/4383 - 36s - loss: 0.4257
+Epoch 73/100
+4383/4383 - 37s - loss: 0.4247
+Epoch 74/100
+4383/4383 - 36s - loss: 0.4259
+Epoch 75/100
+4383/4383 - 36s - loss: 0.4260
+Epoch 76/100
+4383/4383 - 36s - loss: 0.4236
+Epoch 77/100
+4383/4383 - 36s - loss: 0.4236
+Epoch 78/100
+4383/4383 - 36s - loss: 0.4228
+Epoch 79/100
+4383/4383 - 36s - loss: 0.4230
+Epoch 80/100
+4383/4383 - 36s - loss: 0.4223
+Epoch 81/100
+4383/4383 - 36s - loss: 0.4227
+Epoch 82/100
+4383/4383 - 36s - loss: 0.4225
+Epoch 83/100
+4383/4383 - 36s - loss: 0.4225
+Epoch 84/100
+4383/4383 - 36s - loss: 0.4179
+Epoch 85/100
+4383/4383 - 36s - loss: 0.4214
+Epoch 86/100
+4383/4383 - 36s - loss: 0.4214
+Epoch 87/100
+4383/4383 - 36s - loss: 0.4221
+Epoch 88/100
+4383/4383 - 37s - loss: 0.4212
+
+Epoch 00088: ReduceLROnPlateau reducing learning rate to 0.0002500000118743628.
+Epoch 89/100
+4383/4383 - 36s - loss: 0.4115
+Epoch 90/100
+4383/4383 - 36s - loss: 0.4106
+Epoch 91/100
+4383/4383 - 36s - loss: 0.4102
+Epoch 92/100
+4383/4383 - 36s - loss: 0.4098
+Epoch 93/100
+4383/4383 - 36s - loss: 0.4098
+Epoch 94/100
+4383/4383 - 36s - loss: 0.4089
+Epoch 95/100
+4383/4383 - 36s - loss: 0.4101
+Epoch 96/100
+4383/4383 - 36s - loss: 0.4086
+Epoch 97/100
+4383/4383 - 36s - loss: 0.4090
+Epoch 98/100
+4383/4383 - 37s - loss: 0.4088
+Epoch 99/100
+4383/4383 - 36s - loss: 0.4078
+Epoch 100/100
+4383/4383 - 36s - loss: 0.4100
+INFO: [tensorflow] Assets written to: model/assets
+Train f1_avg: 0.7480119024330312
+Test f1_avg: 0.7110678404471908
+INFO: [guild] Running trial 27760a9c70ff4042931ceb142a3f651e: TABL:train (attention_constraint=None, attention_regularizer=None, binarize=yes, dev=no, dimensionality=60, horizon=1, learning_rate=0.001, n_bl_layers=2, n_tabl_layers=1, optimizer=adam, projection_constraint=None, projection_regularizer=None, window=500)
+INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
+Loaded data
+Filtering samples
+There are 2042 samples in total.
+The types and counts of different labels : 
+ {0: 1420, 1: 221, 2: 183, 3: 218}
+The types and counts of different labels as percentage of the total data : 
+ {0: 0.7, 1: 0.11, 2: 0.09, 3: 0.11}
+Reducing dimensionality
+Padding data:   0%|          | 0/2042 [00:00<?, ?it/s]Padding data:   3%|▎         | 60/2042 [00:00<00:03, 598.11it/s]Padding data:   6%|▌         | 122/2042 [00:00<00:03, 609.65it/s]Padding data:   9%|▉         | 184/2042 [00:00<00:03, 610.07it/s]Padding data:  12%|█▏        | 246/2042 [00:00<00:02, 611.68it/s]Padding data:  15%|█▌        | 308/2042 [00:00<00:02, 611.34it/s]Padding data:  18%|█▊        | 370/2042 [00:00<00:02, 607.17it/s]Padding data:  21%|██        | 431/2042 [00:00<00:02, 603.01it/s]Padding data:  24%|██▍       | 492/2042 [00:00<00:02, 603.11it/s]Padding data:  27%|██▋       | 553/2042 [00:00<00:02, 603.68it/s]Padding data:  30%|███       | 614/2042 [00:01<00:02, 599.14it/s]Padding data:  33%|███▎      | 674/2042 [00:01<00:02, 595.15it/s]Padding data:  36%|███▌      | 735/2042 [00:01<00:02, 597.32it/s]Padding data:  39%|███▉      | 796/2042 [00:01<00:02, 600.66it/s]Padding data:  42%|████▏     | 858/2042 [00:01<00:01, 604.33it/s]Padding data:  45%|████▌     | 919/2042 [00:01<00:01, 605.69it/s]Padding data:  48%|████▊     | 981/2042 [00:01<00:01, 608.70it/s]Padding data:  51%|█████     | 1042/2042 [00:01<00:01, 608.76it/s]Padding data:  54%|█████▍    | 1103/2042 [00:01<00:01, 600.56it/s]Padding data:  57%|█████▋    | 1166/2042 [00:01<00:01, 607.57it/s]Padding data:  60%|██████    | 1228/2042 [00:02<00:01, 609.11it/s]Padding data:  63%|██████▎   | 1291/2042 [00:02<00:01, 614.21it/s]Padding data:  66%|██████▋   | 1353/2042 [00:02<00:01, 613.00it/s]Padding data:  69%|██████▉   | 1415/2042 [00:02<00:01, 612.31it/s]Padding data:  72%|███████▏  | 1477/2042 [00:02<00:00, 612.18it/s]Padding data:  75%|███████▌  | 1539/2042 [00:02<00:00, 612.49it/s]Padding data:  78%|███████▊  | 1602/2042 [00:02<00:00, 615.42it/s]Padding data:  82%|████████▏ | 1665/2042 [00:02<00:00, 617.93it/s]Padding data:  85%|████████▍ | 1727/2042 [00:02<00:00, 616.15it/s]Padding data:  88%|████████▊ | 1789/2042 [00:02<00:00, 612.67it/s]Padding data:  91%|█████████ | 1851/2042 [00:03<00:00, 609.82it/s]Padding data:  94%|█████████▎| 1912/2042 [00:03<00:00, 606.92it/s]Padding data:  97%|█████████▋| 1973/2042 [00:03<00:00, 607.72it/s]Padding data: 100%|█████████▉| 2034/2042 [00:03<00:00, 608.04it/s]Padding data: 100%|██████████| 2042/2042 [00:03<00:00, 607.75it/s]
+Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 500, 60)]         0         
+_________________________________________________________________
+bl_1 (BL)                    (None, 120, 5)            60900     
+_________________________________________________________________
+activation_1 (Activation)    (None, 120, 5)            0         
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 120, 5)            0         
+_________________________________________________________________
+bl_2 (BL)                    (None, 60, 2)             7330      
+_________________________________________________________________
+activation_2 (Activation)    (None, 60, 2)             0         
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 60, 2)             0         
+_________________________________________________________________
+tabl (TABL)                  (None, 2)                 129       
+_________________________________________________________________
+activation_3 (Activation)    (None, 2)                 0         
+=================================================================
+Total params: 68,359
+Trainable params: 68,359
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+4382/4382 - 85s - loss: 0.7271
+Epoch 2/100
+4382/4382 - 82s - loss: 0.5804
+Epoch 3/100
+4382/4382 - 82s - loss: 0.5676
+Epoch 4/100
+4382/4382 - 81s - loss: 0.5579
+Epoch 5/100
+4382/4382 - 82s - loss: 0.5429
+Epoch 6/100
+4382/4382 - 82s - loss: 0.5361
+Epoch 7/100
+4382/4382 - 82s - loss: 0.5274
+Epoch 8/100
+4382/4382 - 81s - loss: 0.5189
+Epoch 9/100
+4382/4382 - 80s - loss: 0.5097
+Epoch 10/100
+4382/4382 - 78s - loss: 0.5021
+Epoch 11/100
+4382/4382 - 77s - loss: 0.4945
+Epoch 12/100
+4382/4382 - 80s - loss: 0.4898
+Epoch 13/100
+4382/4382 - 78s - loss: 0.4847
+Epoch 14/100
+4382/4382 - 78s - loss: 0.4835
+Epoch 15/100
+4382/4382 - 80s - loss: 0.4789
+Epoch 16/100
+4382/4382 - 79s - loss: 0.4734
+Epoch 17/100
+4382/4382 - 78s - loss: 0.4707
+Epoch 18/100
+4382/4382 - 79s - loss: 0.4664
+Epoch 19/100
+4382/4382 - 79s - loss: 0.4669
+Epoch 20/100
+4382/4382 - 79s - loss: 0.4624
+Epoch 21/100
+4382/4382 - 77s - loss: 0.4584
+Epoch 22/100
+4382/4382 - 76s - loss: 0.4541
+Epoch 23/100
+4382/4382 - 76s - loss: 0.4517
+Epoch 24/100
+4382/4382 - 77s - loss: 0.4504
+Epoch 25/100
+4382/4382 - 77s - loss: 0.4459
+Epoch 26/100
+4382/4382 - 79s - loss: 0.4445
+Epoch 27/100
+4382/4382 - 78s - loss: 0.4420
+Epoch 28/100
+4382/4382 - 78s - loss: 0.4424
+Epoch 29/100
+4382/4382 - 78s - loss: 0.4429
+Epoch 30/100
+4382/4382 - 77s - loss: 0.4395
+Epoch 31/100
+4382/4382 - 77s - loss: 0.4357
+Epoch 32/100
+4382/4382 - 77s - loss: 0.4373
+Epoch 33/100
+4382/4382 - 77s - loss: 0.4348
+Epoch 34/100
+4382/4382 - 77s - loss: 0.4327
+Epoch 35/100
+4382/4382 - 77s - loss: 0.4307
+Epoch 36/100
+4382/4382 - 77s - loss: 0.4301
+Epoch 37/100
+4382/4382 - 77s - loss: 0.4277
+Epoch 38/100
+4382/4382 - 76s - loss: 0.4254
+Epoch 39/100
+4382/4382 - 77s - loss: 0.4280
+Epoch 40/100
+4382/4382 - 75s - loss: 0.4250
+Epoch 41/100
+4382/4382 - 76s - loss: 0.4262
+Epoch 42/100
+4382/4382 - 76s - loss: 0.4242
+Epoch 43/100
+4382/4382 - 76s - loss: 0.4219
+Epoch 44/100
+4382/4382 - 76s - loss: 0.4220
+Epoch 45/100
+4382/4382 - 76s - loss: 0.4179
+Epoch 46/100
+4382/4382 - 76s - loss: 0.4203
+Epoch 47/100
+4382/4382 - 76s - loss: 0.4218
+Epoch 48/100
+4382/4382 - 76s - loss: 0.4188
+Epoch 49/100
+4382/4382 - 76s - loss: 0.4169
+Epoch 50/100
+4382/4382 - 77s - loss: 0.4139
+Epoch 51/100
+4382/4382 - 76s - loss: 0.4149
+Epoch 52/100
+4382/4382 - 76s - loss: 0.4145
+Epoch 53/100
+4382/4382 - 76s - loss: 0.4155
+Epoch 54/100
+4382/4382 - 75s - loss: 0.4102
+Epoch 55/100
+4382/4382 - 75s - loss: 0.4125
+Epoch 56/100
+4382/4382 - 76s - loss: 0.4138
+Epoch 57/100
+4382/4382 - 75s - loss: 0.4089
+Epoch 58/100
+4382/4382 - 75s - loss: 0.4096
+Epoch 59/100
+4382/4382 - 78s - loss: 0.4085
+Epoch 60/100
+4382/4382 - 78s - loss: 0.4124
+Epoch 61/100
+4382/4382 - 79s - loss: 0.4064
+Epoch 62/100
+4382/4382 - 78s - loss: 0.4083
+Epoch 63/100
+4382/4382 - 79s - loss: 0.4058
+Epoch 64/100
+4382/4382 - 78s - loss: 0.4058
+Epoch 65/100
+4382/4382 - 78s - loss: 0.4072
+Epoch 66/100
+4382/4382 - 78s - loss: 0.4026
+Epoch 67/100
+4382/4382 - 78s - loss: 0.4007
+Epoch 68/100
+4382/4382 - 78s - loss: 0.4047
+Epoch 69/100
+4382/4382 - 78s - loss: 0.4005
+Epoch 70/100
+4382/4382 - 78s - loss: 0.4010
+Epoch 71/100
+4382/4382 - 79s - loss: 0.4013
+Epoch 72/100
+4382/4382 - 79s - loss: 0.4022
+Epoch 73/100
+4382/4382 - 79s - loss: 0.4023
+
+Epoch 00073: ReduceLROnPlateau reducing learning rate to 0.0005000000237487257.
+Epoch 74/100
+4382/4382 - 78s - loss: 0.3803
+Epoch 75/100
+4382/4382 - 79s - loss: 0.3784
+Epoch 76/100
+4382/4382 - 78s - loss: 0.3789
+Epoch 77/100
+4382/4382 - 77s - loss: 0.3780
+Epoch 78/100
+4382/4382 - 77s - loss: 0.3763
+Epoch 79/100
+4382/4382 - 77s - loss: 0.3767
+Epoch 80/100
+4382/4382 - 78s - loss: 0.3752
+Epoch 81/100
+4382/4382 - 78s - loss: 0.3747
+Epoch 82/100
+4382/4382 - 76s - loss: 0.3762
+Epoch 83/100
+4382/4382 - 78s - loss: 0.3738
+Epoch 84/100
+4382/4382 - 77s - loss: 0.3735
+Epoch 85/100
+4382/4382 - 78s - loss: 0.3753
+Epoch 86/100
+4382/4382 - 77s - loss: 0.3747
+Epoch 87/100
+4382/4382 - 78s - loss: 0.3737
+Epoch 88/100
+4382/4382 - 77s - loss: 0.3719
+Epoch 89/100
+4382/4382 - 77s - loss: 0.3732
+Epoch 90/100
+4382/4382 - 77s - loss: 0.3713
+Epoch 91/100
+4382/4382 - 77s - loss: 0.3729
+Epoch 92/100
+4382/4382 - 77s - loss: 0.3701
+Epoch 93/100
+4382/4382 - 77s - loss: 0.3719
+Epoch 94/100
+4382/4382 - 76s - loss: 0.3718
+Epoch 95/100
+4382/4382 - 78s - loss: 0.3722
+Epoch 96/100
+4382/4382 - 77s - loss: 0.3717
+
+Epoch 00096: ReduceLROnPlateau reducing learning rate to 0.0002500000118743628.
+Epoch 97/100
+4382/4382 - 78s - loss: 0.3611
+Epoch 98/100
+4382/4382 - 77s - loss: 0.3597
+Epoch 99/100
+4382/4382 - 79s - loss: 0.3584
+Epoch 100/100
+4382/4382 - 78s - loss: 0.3593
+INFO: [tensorflow] Assets written to: model/assets
+Train f1_avg: 0.8039567317558549
+Test f1_avg: 0.7332478636940307
