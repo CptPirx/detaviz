@@ -151,7 +151,7 @@ def main():
         sent_samples.append(samples)
         run_times.append(run_time)
 
-    plot_labels = dataset_labels[window:(cycle_count + window)]
+    plot_labels = test_y[window:(cycle_count + window)]
 
     results_path = '../Results/' + model_source
     Path(results_path).mkdir(parents=False, exist_ok=True)
