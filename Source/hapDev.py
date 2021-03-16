@@ -87,7 +87,7 @@ class HapDev(object):
 
         return prediction
 
-    def compare_data(self, sensor, buffer, predictions):
+    def compare_data(self, buffer, predictions):
         """
         Compare the predicted values to the actual measures stored in the buffer
 
@@ -98,9 +98,6 @@ class HapDev(object):
         """
         predictions = np.argmax(predictions)
         errors = 1
-
-        # print(buffer)
-        # print(predictions)
 
         actual = buffer[0]
         predicted = predictions
@@ -147,7 +144,7 @@ class HapDev(object):
         predictions = self.predict_values(sensor, sample_buffer)
 
         # Evaluate the predictions
-        errors_list, sent_samples = self.compare_data(sensor, label_buffer, predictions)
+        errors_list, predicted_label = self.compare_data(label_buffer, predictions)
 
         end = time.time()
         run_time = (end - start) * 1000
@@ -157,7 +154,7 @@ class HapDev(object):
         # print("Cycle runtime is {time}ms".format(time=run_time))
         # print("\n")
 
-        return errors_list, sent_samples, run_time
+        return errors_list, predicted_label, run_time
 
 
 

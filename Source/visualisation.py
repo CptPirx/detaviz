@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
 
 
@@ -26,12 +27,6 @@ def plot_simulation_history(predicted_labels, true_labels, errors, run_times, mo
     ax[0].plot(true_labels, label='True labels')
     ax[0].legend(loc='upper left')
     ax[0].set(xlabel='Cycle', ylabel='Label', title='True and predicted labels')
-
-    # # Add text box
-    # text_0 = 'Mean value={mean} %'.format(mean=np.round(sent_samples_mean[0], decimals=3))
-    # props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-    # ax[0].text(0.7, 0.95, text_0, transform=ax[0].transAxes, fontsize=14,
-    #            verticalalignment='top', bbox=props)
 
     # Plot the errors
     ax[1].plot(errors, label='Accuracy')
@@ -65,3 +60,7 @@ def plot_simulation_history(predicted_labels, true_labels, errors, run_times, mo
             bbox_inches='tight')
 
     plt.show()
+
+
+if __name__ == '__main__':
+    pass

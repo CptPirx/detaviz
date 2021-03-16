@@ -3,10 +3,10 @@ Holds different values common for the project.
 """
 
 # Laptop
-data_path = "~/Projects/datasets/AURSAD.h5"
+# data_path = "~/Projects/datasets/AURSAD.h5"
 
 # PC
-# data_path = "E:/source/datasets/AURSAD/AURSAD.h5"
+data_path = "E:/source/datasets/AURSAD/AURSAD.h5"
 
 # Common training parameters
 epochs = 100

@@ -29,6 +29,7 @@ from pathlib import Path
 
 import tqdm
 import aursad
+import pandas as pd
 
 
 def main():
@@ -42,6 +43,9 @@ def main():
 
     # The cycle count
     cycle_count = int(input('Define number of cycles. Default=1000: ') or 1000)
+
+    # Binary or full class data
+    binary_labels = bool(input('Use binary data? Default=False: ') or False)
 
     # The model type
     model_type = input('Enter the model type. Default=tabl: ') or 'tabl'
@@ -98,8 +102,14 @@ def main():
         else:
             break
 
+    # Whether to reduce dimensionality
+    if n_dim < 125:
+        reduce_dim = True
+    else:
+        reduce_dim = False
+
     _, _, test_x, test_y = aursad.get_dataset_numpy(path=Path(meta.data_path),
-                                                    reduce_dimensionality=True,
+                                                    reduce_dimensionality=reduce_dim,
                                                     n_dimensions=n_dim,
                                                     subsample_data=True,
                                                     subsample_freq=2,
@@ -111,7 +121,8 @@ def main():
                                                     damaged_thread_samples=0,
                                                     loosening_samples=0,
                                                     drop_extra_columns=True,
-                                                    onehot_labels=False)
+                                                    onehot_labels=False,
+                                                    binary_labels=binary_labels)
 
     # Create the device
     device = HapDev(buffer_size=buffer,
@@ -137,7 +148,7 @@ def main():
 
     # Lists to hold simulation results
     errors = []
-    sent_samples = []
+    predicted_labels = []
     run_times = []
 
     # Run x steps of simulation
@@ -146,17 +157,30 @@ def main():
             print('Reached the end of the dataset!')
             break
         # print("Cycle number {i}".format(i=i))
-        error, samples, run_time = device.run_one_cycle(domain, i)
+        error, predicted_label, run_time = device.run_one_cycle(domain, i)
         errors.append(error)
-        sent_samples.append(samples)
+        predicted_labels.append(predicted_label)
         run_times.append(run_time)
 
     plot_labels = test_y[window:(cycle_count + window)]
 
     results_path = '../Results/' + model_source
     Path(results_path).mkdir(parents=False, exist_ok=True)
+
+    # Save the simulation data
+    simulation_results = {'True_labels': plot_labels,
+                          'Predicted_labels': predicted_labels,
+                          'Errors': errors,
+                          'Run_times': run_times}
+
+    simulation_results_df = pd.DataFrame(simulation_results)
+    simulation_results_df.to_csv((results_path + '/Results_cycles-{cycle_count}_sensorID-{sensor}.csv').format(
+            cycle_count=cycle_count,
+            sensor=domain
+    ), index_label='Cycle')
+
     # Plot the results
-    plot_simulation_history(sent_samples, plot_labels, errors, run_times, results_path, domain, cycle_count)
+    plot_simulation_history(predicted_labels, plot_labels, errors, run_times, results_path, domain, cycle_count)
 
 
 if __name__ == '__main__':
