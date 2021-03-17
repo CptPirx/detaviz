@@ -3,7 +3,7 @@ import seaborn as sns
 import numpy as np
 
 
-def plot_simulation_history(predicted_labels, true_labels, errors, run_times, model_path, domain, cycle_count):
+def plot_simulation_history(predicted_labels, true_labels, accuracy_list, run_times, model_path, domain, cycle_count):
     """
 
     :param predicted_labels:
@@ -16,7 +16,7 @@ def plot_simulation_history(predicted_labels, true_labels, errors, run_times, mo
     """
     # Calculate mean of sent samples, errors and run times
     run_times[0] = 0
-    mean_errors = [np.mean(errors)] * len(errors)
+    mean_accuracy = [np.mean(accuracy_list)] * len(accuracy_list)
     mean_time = [np.mean(run_times)] * len(run_times)
 
     # Plot the data
@@ -29,13 +29,13 @@ def plot_simulation_history(predicted_labels, true_labels, errors, run_times, mo
     ax[0].set(xlabel='Cycle', ylabel='Label', title='True and predicted labels')
 
     # Plot the errors
-    ax[1].plot(errors, label='Accuracy')
-    ax[1].plot(mean_errors, label='Mean accuracy', linestyle='--')
+    ax[1].plot(accuracy_list, label='Accuracy')
+    ax[1].plot(mean_accuracy, label='Mean accuracy', linestyle='--')
     ax[1].legend(loc='upper left')
     ax[1].set(xlabel='Cycle', ylabel='%', title='Accuracy per cycle')
 
     # Add text box
-    text_1 = 'Mean value={mean} %'.format(mean=(np.round(mean_errors[0], decimals=2) * 100))
+    text_1 = 'Mean value={mean} %'.format(mean=(np.round(mean_accuracy[0], decimals=2) * 100))
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
     ax[1].text(0.7, 0.95, text_1, transform=ax[1].transAxes, fontsize=14,
                verticalalignment='top', bbox=props)

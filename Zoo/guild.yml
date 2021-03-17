@@ -86,6 +86,9 @@
         dev:
           description: Fast development run
           default: False
+        remote:
+          description: If running on remote
+          default: False
       output-scalars:
         train_f1_avg: 'Train f1_avg: (\value)'
         test_f1_avg: 'Test f1_avg: (\value)'
@@ -121,6 +124,9 @@
           default: 64
         dev:
           description: Fast development run
+          default: False
+        remote:
+          description: If running on remote
           default: False
       output-scalars:
         train_f1_avg: 'Train f1_avg: (\value)'

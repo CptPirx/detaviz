@@ -27,7 +27,8 @@ binarize = False
 optimizer = k.optimizers.get(meta.optimizer)
 learning_rate = meta.learning_rate
 n_feature_maps = 64
-dev = True
+dev = False
+remote = False
 
 if dev:
     epochs = 2
@@ -45,8 +46,13 @@ if dimensionality < 125:
 else:
     reduce_dimensions = False
 
+if not remote:
+    data_path = meta.data_path
+else:
+    data_path = '~/Data/AURSAD.h5'
 
-_, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_generator(path=meta.data_path,
+
+_, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_generator(path=data_path,
                                                                                       window_size=window,
                                                                                       reduce_dimensionality=reduce_dimensions,
                                                                                       n_dimensions=dimensionality,

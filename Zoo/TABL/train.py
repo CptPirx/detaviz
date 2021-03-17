@@ -37,7 +37,8 @@ n_bl_layers = 2
 bl_dimensions= {0: "[120, 5]", 1: "[60, 2]"}
 n_tabl_layers = 1
 tabl_dimensions = {0: "[2, 1]"}
-dev = True
+dev = False
+remote = False
 
 if dev:
     epochs = 2
@@ -69,7 +70,12 @@ projection_constraint = None if projection_constraint == 'None' else eval(f"tf.k
 attention_regularizer = None if attention_regularizer == 'None' else attention_regularizer
 attention_constraint = None if attention_constraint == 'None' else eval(f"tf.keras.constraints.{attention_constraint['name']}({attention_constraint['max_value'], attention_constraint['axis']})")
 
-_, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_generator(path=meta.data_path,
+if not remote:
+    data_path = meta.data_path
+else:
+    data_path = '~/Data/AURSAD.h5'
+
+_, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_generator(path=data_path,
                                                                                       window_size=window,
                                                                                       reduce_dimensionality=reduce_dimensions,
                                                                                       binary_labels=binarize,

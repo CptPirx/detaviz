@@ -147,7 +147,7 @@ def main():
     device.receive_model(model)
 
     # Lists to hold simulation results
-    errors = []
+    accuracy_list = []
     predicted_labels = []
     run_times = []
 
@@ -157,8 +157,8 @@ def main():
             print('Reached the end of the dataset!')
             break
         # print("Cycle number {i}".format(i=i))
-        error, predicted_label, run_time = device.run_one_cycle(domain, i)
-        errors.append(error)
+        accuracy, predicted_label, run_time = device.run_one_cycle(domain, i)
+        accuracy_list.append(accuracy)
         predicted_labels.append(predicted_label)
         run_times.append(run_time)
 
@@ -170,7 +170,7 @@ def main():
     # Save the simulation data
     simulation_results = {'True_labels': plot_labels,
                           'Predicted_labels': predicted_labels,
-                          'Errors': errors,
+                          'Accuracy': accuracy_list,
                           'Run_times': run_times}
 
     simulation_results_df = pd.DataFrame(simulation_results)
@@ -180,7 +180,7 @@ def main():
     ), index_label='Cycle')
 
     # Plot the results
-    plot_simulation_history(predicted_labels, plot_labels, errors, run_times, results_path, domain, cycle_count)
+    plot_simulation_history(predicted_labels, plot_labels, accuracy_list, run_times, results_path, domain, cycle_count)
 
 
 if __name__ == '__main__':

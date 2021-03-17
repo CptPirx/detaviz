@@ -9,7 +9,7 @@ import numpy as np
 
 
 def prepare_data():
-    data = pd.read_csv('E:/source/repos/anomaly_simulation/Results/27760/Results_cycles-100000_sensorID-0.csv')
+    data = pd.read_csv('E:/source/repos/anomaly_simulation/Results/27760/Results_cycles-1000_sensorID-0.csv')
 
     return data
 
