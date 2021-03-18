@@ -154,7 +154,7 @@ class HapDev(object):
         # print("Cycle runtime is {time}ms".format(time=run_time))
         # print("\n")
 
-        return errors_list, predicted_label, run_time
+        return errors_list, predicted_label, label_buffer[0], run_time
 
 
 

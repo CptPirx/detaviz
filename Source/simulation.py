@@ -149,6 +149,7 @@ def main():
     # Lists to hold simulation results
     accuracy_list = []
     predicted_labels = []
+    true_labels = []
     run_times = []
 
     # Run x steps of simulation
@@ -157,18 +158,17 @@ def main():
             print('Reached the end of the dataset!')
             break
         # print("Cycle number {i}".format(i=i))
-        accuracy, predicted_label, run_time = device.run_one_cycle(domain, i)
+        accuracy, predicted_label, true_label, run_time = device.run_one_cycle(domain, i)
         accuracy_list.append(accuracy)
         predicted_labels.append(predicted_label)
+        true_labels.append(true_label)
         run_times.append(run_time)
-
-    plot_labels = test_y[window:(cycle_count + window)]
 
     results_path = '../Results/' + model_source
     Path(results_path).mkdir(parents=False, exist_ok=True)
 
     # Save the simulation data
-    simulation_results = {'True_labels': plot_labels,
+    simulation_results = {'True_labels': true_labels,
                           'Predicted_labels': predicted_labels,
                           'Accuracy': accuracy_list,
                           'Run_times': run_times}
@@ -180,7 +180,7 @@ def main():
     ), index_label='Cycle')
 
     # Plot the results
-    plot_simulation_history(predicted_labels, plot_labels, accuracy_list, run_times, results_path, domain, cycle_count)
+    plot_simulation_history(predicted_labels, true_labels, accuracy_list, run_times, results_path, domain, cycle_count)
 
 
 if __name__ == '__main__':
