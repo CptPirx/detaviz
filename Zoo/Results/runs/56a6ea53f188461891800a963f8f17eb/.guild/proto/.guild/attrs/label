@@ -1,3 +1,0 @@
-binary attention_constraint=None attention_regularizer=None binarize=yes dev=no dimensionality=60
-  horizon=1 learning_rate=0.001 n_bl_layers=2 n_tabl_layers=1 optimizer=adam projection_constraint=None
-  projection_regularizer=None window=[100, 200, 500]
