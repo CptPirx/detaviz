@@ -132,7 +132,7 @@ app.layout = html.Div(children=[
 
 
 @app.callback([Output('simulation_data', 'children'),
-               Output('Chosen_model', 'children')],
+               Output('chosen_model', 'children')],
               [Input('model_button', 'n_clicks'),
                Input('model_window', 'value')])
 def load_data(clicks, value):

@@ -7,17 +7,18 @@ import pandas as pd
 from pathlib import Path
 
 
-def check_window_size(file):
+def check_flag_value(file, flag):
     """
     Check the window flag size
 
     :param file:
+    :param flag:
     :return:
     """
     with open(file) as f:
         datafile = f.readlines()
     for line in datafile:
-        if 'window:' in line:
+        if flag in line:
             line_contents = int(line.split(sep=' ')[1])
             break
         else:
@@ -48,14 +49,14 @@ def get_file_list(dirName):
     return allFiles
 
 
-def model_search(model_window=500, model_type='tabl', cycles=50000):
+def model_search(model_window=500, model_dimensionality=60, cycles=50000):
     """
     Search for the best performing model for the given window size in the model Zoo
 
     :param model_window: int,
         model window
-    :param model_type: string,
-        model type
+    :param model_dimensionality: int,
+        model dimensionality
     :param cycles: int,
         the length of the simulation to read
     :return: df,
@@ -73,8 +74,9 @@ def model_search(model_window=500, model_type='tabl', cycles=50000):
 
     # Read each flags file and select the ones with appropriate window size
     for f in flags_list:
-        window_size = check_window_size(f)
-        if window_size == model_window:
+        window_size = check_flag_value(f, 'window')
+        dimensionality = check_flag_value(f, 'dimensionality')
+        if window_size == model_window and dimensionality == model_dimensionality:
             selected_flags.append(f)
 
     if len(selected_flags) > 0:

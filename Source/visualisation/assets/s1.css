@@ -109,6 +109,9 @@
   .one-third.column {
     width: 30.6666666667%;
   }
+  .quarter.column {
+    width: 25%;
+  }
   .two-thirds.column {
     width: 65.3333333333%;
   }

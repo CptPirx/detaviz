@@ -1,17 +1,12 @@
 # Import required libraries
-import pickle
 import copy
-import pathlib
-import urllib.request
 import dash
-import math
-import datetime as dt
+import datetime
 import pandas as pd
-from dash.dependencies import Input, Output, State, ClientsideFunction
+import numpy as np
+from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
-import plotly.graph_objects as go
-import plotly.express as px
 
 from visualisation_utils import model_search, prepare_data
 
@@ -23,13 +18,32 @@ app = dash.Dash(
 )
 server = app.server
 
-layout = {}
+# Create global chart template
+mapbox_access_token = "pk.eyJ1IjoicGxvdGx5bWFwYm94IiwiYSI6ImNrOWJqb2F4djBnMjEzbG50amg0dnJieG4ifQ.Zme1-Uzoi75IaFbieBDl3A"
+
+layout = dict(
+        autosize=True,
+        automargin=True,
+        margin=dict(l=30, r=30, b=20, t=40),
+        hovermode="closest",
+        plot_bgcolor="#F9F9F9",
+        paper_bgcolor="#F9F9F9",
+        legend=dict(font=dict(size=10), orientation="h"),
+        title="Satellite Overview",
+        mapbox=dict(
+                accesstoken=mapbox_access_token,
+                style="light",
+                center=dict(lon=-78.05, lat=42.54),
+                zoom=7,
+        ),
+)
 
 # Create app layout
 app.layout = html.Div(
         [
-            dcc.Store(id="simulation_data"),
-            dcc.Store(id="augmented_data"),
+            # Hidden div inside the app that stores the intermediate value
+            html.Div(id='simulation_data', style={'display': 'none'}),
+
             # empty Div to trigger javascript file for graph resizing
             html.Div(id="output-clientside"),
             html.Div(
@@ -62,14 +76,14 @@ app.layout = html.Div(
                                             ]
                                     )
                                 ],
-                                className="one-half column",
+                                className="one-third  column",
                                 id="title",
                         ),
                         html.Div(
                                 [
                                     html.A(
-                                            html.Button("Learn More", id="learn-more-button"),
-                                            href="https://plot.ly/dash/pricing/",
+                                            html.Button("GitLab repo", id="learn-more-button"),
+                                            href="https://gitlab.au.dk/smart-industry/anomaly_simulation",
                                     )
                                 ],
                                 className="one-third column",
@@ -83,16 +97,24 @@ app.layout = html.Div(
             html.Div(
                     [
                         html.Div([
-                            html.P("Select model window size:", className="control_label"),
+                            html.P("Select model window size and dimensionality:", className="control_label"),
                             dcc.Input(id="model_window",
                                       type="number",
                                       placeholder="Model window size",
+                                      min=0,
                                       value=500,
                                       className="dcc_control"),
-                            html.Button('Find model', id='model_button'),
-                            html.P("Select window type:", className="control_label"),
+                            # html.P("Select model dimensionality:", className="control_label"),
+                            dcc.Input(id="model_dimensionality",
+                                      type="number",
+                                      placeholder="Model dimensionality",
+                                      max=125,
+                                      min=0,
+                                      value=60,
+                                      className="dcc_control"),
+                            html.P("Select system response window type:", className="control_label"),
                             dcc.Dropdown(
-                                    id='window_dropdown',
+                                    id='window_type',
                                     options=window_options,
                                     value='hamming',
                                     className="dcc_control",
@@ -106,12 +128,14 @@ app.layout = html.Div(
                                     html.Div(
                                             [
                                                 html.Div(
-                                                        [html.H6(id="chosen_model_text"), html.P("Chosen model")],
+                                                        [html.H6(id="chosen_model_text"),
+                                                         html.P("Chosen model")],
                                                         id="chosen_model",
                                                         className="mini_container",
                                                 ),
                                                 html.Div(
-                                                        [html.H6(id="avg_f1_text"), html.P("Model average F1")],
+                                                        [html.H6(id="avg_f1_text"),
+                                                         html.P("Model average F1")],
                                                         id="avg_f1",
                                                         className="mini_container",
                                                 ),
@@ -188,337 +212,191 @@ app.layout = html.Div(
 
 
 # Helper functions
-def human_format(num):
-    if num == 0:
-        return "0"
-
-    magnitude = int(math.log(num, 1000))
-    mantissa = str(int(num / (1000 ** magnitude)))
-    return mantissa + ["", "K", "M", "G", "T", "P"][magnitude]
-
-
 def produce_statistics(augmented_data):
-    simulation_length = augmented_data.shape[0] / 1000
-    simulation_avg_acc = augmented_data['Response_accuracy'].mean()
+    simulation_length = str(datetime.timedelta(minutes=augmented_data.shape[0] / 60000))
+    simulation_avg_acc = np.round(augmented_data['value'].loc[augmented_data['variable'] == 'Response_accuracy'].mean(),
+                                  decimals=3)
     model_avg_f1 = 0
 
     return model_avg_f1, simulation_avg_acc, simulation_length
 
 
-# Create callbacks
-app.clientside_callback(
-        ClientsideFunction(namespace="clientside", function_name="resize"),
-        Output("output-clientside", "children"),
-        [Input("count_graph", "figure")],
-)
+def create_plots(augmented_data):
+    """
+    Create the plots for visualisation
 
-
-@app.callback(
-        [
-            Output("avg_f1_text", "children"),
-            Output("simulation_avg_acc_text", "children"),
-            Output("simulation_length_text", "children"),
-        ],
-        [
-            State('augmented_data', 'data'),
-        ],
-)
-def update_production_text(augmented_data, chosen_model):
-    model_avg_f1, simulation_avg_acc, simulation_length = produce_statistics(augmented_data)
-    return model_avg_f1, simulation_avg_acc, simulation_length
-
-
-# Selectors -> main graph
-@app.callback(
-        Output("results_graph", "figure"),
-        [State("augmented_Data", "value")],
-)
-def make_results_figure(augmented_data):
+    :param augmented_data: df,
+        the data augmented with statistics
+    :return: plotly figures
+    """
     # Line plot of true and predicted labels
     data_0 = augmented_data[augmented_data['variable'].isin(['True_labels', 'Response'])]
-    figure = px.line(data_0, x="Cycle", y="value", color='variable', title='True vs predicted labels')
-
-    return figure
-
-
-# Main graph -> individual graph
-@app.callback(Output("individual_graph", "figure"), [Input("main_graph", "hoverData")])
-def make_individual_figure(main_graph_hover):
-    layout_individual = copy.deepcopy(layout)
-
-    if main_graph_hover is None:
-        main_graph_hover = {
-            "points": [
-                {"curveNumber": 4, "pointNumber": 569, "customdata": 31101173130000}
-            ]
-        }
-
-    chosen = [point["customdata"] for point in main_graph_hover["points"]]
-    index, gas, oil, water = produce_individual(chosen[0])
-
-    if index is None:
-        annotation = dict(
-                text="No data available",
-                x=0.5,
-                y=0.5,
-                align="center",
-                showarrow=False,
-                xref="paper",
-                yref="paper",
-        )
-        layout_individual["annotations"] = [annotation]
-        data = []
-    else:
-        data = [
-            dict(
-                    type="scatter",
-                    mode="lines+markers",
-                    name="Gas Produced (mcf)",
-                    x=index,
-                    y=gas,
-                    line=dict(shape="spline", smoothing=2, width=1, color="#fac1b7"),
-                    marker=dict(symbol="diamond-open"),
-            ),
-            dict(
-                    type="scatter",
-                    mode="lines+markers",
-                    name="Oil Produced (bbl)",
-                    x=index,
-                    y=oil,
-                    line=dict(shape="spline", smoothing=2, width=1, color="#a9bb95"),
-                    marker=dict(symbol="diamond-open"),
-            ),
-            dict(
-                    type="scatter",
-                    mode="lines+markers",
-                    name="Water Produced (bbl)",
-                    x=index,
-                    y=water,
-                    line=dict(shape="spline", smoothing=2, width=1, color="#92d8d8"),
-                    marker=dict(symbol="diamond-open"),
-            ),
-        ]
-        layout_individual["title"] = dataset[chosen[0]]["Well_Name"]
-
-    figure = dict(data=data, layout=layout_individual)
-    return figure
-
-
-# Selectors, main graph -> aggregate graph
-@app.callback(
-        Output("aggregate_graph", "figure"),
-        [
-            Input("well_statuses", "value"),
-            Input("well_types", "value"),
-            Input("year_slider", "value"),
-            Input("main_graph", "hoverData"),
-        ],
-)
-def make_aggregate_figure(well_statuses, well_types, year_slider, main_graph_hover):
-    layout_aggregate = copy.deepcopy(layout)
-
-    if main_graph_hover is None:
-        main_graph_hover = {
-            "points": [
-                {"curveNumber": 4, "pointNumber": 569, "customdata": 31101173130000}
-            ]
-        }
-
-    chosen = [point["customdata"] for point in main_graph_hover["points"]]
-    well_type = dataset[chosen[0]]["Well_Type"]
-    dff = filter_dataframe(df, well_statuses, well_types, year_slider)
-
-    selected = dff[dff["Well_Type"] == well_type]["API_WellNo"].values
-    index, gas, oil, water = produce_run_times(selected, year_slider)
+    layout_labels = copy.deepcopy(layout)
 
     data = [
         dict(
                 type="scatter",
                 mode="lines",
-                name="Gas Produced (mcf)",
-                x=index,
-                y=gas,
+                name="True labels",
+                x=data_0['Cycle'],
+                y=data_0['value'].loc[data_0['variable'] == 'True_labels'],
                 line=dict(shape="spline", smoothing="2", color="#F9ADA0"),
         ),
         dict(
                 type="scatter",
                 mode="lines",
-                name="Oil Produced (bbl)",
-                x=index,
-                y=oil,
+                name="System response",
+                x=data_0['Cycle'],
+                y=data_0['value'].loc[data_0['variable'] == 'Response'],
                 line=dict(shape="spline", smoothing="2", color="#849E68"),
+        ),
+    ]
+    layout_labels["title"] = "System response vs true labels"
+
+    fig_0 = dict(data=data, layout=layout_labels)
+
+    # Line plot of run times
+    data_1 = augmented_data[augmented_data['variable'].isin(['Run_times'])]
+    layout_runtimes = copy.deepcopy(layout)
+
+    data = [
+        dict(
+                type="scatter",
+                mode="lines",
+                name="Prediction CMA",
+                x=data_1['Cycle'],
+                y=data_1['value'].loc[data_1['variable'] == 'Run_times'],
+                line=dict(shape="spline", smoothing="2", color="#849E68"),
+        ),
+    ]
+    layout_runtimes["title"] = "Simulation run times"
+
+    fig_1 = dict(data=data, layout=layout_runtimes)
+
+    # Line plot of accuracy
+    data_2 = augmented_data[augmented_data['variable'].isin(['Predicted_CMA', 'Response_CMA'])]
+    layout_accuracy = copy.deepcopy(layout)
+
+    data = [
+        dict(
+                type="scatter",
+                mode="lines",
+                name="Prediction CMA",
+                x=data_2['Cycle'],
+                y=data_2['value'].loc[data_2['variable'] == 'Predicted_CMA'],
+                line=dict(shape="spline", smoothing="2", color="#F9ADA0"),
         ),
         dict(
                 type="scatter",
                 mode="lines",
-                name="Water Produced (bbl)",
-                x=index,
-                y=water,
-                line=dict(shape="spline", smoothing="2", color="#59C3C3"),
+                name="System CMA",
+                x=data_2['Cycle'],
+                y=data_2['value'].loc[data_2['variable'] == 'Response_CMA'],
+                line=dict(shape="spline", smoothing="2", color="#849E68"),
         ),
     ]
-    layout_aggregate["title"] = "Aggregate: " + WELL_TYPES[well_type]
+    layout_accuracy["title"] = "Prediction vs system Cumulative Moving Average accuracy"
 
-    figure = dict(data=data, layout=layout_aggregate)
-    return figure
+    fig_2 = dict(data=data, layout=layout_accuracy)
 
+    # Pie chart of result types
+    data_3 = augmented_data[augmented_data['variable'].isin(['Prediction_result'])]
+    data_3 = data_3['value'].value_counts()
+    data_4 = augmented_data[augmented_data['variable'].isin(['Response_result'])]
+    data_4 = data_4['value'].value_counts()
 
-# Selectors, main graph -> pie graph
-@app.callback(
-        Output("pie_graph", "figure"),
-        [
-            Input("well_statuses", "value"),
-            Input("well_types", "value"),
-            Input("year_slider", "value"),
-        ],
-)
-def make_pie_figure(well_statuses, well_types, year_slider):
     layout_pie = copy.deepcopy(layout)
-
-    dff = filter_dataframe(df, well_statuses, well_types, year_slider)
-
-    selected = dff["API_WellNo"].values
-    index, gas, oil, water = produce_run_times(selected, year_slider)
-
-    aggregate = dff.groupby(["Well_Type"]).count()
 
     data = [
         dict(
                 type="pie",
-                labels=["Gas", "Oil", "Water"],
-                values=[sum(gas), sum(oil), sum(water)],
-                name="Production Breakdown",
+                labels=["False positive", "False negative", "Correct"],
+                values=[data_3['False positive'],
+                        data_3['False negative'],
+                        data_3['Correct']],
+                name="Simulation response",
                 text=[
-                    "Total Gas Produced (mcf)",
-                    "Total Oil Produced (bbl)",
-                    "Total Water Produced (bbl)",
+                    "False positives",
+                    "False negatives",
+                    "Correct",
                 ],
                 hoverinfo="text+value+percent",
                 textinfo="label+percent+name",
                 hole=0.5,
-                marker=dict(colors=["#fac1b7", "#a9bb95", "#92d8d8"]),
+                marker=dict(colors=["#92d8d8", "#fac1b7", "#a9bb95"]),
                 domain={"x": [0, 0.45], "y": [0.2, 0.8]},
         ),
         dict(
                 type="pie",
-                labels=[WELL_TYPES[i] for i in aggregate.index],
-                values=aggregate["API_WellNo"],
-                name="Well Type Breakdown",
-                hoverinfo="label+text+value+percent",
+                labels=["False positive", "False negative", "Correct"],
+                values=[data_4['False positive'],
+                        data_4['False negative'],
+                        data_4['Correct']],
+                name="System response",
+                text=[
+                    "False positives",
+                    "False negatives",
+                    "Correct",
+                ],
+                hoverinfo="text+value+percent",
                 textinfo="label+percent+name",
                 hole=0.5,
-                marker=dict(colors=[WELL_COLORS[i] for i in aggregate.index]),
+                marker=dict(colors=["#92d8d8", "#fac1b7", "#a9bb95"]),
                 domain={"x": [0.55, 1], "y": [0.2, 0.8]},
         ),
     ]
-    layout_pie["title"] = "Production Summary: {} to {}".format(
-            year_slider[0], year_slider[1]
-    )
+    layout_pie["title"] = "Results breakdown: simulation vs system response"
     layout_pie["font"] = dict(color="#777777")
     layout_pie["legend"] = dict(
             font=dict(color="#CCCCCC", size="10"), orientation="h", bgcolor="rgba(0,0,0,0)"
     )
 
-    figure = dict(data=data, layout=layout_pie)
-    return figure
+    fig_3 = dict(data=data, layout=layout_pie)
+
+    return fig_0, fig_1, fig_2, fig_3
 
 
-# Selectors -> count graph
+@app.callback([Output('simulation_data', 'children'),
+               Output('chosen_model_text', 'children')],
+              [Input('model_window', 'value'),
+               Input('model_dimensionality', 'value')])
+def load_data(model_window, model_dimensionality):
+    if model_window == "":  # Do nothing if button is clicked and input num is blank.
+        return "", "No input"
+
+    df, chosen_model = model_search(model_window, model_dimensionality)
+
+    if isinstance(df, pd.DataFrame):
+        return df.to_json(orient='split'), chosen_model
+    else:
+        return dash.no_update, chosen_model
+
+
 @app.callback(
-        Output("count_graph", "figure"),
-        [
-            Input("well_statuses", "value"),
-            Input("well_types", "value"),
-            Input("year_slider", "value"),
-        ],
-)
-def make_count_figure(well_statuses, well_types, year_slider):
-    layout_count = copy.deepcopy(layout)
+        [Output('results_graph', 'figure'),
+         Output('run_times_graph', 'figure'),
+         Output('avg_accuracy_graph', 'figure'),
+         Output('pie_graph', 'figure'),
+         Output("avg_f1_text", "children"),
+         Output("simulation_avg_acc_text", "children"),
+         Output("simulation_length_text", "children"),
+         ],
+        [Input('simulation_data', 'children'),
+         Input('window_slider', 'value'),
+         Input('window_type', 'value')])
+def update_figure(simulation_data, window_size, window_type):
+    if simulation_data == '':
+        return dash.no_update, dash.no_update, dash.no_update, dash.no_update, 0, 0, 0
 
-    dff = filter_dataframe(df, well_statuses, well_types, [1960, 2017])
-    g = dff[["API_WellNo", "Date_Well_Completed"]]
-    g.index = g["Date_Well_Completed"]
-    g = g.resample("A").count()
+    data = pd.read_json(simulation_data, orient='split')
 
-    colors = []
-    for i in range(1960, 2018):
-        if i >= int(year_slider[0]) and i < int(year_slider[1]):
-            colors.append("rgb(123, 199, 255)")
-        else:
-            colors.append("rgba(123, 199, 255, 0.2)")
+    augmented_df = prepare_data(data, window_size, window_type)
 
-    data = [
-        dict(
-                type="scatter",
-                mode="markers",
-                x=g.index,
-                y=g["API_WellNo"] / 2,
-                name="All Wells",
-                opacity=0,
-                hoverinfo="skip",
-        ),
-        dict(
-                type="bar",
-                x=g.index,
-                y=g["API_WellNo"],
-                name="All Wells",
-                marker=dict(color=colors),
-        ),
-    ]
+    fig_0, fig_1, fig_2, fig_3 = create_plots(augmented_df)
 
-    layout_count["title"] = "Completed Wells/Year"
-    layout_count["dragmode"] = "select"
-    layout_count["showlegend"] = False
-    layout_count["autosize"] = True
+    avg_f1_text, simulation_avg_acc_text, simulation_length_text = produce_statistics(augmented_df)
 
-    figure = dict(data=data, layout=layout_count)
-    return figure
-
-
-@app.callback([Output('simulation_data', 'data'),
-               Output('chosen_model', 'value')],
-              [Input('model_button', 'n_clicks'),
-               Input('model_window', 'value')])
-def load_data(clicks, value):
-    # To determine if n_clicks is changed.
-    changed_ids = [p['prop_id'].split('.')[0] for p in dash.callback_context.triggered]
-    button_pressed = 'model_button' in changed_ids
-
-    if not button_pressed:
-        return "", ""
-
-    if value == "":  # Do nothing if button is clicked and input num is blank.
-        return "No input", ""
-
-    df, chosen_model = model_search(value)
-
-    if isinstance(df, pd.DataFrame):
-        return df.to_json(orient='split'), chosen_model
-    else:
-        return dash.no_update, chosen_model
-
-
-@app.callback([Output('simulation_data', 'data'),
-               Output('chosen_model', 'value')],
-              [Input('model_button', 'n_clicks'),
-               Input('model_window', 'value')])
-def prepare_data(clicks, value):
-    # To determine if n_clicks is changed.
-    changed_ids = [p['prop_id'].split('.')[0] for p in dash.callback_context.triggered]
-    button_pressed = 'model_button' in changed_ids
-
-    if not button_pressed:
-        return "", ""
-
-    if value == "":  # Do nothing if button is clicked and input num is blank.
-        return "No input", ""
-
-    df, chosen_model = model_search(value)
-
-    if isinstance(df, pd.DataFrame):
-        return df.to_json(orient='split'), chosen_model
-    else:
-        return dash.no_update, chosen_model
+    return fig_0, fig_1, fig_2, fig_3, avg_f1_text, simulation_avg_acc_text, simulation_length_text
 
 
 # Main

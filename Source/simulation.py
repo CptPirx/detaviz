@@ -23,7 +23,7 @@ from sensor import Sensor
 from hapDev import HapDev
 
 from Zoo.TABL.Layers import BL, TABL
-from Source.visualisation import plot_simulation_history
+from Source.visualisation.visualisation import plot_simulation_history
 
 from pathlib import Path
 
@@ -151,6 +151,7 @@ def main():
     predicted_labels = []
     true_labels = []
     run_times = []
+    debug_times = []
 
     # Run x steps of simulation
     for i in tqdm.tqdm(range(cycle_count), desc='Running simulation cycles'):
@@ -158,7 +159,8 @@ def main():
             print('Reached the end of the dataset!')
             break
         # print("Cycle number {i}".format(i=i))
-        accuracy, predicted_label, true_label, run_time = device.run_one_cycle(domain, i)
+        accuracy, predicted_label, true_label, run_time, debug_results = device.run_one_cycle(domain)
+        debug_times.append(debug_results)
         accuracy_list.append(accuracy)
         predicted_labels.append(predicted_label)
         true_labels.append(true_label)
@@ -172,6 +174,10 @@ def main():
                           'Predicted_labels': predicted_labels,
                           'Accuracy': accuracy_list,
                           'Run_times': run_times}
+
+    # Save debug data
+    debug_df = pd.DataFrame(debug_times)
+    debug_df.to_csv(results_path + '/debug_times.csv')
 
     simulation_results_df = pd.DataFrame(simulation_results)
     simulation_results_df.to_csv((results_path + '/Results_cycles-{cycle_count}_sensorID-{sensor}.csv').format(

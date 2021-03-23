@@ -124,10 +124,10 @@ class HapDev(object):
             sensor.sample_counter = sensor.sample_counter - (self.window - 1)
         return np.asarray(sample_buffer)
 
-    def run_one_cycle(self, sensor_id, current_cycle):
+    def run_one_cycle(self, sensor_id):
         """
 
-        :param current_cycle:
+        :param debug_times:
         :param sensor_id:
         :return:
         """
@@ -137,14 +137,29 @@ class HapDev(object):
         start = time.time()
 
         # First step is to fill the buffer with samples
+        sample_start = time.time()
         sample_buffer = self.add_to_buffer(sensor, self.window, 'sample')
+        sample_end = time.time()
+
+        label_start = time.time()
         label_buffer = self.add_to_buffer(sensor, self.horizon, 'label')
+        label_end = time.time()
 
         # Make prediction
+        prediction_start = time.time()
         predictions = self.predict_values(sensor, sample_buffer)
+        prediction_end = time.time()
 
         # Evaluate the predictions
+        evaluation_start = time.time()
         errors_list, predicted_label = self.compare_data(label_buffer, predictions)
+        evaluation_end = time.time()
+
+        debug_times = {'Gathering samples': sample_end - sample_start,
+                       'Gathering labels': label_end - label_start,
+                       'Predictions': prediction_end - prediction_start,
+                       'Evaluation': evaluation_end - evaluation_start}
+
 
         end = time.time()
         run_time = (end - start) * 1000
@@ -154,15 +169,4 @@ class HapDev(object):
         # print("Cycle runtime is {time}ms".format(time=run_time))
         # print("\n")
 
-        return errors_list, predicted_label, label_buffer[0], run_time
-
-
-
-
-
-
-
-
-
-
-
+        return errors_list, predicted_label, label_buffer[0], run_time, debug_times
