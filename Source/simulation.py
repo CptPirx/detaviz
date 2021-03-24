@@ -2,9 +2,10 @@ __doc__ = """
 Script responsible for running the entire simulation.
 """
 
-# Tensorflow logging level
 import os
+import sys
 
+# Tensorflow logging level
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
 from tensorflow.keras.models import load_model
@@ -15,17 +16,18 @@ from tensorflow.keras.models import load_model
 
 # Allow memory growth
 physical_devices = tf.config.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
-
-import Zoo.meta as meta
+if len(physical_devices) > 0:
+    tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
 
 from sensor import Sensor
 from hapDev import HapDev
 
+sys.path.append('../')
+import Zoo.meta as meta
 from Zoo.TABL.Layers import BL, TABL
 from Source.visualisation.visualisation import plot_simulation_history
 
-from pathlib import Path
+from pathlib import Path, PurePath
 
 import tqdm
 import aursad
@@ -50,6 +52,10 @@ def main():
     # The model type
     model_type = input('Enter the model type. Default=tabl: ') or 'tabl'
 
+    # The model format
+    # model_format = input('Do you want to use the TFLite model? Default=False: ') or 'False'
+    model_format = False
+
     # The model source
     while True:
         model_dir = None
@@ -64,19 +70,21 @@ def main():
             continue
 
     # The sensor domain
-    while True:
-        domain = int(input('Which sensor to use, 0 to 4. Default=0: ') or 0)
-        if domain > 4:
-            print('Wrong sensor id.')
-            continue
-        else:
-            break
+    # while True:
+    #     domain = int(input('Which sensor to use, 0 to 4. Default=0: ') or 0)
+    #     if domain > 4:
+    #         print('Wrong sensor id.')
+    #         continue
+    #     else:
+    #         break
+    domain = 0
 
     # The model's window size
     window = int(input('Enter the model window size.Default=500: ') or 500)
 
     # The model's prediction horizon
-    horizon = int(input('Enter the horizon size. Default=1: ') or 1)
+    # horizon = int(input('Enter the horizon size. Default=1: ') or 1)
+    horizon = 1
 
     # The data's dimensionality
     n_dim = int(input('Enter the data dimensionality. Default=60: ') or 60)
@@ -93,14 +101,15 @@ def main():
     buffer = window
 
     # The system's threshold
-    while True:
-        threshold = input('The system threshold. Format -> "0.00". Default=0.05: ').replace(',', '.') or 0.05
-        threshold = float(threshold)
-        if threshold > 1.0 or threshold < 0.0:
-            print('Wrong threshold value.')
-            continue
-        else:
-            break
+    # while True:
+    #     threshold = input('The system threshold. Format -> "0.00". Default=0.05: ').replace(',', '.') or 0.05
+    #     threshold = float(threshold)
+    #     if threshold > 1.0 or threshold < 0.0:
+    #         print('Wrong threshold value.')
+    #         continue
+    #     else:
+    #         break
+    threshold = 0.005
 
     # Whether to reduce dimensionality
     if n_dim < 125:
@@ -140,9 +149,16 @@ def main():
         custom_objects = {'BL': BL,
                           'TABL': TABL,
                           'MaxNorm': tf.keras.constraints.max_norm}
-        model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'), custom_objects=custom_objects)
+        if model_format:
+            model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model_quant'),
+                               custom_objects=custom_objects)
+        else:
+            model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'), custom_objects=custom_objects)
     else:
-        model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'))
+        if os.path.isdir(Path('../Zoo/Results/runs/' + model_dir + '/model_quant')):
+            model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model_quant'))
+        else:
+            model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'))
 
     device.receive_model(model)
 
@@ -166,7 +182,8 @@ def main():
         true_labels.append(true_label)
         run_times.append(run_time)
 
-    results_path = '../Results/' + model_source
+    model_name = PurePath(model_dir)
+    results_path = '../Results/' + model_name.name
     Path(results_path).mkdir(parents=False, exist_ok=True)
 
     # Save the simulation data

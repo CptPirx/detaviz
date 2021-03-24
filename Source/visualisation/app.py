@@ -134,14 +134,14 @@ app.layout = html.Div(
                                                         className="mini_container",
                                                 ),
                                                 html.Div(
-                                                        [html.H6(id="avg_f1_text"),
-                                                         html.P("Model average F1")],
+                                                        [html.H6(id="avg_acc_text"),
+                                                         html.P("Model accuracy")],
                                                         id="avg_f1",
                                                         className="mini_container",
                                                 ),
                                                 html.Div(
                                                         [html.H6(id="simulation_avg_acc_text"),
-                                                         html.P("Simulation average accuracy")],
+                                                         html.P("Simulation accuracy")],
                                                         id="simulation_avg_acc",
                                                         className="mini_container",
                                                 ),
@@ -157,7 +157,7 @@ app.layout = html.Div(
                                     ),
                                     html.Div(
                                             [html.P(
-                                                    "Select window size:",
+                                                    "Select simulation window size:",
                                                     className="control_label",
                                             ),
                                                 dcc.Slider(
@@ -216,9 +216,8 @@ def produce_statistics(augmented_data):
     simulation_length = str(datetime.timedelta(minutes=augmented_data.shape[0] / 60000))
     simulation_avg_acc = np.round(augmented_data['value'].loc[augmented_data['variable'] == 'Response_accuracy'].mean(),
                                   decimals=3)
-    model_avg_f1 = 0
 
-    return model_avg_f1, simulation_avg_acc, simulation_length
+    return simulation_avg_acc, simulation_length
 
 
 def create_plots(augmented_data):
@@ -357,19 +356,20 @@ def create_plots(augmented_data):
 
 
 @app.callback([Output('simulation_data', 'children'),
-               Output('chosen_model_text', 'children')],
+               Output('chosen_model_text', 'children'),
+               Output('avg_acc_text', 'children')],
               [Input('model_window', 'value'),
                Input('model_dimensionality', 'value')])
 def load_data(model_window, model_dimensionality):
     if model_window == "":  # Do nothing if button is clicked and input num is blank.
-        return "", "No input"
+        return "", "No input", 0
 
-    df, chosen_model = model_search(model_window, model_dimensionality)
+    df, chosen_model, max_acc = model_search(model_window, model_dimensionality)
 
     if isinstance(df, pd.DataFrame):
-        return df.to_json(orient='split'), chosen_model
+        return df.to_json(orient='split'), chosen_model, max_acc
     else:
-        return dash.no_update, chosen_model
+        return dash.no_update, chosen_model, max_acc
 
 
 @app.callback(
@@ -377,7 +377,6 @@ def load_data(model_window, model_dimensionality):
          Output('run_times_graph', 'figure'),
          Output('avg_accuracy_graph', 'figure'),
          Output('pie_graph', 'figure'),
-         Output("avg_f1_text", "children"),
          Output("simulation_avg_acc_text", "children"),
          Output("simulation_length_text", "children"),
          ],
@@ -386,7 +385,7 @@ def load_data(model_window, model_dimensionality):
          Input('window_type', 'value')])
 def update_figure(simulation_data, window_size, window_type):
     if simulation_data == '':
-        return dash.no_update, dash.no_update, dash.no_update, dash.no_update, 0, 0, 0
+        return dash.no_update, dash.no_update, dash.no_update, dash.no_update, 0, 0
 
     data = pd.read_json(simulation_data, orient='split')
 
@@ -394,11 +393,12 @@ def update_figure(simulation_data, window_size, window_type):
 
     fig_0, fig_1, fig_2, fig_3 = create_plots(augmented_df)
 
-    avg_f1_text, simulation_avg_acc_text, simulation_length_text = produce_statistics(augmented_df)
+    simulation_avg_acc_text, simulation_length_text = produce_statistics(augmented_df)
 
-    return fig_0, fig_1, fig_2, fig_3, avg_f1_text, simulation_avg_acc_text, simulation_length_text
+    return fig_0, fig_1, fig_2, fig_3, simulation_avg_acc_text, simulation_length_text
 
 
 # Main
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    # app.run_server(debug=True)
+    app.run_server(debug=False)

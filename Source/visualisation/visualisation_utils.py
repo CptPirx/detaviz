@@ -93,9 +93,11 @@ def model_search(model_window=500, model_dimensionality=60, cycles=50000):
             with open(path + '/test_metrics.json') as json_file:
                 metrics = json.load(json_file)
             f1 = metrics['f1_avg']
+            acc = metrics['accuracy']
             name = path.split(os.sep)
             name = name[-1:]
             metric_dict = {'f1': f1,
+                           'accuracy': acc,
                            'name': name}
             test_metrics.append(metric_dict)
 
@@ -111,11 +113,11 @@ def model_search(model_window=500, model_dimensionality=60, cycles=50000):
         if len(load_dir) > 0:
             # Load the results file
             data = pd.read_csv(load_dir[0])
-            return data, max_f1['name']
+            return data, max_f1['name'], np.round(max_f1['accuracy'], decimals=3)
         else:
-            return "", 'Simulation not found'
+            return "", 'Simulation not found', 0
     else:
-        return "", 'Model not found'
+        return "", 'Model not found', 0
 
 
 def prepare_data(data, rolling_window=1000, window_type='hamming', threshold=0.5):
