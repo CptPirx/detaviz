@@ -9,14 +9,12 @@ The simulation measures the accuracy of the predictions, as well as the run time
 Based on these results, the web app allows experimenting with applying different methods to create the optimal system response accuracy.
 
 
----
 ## Requirements
 The solution has been intended for and tested on Ubuntu & Windows 10. 
 For training new models, a Nvidia GPU with installed and 
 properly configured cuDNN drivers is recommended. 
 More on how to install those drivers can be found [here](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html).
 
----
 ## Installation instructions
 1. Install Anaconda from [here](https://www.anaconda.com/products/individual)
 2. Clone the Git repository to chosen directory
@@ -28,7 +26,6 @@ More on how to install those drivers can be found [here](https://docs.nvidia.com
 ```
 5. Download the [AURSAD](https://zenodo.org/record/4487073) dataset and move it to the directory anomaly_simulation/Data
 
----
 ## How to use it?
 The project can be used in several ways. 
 

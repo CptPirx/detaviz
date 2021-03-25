@@ -117,7 +117,7 @@ def main():
     else:
         reduce_dim = False
 
-    _, _, test_x, test_y = aursad.get_dataset_numpy(path=Path(meta.data_path),
+    _, _, test_x, test_y = aursad.get_dataset_numpy(path=Path('../Data'),
                                                     reduce_dimensionality=reduce_dim,
                                                     n_dimensions=n_dim,
                                                     subsample_data=True,
