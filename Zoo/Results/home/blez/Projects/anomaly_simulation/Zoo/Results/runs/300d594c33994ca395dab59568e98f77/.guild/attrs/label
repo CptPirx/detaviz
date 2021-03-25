@@ -1,0 +1,1 @@
+dashboard-address=8787 loglevel=warn poll-interval=10 run-once=no wait-for-running=no

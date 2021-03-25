@@ -2,7 +2,6 @@ import os
 
 # Tensorflow logging level
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
-os.environ['CUDA_VISIBLE_DEVICES'] = "0"
 import tensorflow as tf
 
 # Use mixed precision
@@ -15,7 +14,6 @@ import tensorflow.keras as k
 from TABL.tabl_model import TABL_Model
 import aursad
 import json
-import ast
 import numpy as np
 
 # Flags
@@ -35,17 +33,17 @@ bl_dimensions= {0: "[120, 5]", 1: "[60, 2]"}
 n_tabl_layers = 1
 tabl_dimensions = {0: "[2, 1]"}
 dev = False
-remote = False
-gpus = '[0]'
+remote = True
+
+if remote:
+    data_path = '~/Data/AURSAD.h5'
+else:
+    data_path = meta.data_path
 
 # Allow memory growth
-gpu_list = ast.literal_eval(gpus)
-gpu_list = [str(i) for i in gpu_list]
-
 physical_devices = tf.config.list_physical_devices('GPU')
 for gpu in physical_devices:
-    if gpu.name[-1] in gpu_list:
-        tf.config.experimental.set_memory_growth(gpu, enable=True)
+    tf.config.experimental.set_memory_growth(gpu, enable=True)
 
 if dev:
     epochs = 2
@@ -76,11 +74,6 @@ projection_constraint = None if projection_constraint == 'None' else eval(f"tf.k
 
 attention_regularizer = None if attention_regularizer == 'None' else attention_regularizer
 attention_constraint = None if attention_constraint == 'None' else eval(f"tf.keras.constraints.{attention_constraint['name']}({attention_constraint['max_value'], attention_constraint['axis']})")
-
-if not remote:
-    data_path = meta.data_path
-else:
-    data_path = '~/Data/AURSAD.h5'
 
 _, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_generator(path=data_path,
                                                                                       window_size=window,

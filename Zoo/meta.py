@@ -5,7 +5,7 @@ Holds different values common for the project.
 import sys
 sys.path.append('../')
 
-data_path = '../Data/AURSAD.h5'
+data_path = 'Data/AURSAD.h5'
 
 # Common training parameters
 epochs = 100

@@ -10,7 +10,6 @@ import tensorflow.keras as k
 from resnet_model import ResNet_Model
 import aursad
 import numpy as np
-import ast
 
 # Flags
 window = meta.window
@@ -22,16 +21,16 @@ learning_rate = meta.learning_rate
 n_feature_maps = 64
 dev = False
 remote = False
-gpus = '[0]'
+
+if remote:
+    data_path = '~/Data/AURSAD.h5'
+else:
+    data_path = meta.data_path
 
 # Allow memory growth
-gpu_list = ast.literal_eval(gpus)
-gpu_list = [str(i) for i in gpu_list]
-
 physical_devices = tf.config.list_physical_devices('GPU')
 for gpu in physical_devices:
-    if gpu.name[-1] in gpu_list:
-        tf.config.experimental.set_memory_growth(gpu, enable=True)
+    tf.config.experimental.set_memory_growth(gpu, enable=True)
 
 if dev:
     epochs = 2
@@ -48,12 +47,6 @@ if dimensionality < 125:
     reduce_dimensions = True
 else:
     reduce_dimensions = False
-
-if not remote:
-    data_path = meta.data_path
-else:
-    data_path = '~/Data/AURSAD.h5'
-
 
 _, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_generator(path=data_path,
                                                                                       window_size=window,
