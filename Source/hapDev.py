@@ -6,20 +6,21 @@ import time
 
 
 class HapDev(object):
-    def __init__(self, buffer_size, network_delay, window, horizon, threshold):
+    def __init__(self, buffer_size, network_delay, window, horizon):
         """
         Initialisation
 
-        :param buffer_size: int, buffer to hold samples
-        :param network_delay: float, the network delay in the device
-        :param window: int, how many prior samples to base the prediction on
-        :param threshold: float, how much the predicted value can differ from the actual measurement
+        :param buffer_size: int,
+            how many samples will be held in the buffer
+        :param network_delay: float,
+            the network delay in the device
+        :param window: int,
+            how many prior samples to base the prediction on
         """
         self.buffer_size = buffer_size
         self.network_delay = network_delay
         self.window = window
         self.horizon = horizon
-        self.threshold = threshold
         self.model = None
         self.sensor_list = []
         self.buffer_list = []
@@ -27,7 +28,7 @@ class HapDev(object):
 
     def receive_model(self, model):
         """
-        Receive model from the cloud
+        Receive model from source
 
         :param model: keras model
         """
@@ -37,7 +38,7 @@ class HapDev(object):
         """
         Add sensor to the device
 
-        :param sensor:
+        :param sensor: sensor class
         :return:
         """
         self.sensor_list.append(sensor)
@@ -46,7 +47,8 @@ class HapDev(object):
         """
         Remove sensor from the device
 
-        :param sensor_id:
+        :param sensor_id: int,
+            id of the sensor to be removed
         :return:
         """
         self.sensor_list = [x for x in self.sensor_list if x.id != sensor_id]
@@ -55,8 +57,10 @@ class HapDev(object):
         """
         Receive sample from a sensor
 
-        :param sensor:
-        :return: single sample
+        :param sensor: int,
+            sensor id
+        :return: np array,
+            single sample
         """
         if source == 'sample':
             sample = sensor.send_sample()
@@ -67,16 +71,15 @@ class HapDev(object):
 
         return sample
 
-    def predict_values(self, sensor, data):
+    def predict_values(self, data):
         """
         Predicts the next #horizon samples based on #window past buffers
 
-        :param sensor_id: int, which sensor are we predicting
+        :param data: buffered data
         :return: the predicted values as an array
         """
         # First prepare the buffer data for prediction
         # Reshape input pattern to [samples, timesteps, features]
-        # data = np.asarray(self.buffer_list[sensor_id[-self.window:]])
         x = data.reshape(1, len(data), -1)
 
         # Make prediction
@@ -87,32 +90,33 @@ class HapDev(object):
 
         return prediction
 
-    def compare_data(self, buffer, predictions):
+    def compare_data(self, buffer_labels, predictions):
         """
-        Compare the predicted values to the actual measures stored in the buffer
+        Compare the predicted values to the true labels stored in the buffer
 
-        :param sensor_id:
-        :return:    list of errors
-                    average error
-                    number of sent samples
+        :param buffer_labels:
+        :param predictions:
+        :return: accuracy & predicted label
         """
         predictions = np.argmax(predictions)
-        errors = 1
+        accuracy = 1
 
-        actual = buffer[0]
+        true_label = buffer_labels[0]
         predicted = predictions
 
-        if actual != predicted:
-            errors = 0
+        if true_label != predicted:
+            accuracy = 0
 
-        return errors, predicted
+        return accuracy, predicted
 
     def add_to_buffer(self, sensor, length, source):
         """
         Populate the buffer with samples
 
-        :param sensor_id: int, which sensor to use
-        :return: list of #buffer_size length
+        :param sensor: int, which sensor to use
+        :param length:
+        :param source:
+        :return: np array of #buffer_size length
         """
         sample_buffer = []
 
@@ -127,7 +131,6 @@ class HapDev(object):
     def run_one_cycle(self, sensor_id):
         """
 
-        :param debug_times:
         :param sensor_id:
         :return:
         """
@@ -147,7 +150,7 @@ class HapDev(object):
 
         # Make prediction
         prediction_start = time.time()
-        predictions = self.predict_values(sensor, sample_buffer)
+        predictions = self.predict_values(sample_buffer)
         prediction_end = time.time()
 
         # Evaluate the predictions

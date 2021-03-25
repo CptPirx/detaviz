@@ -10,10 +10,6 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
-# Use mixed precision
-# policy = mixed_precision.Policy('mixed_float16')
-# mixed_precision.set_policy(policy)
-
 # Allow memory growth
 physical_devices = tf.config.list_physical_devices('GPU')
 if len(physical_devices) > 0:
@@ -39,7 +35,6 @@ def main():
 
     :return:
     """
-    # print(device_lib.list_local_devices())
     # Define simulation parameters
     print('Define the simulation parameters')
 
@@ -51,10 +46,6 @@ def main():
 
     # The model type
     model_type = input('Enter the model type. Default=tabl: ') or 'tabl'
-
-    # The model format
-    # model_format = input('Do you want to use the TFLite model? Default=False: ') or 'False'
-    model_format = False
 
     # The model source
     while True:
@@ -97,19 +88,8 @@ def main():
     #         continue
     #     else:
     #         break
-
     buffer = window
 
-    # The system's threshold
-    # while True:
-    #     threshold = input('The system threshold. Format -> "0.00". Default=0.05: ').replace(',', '.') or 0.05
-    #     threshold = float(threshold)
-    #     if threshold > 1.0 or threshold < 0.0:
-    #         print('Wrong threshold value.')
-    #         continue
-    #     else:
-    #         break
-    threshold = 0.005
 
     # Whether to reduce dimensionality
     if n_dim < 125:
@@ -137,8 +117,7 @@ def main():
     device = HapDev(buffer_size=buffer,
                     network_delay=meta.network_delay,
                     window=window,
-                    horizon=horizon,
-                    threshold=threshold)
+                    horizon=horizon)
 
     # Create a sensor
     sensor = Sensor(axle_nr=domain, buffer_size=buffer, dataset=test_x, dataset_labels=test_y)
@@ -149,16 +128,9 @@ def main():
         custom_objects = {'BL': BL,
                           'TABL': TABL,
                           'MaxNorm': tf.keras.constraints.max_norm}
-        if model_format:
-            model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model_quant'),
-                               custom_objects=custom_objects)
-        else:
-            model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'), custom_objects=custom_objects)
+        model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'), custom_objects=custom_objects)
     else:
-        if os.path.isdir(Path('../Zoo/Results/runs/' + model_dir + '/model_quant')):
-            model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model_quant'))
-        else:
-            model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'))
+        model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'))
 
     device.receive_model(model)
 
