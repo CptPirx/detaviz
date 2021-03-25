@@ -4,20 +4,13 @@ import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
 
-# Use mixed precision
-# policy = mixed_precision.Policy('mixed_float16')
-# mixed_precision.set_policy(policy)
-
-# Allow memory growth
-physical_devices = tf.config.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
-
 import meta as meta
 import tensorflow.keras as k
 
 from resnet_model import ResNet_Model
 import aursad
 import numpy as np
+import ast
 
 # Flags
 window = meta.window
@@ -29,6 +22,16 @@ learning_rate = meta.learning_rate
 n_feature_maps = 64
 dev = False
 remote = False
+gpus = '[0]'
+
+# Allow memory growth
+gpu_list = ast.literal_eval(gpus)
+gpu_list = [str(i) for i in gpu_list]
+
+physical_devices = tf.config.list_physical_devices('GPU')
+for gpu in physical_devices:
+    if gpu.name[-1] in gpu_list:
+        tf.config.experimental.set_memory_growth(gpu, enable=True)
 
 if dev:
     epochs = 2
