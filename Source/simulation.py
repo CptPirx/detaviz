@@ -97,7 +97,7 @@ def main():
     else:
         reduce_dim = False
 
-    _, _, test_x, test_y = aursad.get_dataset_numpy(path=Path('../Data'),
+    _, _, test_x, test_y = aursad.get_dataset_numpy(path=Path(meta.data_path),
                                                     reduce_dimensionality=reduce_dim,
                                                     n_dimensions=n_dim,
                                                     subsample_data=True,
@@ -120,7 +120,7 @@ def main():
                     horizon=horizon)
 
     # Create a sensor
-    sensor = Sensor(axle_nr=domain, buffer_size=buffer, dataset=test_x, dataset_labels=test_y)
+    sensor = Sensor(domain=domain, buffer_size=buffer, dataset=test_x, dataset_labels=test_y)
     device.add_sensor(sensor)
 
     # Load the ML model
