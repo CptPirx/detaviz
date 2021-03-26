@@ -78,6 +78,7 @@ def model_search(model_window=500, model_dimensionality=60, cycles=50000):
         dimensionality = check_flag_value(f, 'dimensionality')
         if window_size == model_window and dimensionality == model_dimensionality:
             selected_flags.append(f)
+    print(selected_flags)
 
     if len(selected_flags) > 0:
         # Get the selected directories

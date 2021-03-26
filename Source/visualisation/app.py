@@ -401,4 +401,4 @@ def update_figure(simulation_data, window_size, window_type):
 # Main
 if __name__ == "__main__":
     # app.run_server(debug=True)
-    app.run_server(debug=False)
+    app.run_server(debug=True)

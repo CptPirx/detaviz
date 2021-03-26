@@ -59,7 +59,7 @@
           description: Data dimensionality
           default: 60
         binarize:
-            description: Usebinary labels
+            description: Use binary labels
             default: False
         n_bl_layers:
           description: Number of BL layers
@@ -107,7 +107,6 @@
         window:
           description: The sliding window size
           default: 100
-          choices: [100, 200, 500]
         horizon:
           description: Prediction horizon
           default: 1

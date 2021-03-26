@@ -4,10 +4,6 @@ import os
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 import tensorflow as tf
 
-# Use mixed precision
-# policy = mixed_precision.Policy('mixed_float16')
-# mixed_precision.set_policy(policy)
-
 import meta as meta
 import tensorflow.keras as k
 

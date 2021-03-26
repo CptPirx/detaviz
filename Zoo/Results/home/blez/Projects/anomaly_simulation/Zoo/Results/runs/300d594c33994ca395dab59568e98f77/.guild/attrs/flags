@@ -1,7 +1,0 @@
-dashboard-address: 8787
-loglevel: warn
-poll-interval: 10
-resources: null
-run-once: false
-wait-for-running: false
-workers: null

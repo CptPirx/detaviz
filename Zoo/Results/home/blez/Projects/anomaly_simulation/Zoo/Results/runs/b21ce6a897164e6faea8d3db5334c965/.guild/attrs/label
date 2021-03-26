@@ -1,2 +1,0 @@
-dashboard-address=8787 loglevel=warn poll-interval=10 resources='GPU0=1 GPU1=1 GPU2=1'
-  run-once=no wait-for-running=no

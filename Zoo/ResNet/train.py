@@ -7,7 +7,7 @@ import tensorflow as tf
 import meta as meta
 import tensorflow.keras as k
 
-from resnet_model import ResNet_Model
+from ResNet.resnet_model import ResNet_Model
 import aursad
 import numpy as np
 

@@ -1,6 +1,0 @@
-INFO: [guild] 2021-03-25 12:12:03 Starting Dask scheduler
-INFO: [guild] 2021-03-25 12:12:04 Initializing Dask cluster
-INFO: [guild] 2021-03-25 12:12:04 Dashboard link: http://10.250.136.191:8787/status
-INFO: [guild] 2021-03-25 12:12:04 Waiting for staged runs
-INFO: [guild] 2021-03-25 12:12:45 Stopping Dask scheduler
-INFO: [guild] 2021-03-25 12:12:45 Stopping Dask cluster

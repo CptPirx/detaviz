@@ -1,1 +1,0 @@
-{"binarize": {"default": false, "type": "boolean", "arg-split": null}, "n_feature_maps": {"default": 64, "type": "number", "arg-split": null}, "dev": {"default": false, "type": "boolean", "arg-split": null}, "remote": {"default": false, "type": "boolean", "arg-split": null}, "$dest": "globals"}

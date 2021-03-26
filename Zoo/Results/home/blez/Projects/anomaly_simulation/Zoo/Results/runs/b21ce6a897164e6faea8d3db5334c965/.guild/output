@@ -1,7 +1,0 @@
-INFO: [guild] 2021-03-25 12:13:30 Starting Dask scheduler
-INFO: [guild] 2021-03-25 12:13:31 Initializing Dask cluster
-INFO: [guild] 2021-03-25 12:13:31 Dashboard link: http://10.250.136.191:8787/status
-INFO: [guild] 2021-03-25 12:13:31 Cluster resources: GPU0=1 GPU1=1 GPU2=1
-INFO: [guild] 2021-03-25 12:13:31 Waiting for staged runs
-INFO: [guild] 2021-03-25 12:17:34 Stopping Dask scheduler
-INFO: [guild] 2021-03-25 12:17:34 Stopping Dask cluster

@@ -1,9 +1,0 @@
-- /home/blez/anaconda3/envs/anomaly_detection/bin/python
-- -um
-- guild.plugins.dask_scheduler_main
-- --dashboard-address
-- '8787'
-- --loglevel
-- warn
-- --poll-interval
-- '10'
