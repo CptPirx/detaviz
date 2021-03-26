@@ -1,0 +1,75 @@
+INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
+Loaded data
+Filtering samples
+There are 2042 samples in total.
+The types and counts of different labels : 
+ {0: 1420, 1: 221, 2: 183, 3: 218}
+The types and counts of different labels as percentage of the total data : 
+ {0: 0.7, 1: 0.11, 2: 0.09, 3: 0.11}
+Reducing dimensionality
+Padding data:   0%|          | 0/2042 [00:00<?, ?it/s]Padding data:   3%|▎         | 65/2042 [00:00<00:03, 646.18it/s]Padding data:   6%|▋         | 131/2042 [00:00<00:02, 650.89it/s]Padding data:  10%|▉         | 198/2042 [00:00<00:02, 653.52it/s]Padding data:  13%|█▎        | 264/2042 [00:00<00:02, 654.30it/s]Padding data:  16%|█▌        | 331/2042 [00:00<00:02, 657.68it/s]Padding data:  19%|█▉        | 397/2042 [00:00<00:02, 656.30it/s]Padding data:  23%|██▎       | 463/2042 [00:00<00:02, 657.34it/s]Padding data:  26%|██▌       | 531/2042 [00:00<00:02, 662.50it/s]Padding data:  29%|██▉       | 598/2042 [00:00<00:02, 664.31it/s]Padding data:  33%|███▎      | 665/2042 [00:01<00:02, 663.80it/s]Padding data:  36%|███▌      | 732/2042 [00:01<00:01, 663.53it/s]Padding data:  39%|███▉      | 800/2042 [00:01<00:01, 668.04it/s]Padding data:  42%|████▏     | 867/2042 [00:01<00:01, 667.94it/s]Padding data:  46%|████▌     | 935/2042 [00:01<00:01, 670.26it/s]Padding data:  49%|████▉     | 1003/2042 [00:01<00:01, 667.03it/s]Padding data:  52%|█████▏    | 1071/2042 [00:01<00:01, 669.03it/s]Padding data:  56%|█████▌    | 1139/2042 [00:01<00:01, 671.92it/s]Padding data:  59%|█████▉    | 1207/2042 [00:01<00:01, 672.92it/s]Padding data:  62%|██████▏   | 1275/2042 [00:01<00:01, 674.27it/s]Padding data:  66%|██████▌   | 1343/2042 [00:02<00:01, 671.88it/s]Padding data:  69%|██████▉   | 1411/2042 [00:02<00:00, 666.45it/s]Padding data:  72%|███████▏  | 1478/2042 [00:02<00:00, 662.12it/s]Padding data:  76%|███████▌  | 1547/2042 [00:02<00:00, 668.53it/s]Padding data:  79%|███████▉  | 1615/2042 [00:02<00:00, 671.08it/s]Padding data:  82%|████████▏ | 1683/2042 [00:02<00:00, 669.36it/s]Padding data:  86%|████████▌ | 1750/2042 [00:02<00:00, 662.63it/s]Padding data:  89%|████████▉ | 1817/2042 [00:02<00:00, 658.30it/s]Padding data:  92%|█████████▏| 1884/2042 [00:02<00:00, 661.57it/s]Padding data:  96%|█████████▌| 1952/2042 [00:02<00:00, 666.96it/s]Padding data:  99%|█████████▉| 2019/2042 [00:03<00:00, 659.08it/s]Padding data: 100%|██████████| 2042/2042 [00:03<00:00, 664.04it/s]
+Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 100, 40)]         0         
+_________________________________________________________________
+bl_1 (BL)                    (None, 120, 5)            12800     
+_________________________________________________________________
+activation_1 (Activation)    (None, 120, 5)            0         
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 120, 5)            0         
+_________________________________________________________________
+bl_2 (BL)                    (None, 60, 2)             7330      
+_________________________________________________________________
+activation_2 (Activation)    (None, 60, 2)             0         
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 60, 2)             0         
+_________________________________________________________________
+tabl (TABL)                  (None, 2)                 129       
+_________________________________________________________________
+activation_3 (Activation)    (None, 2)                 0         
+=================================================================
+Total params: 20,259
+Trainable params: 20,259
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/100
+Traceback (most recent call last):
+  File "/home/blez/Projects/anomaly_simulation/Zoo/Results/runs/9a7f9efd740f4a91be92b1896ebf8107/.guild/sourcecode/TABL/train.py", line 104, in <module>
+    clf.train(train_generator=train_generator,
+  File "/home/blez/Projects/anomaly_simulation/Zoo/Results/runs/9a7f9efd740f4a91be92b1896ebf8107/.guild/sourcecode/abstract_classifier.py", line 51, in train
+    history = self.model.fit(train_generator,
+  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/tensorflow/python/keras/engine/training.py", line 1100, in fit
+    tmp_logs = self.train_function(iterator)
+  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/tensorflow/python/eager/def_function.py", line 828, in __call__
+    result = self._call(*args, **kwds)
+  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/tensorflow/python/eager/def_function.py", line 888, in _call
+    return self._stateless_fn(*args, **kwds)
+  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/tensorflow/python/eager/function.py", line 2942, in __call__
+    return graph_function._call_flat(
+  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/tensorflow/python/eager/function.py", line 1918, in _call_flat
+    return self._build_call_outputs(self._inference_function.call(
+  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/tensorflow/python/eager/function.py", line 555, in call
+    outputs = execute.execute(
+  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/tensorflow/python/eager/execute.py", line 59, in quick_execute
+    tensors = pywrap_tfe.TFE_Py_Execute(ctx._handle, device_name, op_name,
+tensorflow.python.framework.errors_impl.InvalidArgumentError: 2 root error(s) found.
+  (0) Invalid argument:  Incompatible shapes: [256,4] vs. [256,2]
+	 [[node binary_crossentropy/logistic_loss/mul (defined at /Projects/anomaly_simulation/Zoo/Results/runs/9a7f9efd740f4a91be92b1896ebf8107/.guild/sourcecode/abstract_classifier.py:51) ]]
+	 [[Func/cond/then/_0/input/_12/_30]]
+  (1) Invalid argument:  Incompatible shapes: [256,4] vs. [256,2]
+	 [[node binary_crossentropy/logistic_loss/mul (defined at /Projects/anomaly_simulation/Zoo/Results/runs/9a7f9efd740f4a91be92b1896ebf8107/.guild/sourcecode/abstract_classifier.py:51) ]]
+0 successful operations.
+0 derived errors ignored. [Op:__inference_train_function_1945]
+
+Errors may have originated from an input operation.
+Input Source operations connected to node binary_crossentropy/logistic_loss/mul:
+ model/tabl/Squeeze (defined at /Projects/anomaly_simulation/Zoo/Results/runs/9a7f9efd740f4a91be92b1896ebf8107/.guild/sourcecode/TABL/Layers.py:202)
+
+Input Source operations connected to node binary_crossentropy/logistic_loss/mul:
+ model/tabl/Squeeze (defined at /Projects/anomaly_simulation/Zoo/Results/runs/9a7f9efd740f4a91be92b1896ebf8107/.guild/sourcecode/TABL/Layers.py:202)
+
+Function call stack:
+train_function -> train_function
+

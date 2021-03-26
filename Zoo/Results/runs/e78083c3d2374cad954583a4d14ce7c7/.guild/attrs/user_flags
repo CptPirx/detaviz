@@ -1,0 +1,4 @@
+binarize: true
+dimensionality: 125
+remote: true
+window: 500
