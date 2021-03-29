@@ -5,9 +5,10 @@ To view and experiment with different settings of the simulation, an interactive
 The project emulates the workings of a system for x number of cycles, where every cycle consists of reading a new sample
 to the buffer, making a prediction and then appending the results to be summarily saved at the end of the simulation.
 The simulation measures the accuracy of the predictions, as well as the run times for each cycle.
+The experiments are performed for the binary version of the dataset, which means that the operation can be normal or 
+anomalous, without distinction between the different types of anomalies.
 
 Based on these results, the web app allows experimenting with applying different methods to create the optimal system response accuracy.
-
 
 ## Requirements
 The solution has been intended for and tested on Ubuntu & Windows 10. 
