@@ -1,6 +1,0 @@
-architecture: 64bit ELF
-cpus: 8
-processor: x86_64
-python_version: 3.8.5 (default, Sep  4 2020, 07:30:14) [GCC 7.3.0]
-uname: 'Linux blez-au 5.8.0-44-generic #50~20.04.1-Ubuntu SMP Wed Feb 10 21:07:30
-  UTC 2021 x86_64 x86_64'

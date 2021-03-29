@@ -1,4 +1,4 @@
-attention_constraint: None
+50attention_constraint: None
 attention_regularizer: None
 binarize: true
 dev: false

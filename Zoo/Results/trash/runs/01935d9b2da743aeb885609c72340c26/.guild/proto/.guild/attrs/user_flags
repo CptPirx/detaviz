@@ -1,5 +1,0 @@
-binarize: true
-dimensionality:
-- 100
-- 80
-- 40
