@@ -1,6 +1,0 @@
-INFO: [guild] Running trial a3e92b4a24304de9b1dd3fb49ba717d6: gpkg.anonymous-f8a06c26/ResNet:train (binarize=yes, dev=no, dimensionality=125, horizon=1, learning_rate=0.001, n_feature_maps=64, optimizer=adam, remote=yes, window=100)
-INFO: [guild] Resolving file:ResNet.resnet_model.py dependency
-ERROR: [guild] Trial a3e92b4a24304de9b1dd3fb49ba717d6 exited with an error: (1) run failed because a dependency was not met: could not resolve 'file:ResNet.resnet_model.py' in file:ResNet.resnet_model.py resource: cannot find source file 'ResNet.resnet_model.py'
-INFO: [guild] Running trial 67fc11cbf12146889a8c69ba8272b5da: gpkg.anonymous-f8a06c26/ResNet:train (binarize=yes, dev=no, dimensionality=125, horizon=1, learning_rate=0.001, n_feature_maps=64, optimizer=adam, remote=yes, window=200)
-INFO: [guild] Resolving file:ResNet.resnet_model.py dependency
-ERROR: [guild] Trial 67fc11cbf12146889a8c69ba8272b5da exited with an error: (1) run failed because a dependency was not met: could not resolve 'file:ResNet.resnet_model.py' in file:ResNet.resnet_model.py resource: cannot find source file 'ResNet.resnet_model.py'
