@@ -1,0 +1,37 @@
+CMD_DIR: /home/bl
+COLUMNS: '223'
+CONDA_DEFAULT_ENV: anomaly_detection
+CONDA_EXE: /home/bl/anaconda3/bin/conda
+CONDA_PREFIX: /home/bl/anaconda3/envs/anomaly_detection
+CONDA_PROMPT_MODIFIER: '(anomaly_detection) '
+CONDA_PYTHON_EXE: /home/bl/anaconda3/bin/python
+CONDA_SHLVL: '1'
+CUDA_VISIBLE_DEVICES: '0'
+GUILD_HOME: /home/bl/anaconda3/envs/anomaly_detection/.guild
+GUILD_OP: +
+GUILD_PLUGINS: ''
+GUILD_SOURCECODE: .guild/sourcecode
+HOME: /home/bl
+LANG: en_US.UTF-8
+LOGNAME: bl
+LOG_LEVEL: '20'
+MAIL: /var/mail/bl
+NO_IMPORT_FLAGS_PROGRESS: '1'
+NO_OP_INTERRUPTED_MSG: '1'
+NO_STAGED_MSG: '1'
+NO_WARN_RUNDIR: '1'
+PATH: /home/bl/anaconda3/envs/anomaly_detection/bin:/home/bl/anaconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+PROJECT_DIR: ''
+PWD: /home/bl
+PYTHONPATH: '.guild/sourcecode:/home/bl/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/guild/external:/home/bl/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages:/home/bl/anaconda3/envs/anomaly_detection/.guild/runs/e5c5c5689949402a996382ec946490cd/.guild/job-packages:'
+RUN_DIR: /home/bl/anaconda3/envs/anomaly_detection/.guild/runs/e5c5c5689949402a996382ec946490cd
+RUN_ID: e5c5c5689949402a996382ec946490cd
+SHELL: /bin/bash
+SHLVL: '1'
+SSH_CLIENT: 10.250.152.209 58966 22
+SSH_CONNECTION: 10.250.152.209 58966 10.106.37.241 22
+USER: bl
+XDG_RUNTIME_DIR: /run/user/1014
+XDG_SESSION_ID: '330'
+_CE_CONDA: ''
+_CE_M: ''

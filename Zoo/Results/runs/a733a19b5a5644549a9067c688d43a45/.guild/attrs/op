@@ -1,0 +1,19 @@
+delete-on-success: true
+deps: []
+flag-null-labels: {}
+flags-extra: {}
+label-template: null
+op-cmd:
+  cmd-args:
+  - ${python_exe}
+  - -um
+  - guild.batch_main
+  cmd-env:
+    CUDA_VISIBLE_DEVICES: '2'
+    GUILD_PLUGINS: ''
+    NO_OP_INTERRUPTED_MSG: '1'
+    PROJECT_DIR: ''
+  flags-dest: args
+output-scalars: null
+python-requires: null
+sourcecode-root: .guild/sourcecode
