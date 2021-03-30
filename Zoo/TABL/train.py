@@ -16,6 +16,7 @@ import numpy as np
 window = meta.window
 horizon = meta.horizon
 dimensionality = meta.dimensionality
+screwdiver_only = False
 binarize = False
 optimizer = k.optimizers.get(meta.optimizer)
 learning_rate = meta.learning_rate
@@ -25,7 +26,7 @@ projection_constraint = None
 attention_regularizer = None
 attention_constraint = None
 n_bl_layers = 2
-bl_dimensions= {0: "[120, 5]", 1: "[60, 2]"}
+bl_dimensions = {0: "[120, 5]", 1: "[60, 2]"}
 n_tabl_layers = 1
 tabl_dimensions = {0: "[2, 1]"}
 dev = False
@@ -57,6 +58,8 @@ if dimensionality < 125:
 else:
     reduce_dimensions = False
 
+if screwdiver_only:
+    dimensionality = 7
 
 # Turn dicts of string lists to dict of lists
 for k, v in bl_dimensions.items():
@@ -66,15 +69,18 @@ for k, v in tabl_dimensions.items():
     tabl_dimensions[k] = json.loads(v)
 
 projection_regularizer = None if projection_regularizer == 'None' else projection_regularizer
-projection_constraint = None if projection_constraint == 'None' else eval(f"tf.keras.constraints.{projection_constraint['name']}({projection_constraint['max_value'], projection_constraint['axis']})")
+projection_constraint = None if projection_constraint == 'None' else eval(
+    f"tf.keras.constraints.{projection_constraint['name']}({projection_constraint['max_value'], projection_constraint['axis']})")
 
 attention_regularizer = None if attention_regularizer == 'None' else attention_regularizer
-attention_constraint = None if attention_constraint == 'None' else eval(f"tf.keras.constraints.{attention_constraint['name']}({attention_constraint['max_value'], attention_constraint['axis']})")
+attention_constraint = None if attention_constraint == 'None' else eval(
+    f"tf.keras.constraints.{attention_constraint['name']}({attention_constraint['max_value'], attention_constraint['axis']})")
 
 _, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_generator(path=data_path,
                                                                                       window_size=window,
                                                                                       reduce_dimensionality=reduce_dimensions,
                                                                                       binary_labels=binarize,
+                                                                                      screwdriver_only=screwdiver_only,
                                                                                       n_dimensions=dimensionality,
                                                                                       normal_samples=normal_samples,
                                                                                       missing_samples=missing_samples,
@@ -84,18 +90,18 @@ _, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_gene
                                                                                       batch_size=meta.batch_size)
 
 clf = TABLModel(window=window,
-                 dimensions=dimensionality,
-                 classes=len(np.unique(train_y)),
-                 optimizer=optimizer,
-                 dropout=dropout,
-                 projection_regularizer=projection_regularizer,
-                 projection_constraint=projection_constraint,
-                 attention_regularizer=attention_regularizer,
-                 attention_constraint=attention_constraint,
-                 n_bl_layers=n_bl_layers,
-                 bl_layers=bl_dimensions,
-                 n_tabl_layers=n_tabl_layers,
-                 tabl_layers=tabl_dimensions)
+                dimensions=dimensionality,
+                classes=len(np.unique(train_y)),
+                optimizer=optimizer,
+                dropout=dropout,
+                projection_regularizer=projection_regularizer,
+                projection_constraint=projection_constraint,
+                attention_regularizer=attention_regularizer,
+                attention_constraint=attention_constraint,
+                n_bl_layers=n_bl_layers,
+                bl_layers=bl_dimensions,
+                n_tabl_layers=n_tabl_layers,
+                tabl_layers=tabl_dimensions)
 
 clf.train(train_generator=train_generator,
           epochs=epochs)
