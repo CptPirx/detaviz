@@ -79,15 +79,24 @@ To run a new simulation using one of the available models, run the following in 
 ```bash
 /anomaly_simulation/Source> python simulation.py 
 ```
-The simulation requires the user to input several parameters:
+The simulation requires the user to give the starting symbols of the model to use in the simulation, and allows to 
+set several other parameters. 
 ```bash
-Define the simulation parameters
-Define number of cycles. Default=1000:
-Use binary data? Default=False: True  # Use multi-class labels or binary labels (only normal and anomaly, no distinction between anomaly types)
-Enter the model type. Default=tabl:   # Define the model type
-Enter the first symbols of folder name in Results/runs: 27760   # Enough characters to make the model name in /Zoo/Results/runs unique
-Enter the model window size.Default=500:
-Enter the data dimensionality. Default=60:
+/anomaly_simulation/Source>python simulation.py --help
+Usage: simulation.py [OPTIONS]
+
+  :return:
+
+Options:
+  --version                Show the version and exit.
+  --cycle_count INTEGER    Number of simulation cycles.
+  --binary_labels BOOLEAN  True for binary labels, False for multi-class
+  --model_dir TEXT         The first symbols of folder name in Results/runs
+  --model_type TEXT        Model type
+  --window INTEGER         Rolling window size
+  --n_dim INTEGER          Data dimensionality
+  --help                   Show this message and exit.
+
 ```
 
 This will run the simulation and save its results to anomaly_simulation/Results. 

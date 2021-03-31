@@ -2,7 +2,10 @@ __doc__ = """
 Holds different values common for the project.
 """
 
-data_path = '/home/blez/Projects/anomaly_simulation/Data/AURSAD.h5'
+import pathlib
+
+# data_path = ('/home/blez/Projects/anomaly_simulation/Data/AURSAD.h5')
+data_path = pathlib.Path('../Data/AURSAD.h5')
 # data_path = 'E:/source/repos/anomaly_simulation/Data/AURSAD.h5'
 
 # Common training parameters

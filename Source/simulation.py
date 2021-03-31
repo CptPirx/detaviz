@@ -2,18 +2,23 @@ __doc__ = """
 Script responsible for running the entire simulation.
 """
 
-import os
-import sys
+__version__ = """ 
+v0.1.0 First release
+"""
 
+import os
 # Tensorflow logging level
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
-import tensorflow as tf
-from tensorflow.keras.models import load_model
 
-# Allow memory growth
-physical_devices = tf.config.list_physical_devices('GPU')
-if len(physical_devices) > 0:
-    tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
+import sys
+import tqdm
+import click
+import tensorflow as tf
+import aursad
+import pandas as pd
+
+from tensorflow.keras.models import load_model
+from pathlib import Path, PurePath
 
 from sensor import Sensor
 from hapDev import HapDev
@@ -23,42 +28,33 @@ import Zoo.meta as meta
 from Zoo.TABL.Layers import BL, TABL
 from Source.visualisation.visualisation import plot_simulation_history
 
-from pathlib import Path, PurePath
 
-import tqdm
-import aursad
-import pandas as pd
+def validate_model_exists(ctx, param, value):
+    found = False
+    for x in os.listdir('../Zoo/Results/runs'):
+        if x.startswith(value):
+            ctx.params['model_dir'] = x
+            found = True
+            break
 
+    if not found:
+        raise click.BadParameter('no such model exists')
 
-def main():
+@click.command()
+@click.version_option(version=__version__)
+@click.option('--cycle_count', default=50000, type=int, help='Number of simulation cycles.')
+@click.option('--binary_labels', default=True, type=bool, help='True for binary labels, False for multi-class')
+@click.option('--model_dir',
+              callback=validate_model_exists,
+              help='The first symbols of folder name in Results/runs')
+@click.option('--model_type', default='tabl', type=str, help='Model type')
+@click.option('--window', default=500, type=int, help='Rolling window size')
+@click.option('--n_dim', default=60, type=int, help='Data dimensionality')
+def main(cycle_count, binary_labels, model_dir, model_type, window, n_dim):
     """
 
     :return:
     """
-    # Define simulation parameters
-    print('Define the simulation parameters')
-
-    # The cycle count
-    cycle_count = int(input('Define number of cycles. Default=1000: ') or 1000)
-
-    # Binary or full class data
-    binary_labels = bool(input('Use binary data? Default=False: ') or False)
-
-    # The model type
-    model_type = input('Enter the model type. Default=tabl: ') or 'tabl'
-
-    # The model source
-    while True:
-        model_dir = None
-        model_source = input('Enter the first symbols of folder name in Results/runs: ')
-        for x in os.listdir('../Zoo/Results/runs'):
-            if x.startswith(model_source):
-                model_dir = x
-        if model_dir is not None:
-            break
-        else:
-            print('No such folder')
-            continue
 
     # The sensor domain
     # while True:
@@ -70,15 +66,9 @@ def main():
     #         break
     domain = 0
 
-    # The model's window size
-    window = int(input('Enter the model window size.Default=500: ') or 500)
-
     # The model's prediction horizon
     # horizon = int(input('Enter the horizon size. Default=1: ') or 1)
     horizon = 1
-
-    # The data's dimensionality
-    n_dim = int(input('Enter the data dimensionality. Default=60: ') or 60)
 
     # The model's buffer size
     # while True:
@@ -89,7 +79,6 @@ def main():
     #     else:
     #         break
     buffer = window
-
 
     # Whether to reduce dimensionality
     if n_dim < 125:
