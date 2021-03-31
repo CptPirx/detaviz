@@ -1,0 +1,3 @@
+binarize: true
+dev: true
+screwdriver_only: true

@@ -16,6 +16,8 @@ window = meta.window
 horizon = meta.horizon
 dimensionality = meta.dimensionality
 binarize = False
+prediction_mode = True
+screwdriver_only = False
 optimizer = k.optimizers.get(meta.optimizer)
 learning_rate = meta.learning_rate
 n_feature_maps = 64
@@ -48,11 +50,16 @@ if dimensionality < 125:
 else:
     reduce_dimensions = False
 
+if screwdriver_only:
+    dimensionality = 7
+
 _, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_generator(path=data_path,
                                                                                       window_size=window,
                                                                                       reduce_dimensionality=reduce_dimensions,
                                                                                       n_dimensions=dimensionality,
                                                                                       binary_labels=binarize,
+                                                                                      screwdriver_only=screwdriver_only,
+                                                                                      prediction_mode=prediction_mode,
                                                                                       normal_samples=normal_samples,
                                                                                       missing_samples=missing_samples,
                                                                                       damaged_samples=damaged_samples,

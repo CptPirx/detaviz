@@ -1,0 +1,43 @@
+INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
+Loaded data
+Only screwdriver data taken
+Filtering samples
+There are 368 samples in total.
+The types and counts of different labels : 
+ {0: 142, 2: 183, 3: 21, 1: 22}
+The types and counts of different labels as percentage of the total data : 
+ {0: 0.39, 2: 0.5, 3: 0.06, 1: 0.06}
+Padding data:   0%|          | 0/368 [00:00<?, ?it/s]Padding data:  30%|██▉       | 110/368 [00:00<00:00, 1095.59it/s]Padding data:  61%|██████    | 223/368 [00:00<00:00, 1111.31it/s]Padding data:  91%|█████████▏| 336/368 [00:00<00:00, 1116.79it/s]Padding data: 100%|██████████| 368/368 [00:00<00:00, 1093.73it/s]
+Model: "model"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 100, 7)]          0         
+_________________________________________________________________
+bl_1 (BL)                    (None, 120, 5)            12635     
+_________________________________________________________________
+activation_1 (Activation)    (None, 120, 5)            0         
+_________________________________________________________________
+dropout_1 (Dropout)          (None, 120, 5)            0         
+_________________________________________________________________
+bl_2 (BL)                    (None, 60, 2)             7330      
+_________________________________________________________________
+activation_2 (Activation)    (None, 60, 2)             0         
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 60, 2)             0         
+_________________________________________________________________
+tabl (TABL)                  (None, 2)                 129       
+_________________________________________________________________
+activation_3 (Activation)    (None, 2)                 0         
+=================================================================
+Total params: 20,094
+Trainable params: 20,094
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/2
+351/351 - 2s - loss: 0.6991
+Epoch 2/2
+351/351 - 1s - loss: 0.6768
+INFO: [tensorflow] Assets written to: model/assets
+Train f1_avg: 0.39875997148761244
+Test f1_avg: 0.3910502789894903

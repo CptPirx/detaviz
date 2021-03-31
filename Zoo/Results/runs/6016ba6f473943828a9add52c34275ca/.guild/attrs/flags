@@ -1,6 +1,7 @@
 binarize: true
 dev: false
 dimensionality: 125
+prediction_mode: false
 horizon: 1
 learning_rate: 0.001
 n_feature_maps: 64

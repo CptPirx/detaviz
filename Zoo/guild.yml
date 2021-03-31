@@ -64,6 +64,9 @@
         screwdriver_only:
           description: Use screwdriver data only
           default: False
+        prediction_mode:
+          description: If True train the model to predict the next label, if False classify the current sample
+          default: True
         n_bl_layers:
           description: Number of BL layers
           default: 2
@@ -118,6 +121,12 @@
           default: 60
         binarize:
           description: Use binary labels
+          default: False
+        prediction_mode:
+          description: If True train the model to predict the next label, if False classify the current sample
+          default: True
+        screwdriver_only:
+          description: Use screwdriver data only
           default: False
         optimizer:
           description: Loss optimizer
