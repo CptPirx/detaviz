@@ -7,6 +7,7 @@ v0.1.0 First release
 """
 
 import os
+
 # Tensorflow logging level
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
@@ -40,6 +41,7 @@ def validate_model_exists(ctx, param, value):
     if not found:
         raise click.BadParameter('no such model exists')
 
+
 @click.command()
 @click.version_option(version=__version__)
 @click.option('--cycle_count', default=50000, type=int, help='Number of simulation cycles.')
@@ -47,10 +49,9 @@ def validate_model_exists(ctx, param, value):
 @click.option('--model_dir',
               callback=validate_model_exists,
               help='The first symbols of folder name in Results/runs')
-@click.option('--model_type', default='tabl', type=str, help='Model type')
 @click.option('--window', default=500, type=int, help='Rolling window size')
 @click.option('--n_dim', default=60, type=int, help='Data dimensionality')
-def main(cycle_count, binary_labels, model_dir, model_type, window, n_dim):
+def main(cycle_count, binary_labels, model_dir, window, n_dim):
     """
     Run the system simulation
     """
@@ -108,17 +109,19 @@ def main(cycle_count, binary_labels, model_dir, model_type, window, n_dim):
                     horizon=horizon)
 
     # Create a sensor
-    sensor = Sensor(domain=domain, buffer_size=buffer, dataset=test_x, dataset_labels=test_y)
+    sensor = Sensor(domain=domain,
+                    buffer_size=buffer,
+                    dataset=test_x,
+                    dataset_labels=test_y,
+                    label_counter=window)
     device.add_sensor(sensor)
 
     # Load the ML model
-    if model_type == 'tabl':
-        custom_objects = {'BL': BL,
-                          'TABL': TABL,
-                          'MaxNorm': tf.keras.constraints.max_norm}
-        model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'), custom_objects=custom_objects)
-    else:
-        model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'))
+    custom_objects = {'BL': BL,
+                      'TABL': TABL,
+                      'MaxNorm': tf.keras.constraints.max_norm}
+    model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'), custom_objects=custom_objects)
+    model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'))
 
     device.receive_model(model)
 

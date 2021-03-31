@@ -10,12 +10,10 @@ class HapDev(object):
         """
         Initialisation
 
-        :param buffer_size: int,
-            how many samples will be held in the buffer
-        :param network_delay: float,
-            the network delay in the device
-        :param window: int,
-            how many prior samples to base the prediction on
+        :param buffer_size: int, how many samples will be held in the buffer
+        :param network_delay: float, the network delay in the device
+        :param window: int, how many prior samples to base the prediction on
+        :param horizon: int, the prediction horizon
         """
         self.buffer_size = buffer_size
         self.network_delay = network_delay
@@ -47,8 +45,7 @@ class HapDev(object):
         """
         Remove sensor from the device
 
-        :param sensor_id: int,
-            id of the sensor to be removed
+        :param sensor_id: int, id of the sensor to be removed
         :return:
         """
         self.sensor_list = [x for x in self.sensor_list if x.id != sensor_id]
@@ -57,10 +54,9 @@ class HapDev(object):
         """
         Receive sample from a sensor
 
-        :param sensor: int,
-            sensor id
-        :return: np array,
-            single sample
+        :param sensor: int, sensor id
+        :param source: str, receive 'sensor' or 'label'
+        :return: np array, single sample
         """
         if source == 'sample':
             sample = sensor.send_sample()

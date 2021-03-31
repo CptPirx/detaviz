@@ -86,18 +86,17 @@ set several other parameters.
 /anomaly_simulation/Source>python simulation.py --help
 Usage: simulation.py [OPTIONS]
 
-  :return:
+  Run the system simulation
 
 Options:
-  --version                Show the version and exit.
-  --cycle_count INTEGER    Number of simulation cycles.
-  --binary_labels BOOLEAN  True for binary labels, False for multi-class
-  --model_dir TEXT         The first symbols of folder name in Results/runs
-  --model_type TEXT        Model type
-  --window INTEGER         Rolling window size
-  --n_dim INTEGER          Data dimensionality
-  --help                   Show this message and exit.
+  --version                  Show the version and exit.
+  --cycle_count INTEGER      Number of simulation cycles.
+  --binary_labels BOOLEAN    True for binary labels, False for multi-class
+  --model_dir TEXT           The first symbols of folder name in Results/runs
+  --window INTEGER           Rolling window size
+  --n_dim INTEGER            Data dimensionality
 
+  --help                     Show this message and exit.
 ```
 
 This will run the simulation and save its results to anomaly_simulation/Results. 
