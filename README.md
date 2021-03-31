@@ -27,6 +27,7 @@ More on how to install those drivers can be found [here](https://docs.nvidia.com
 > conda activate anomaly_simulation
 ```
 5. Download the [AURSAD](https://zenodo.org/record/4487073) dataset and move it to the directory anomaly_simulation/Data
+6. All the following commands must be run from the activated virtual environment
 
 ## How to use it?
 The project can be used in several ways. 
@@ -117,7 +118,6 @@ Example ResNet configuration looks like this:
         window:
           description: The sliding window size
           default: 100
-          choices: [100, 200, 500]
         horizon:
           description: Prediction horizon
           default: 1
@@ -146,8 +146,9 @@ Example ResNet configuration looks like this:
         train_f1_avg: 'Train f1_avg: (\value)'
         test_f1_avg: 'Test f1_avg: (\value)'
 ```
-Change the default values of the parameters and save the file.
-Next, in your terminal run the following to see avaialble models:
+There are two ways now to run the model with new parameters.
+One is to change the default values of the parameters and save the file.
+Next, in your terminal run the following to see available models:
 ```bash
 anomaly_simulation/Zoo> guild operations
 Refreshing flags...
@@ -172,8 +173,9 @@ You are about to run ResNet:train
   window: 100
 Continue? (Y/n) # Tyoe Y and press enter to commence model training
 ```
+This will run the model with the default flags as configured in the guild.yml file.
 
-To run a model with grid search of certain attributes, run the previous command with additional flags:
+To run a model with grid search of certain attributes, or change the flags without changing the default values, run the previous command with additional options:
 ```bash
 anomaly_simulation/Zoo> guild -H <path> run ResNet:train window=[100,200,500]
 You are about to run ResNet:train as a batch (3 trials)

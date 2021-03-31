@@ -52,8 +52,7 @@ def validate_model_exists(ctx, param, value):
 @click.option('--n_dim', default=60, type=int, help='Data dimensionality')
 def main(cycle_count, binary_labels, model_dir, model_type, window, n_dim):
     """
-
-    :return:
+    Run the system simulation
     """
 
     # The sensor domain
