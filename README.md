@@ -7,6 +7,7 @@ to the buffer, making a prediction and then appending the results to be summaril
 The simulation measures the accuracy of the predictions, as well as the run times for each cycle.
 The experiments are performed for the binary version of the dataset, which means that the operation can be normal or 
 anomalous, without distinction between the different types of anomalies.
+The data is sampled at 50 Hz.
 
 Based on these results, the web app allows experimenting with applying different methods to create the optimal system response accuracy.
 

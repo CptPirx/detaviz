@@ -97,7 +97,8 @@ app.layout = html.Div(
             html.Div(
                     [
                         html.Div([
-                            html.P("Select model window size and dimensionality:", className="control_label"),
+                            html.P("Select model window size, dimensionality and other parameters:",
+                                   className="control_label"),
                             dcc.Input(id="model_window",
                                       type="number",
                                       placeholder="Model window size",
@@ -112,6 +113,14 @@ app.layout = html.Div(
                                       min=0,
                                       value=60,
                                       className="dcc_control"),
+                            dcc.Checklist(
+                                    id='model_checklist',
+                                    options=[
+                                        {'label': 'Screwdriver data only', 'value': 'screwdriver_only'},
+                                        {'label': 'Binary data', 'value': 'binarize'}
+                                    ],
+                                    value=['binarize']
+                            ),
                             html.P("Select system response window type:", className="control_label"),
                             dcc.Dropdown(
                                     id='window_type',
@@ -119,6 +128,13 @@ app.layout = html.Div(
                                     value='hamming',
                                     className="dcc_control",
                             ),
+                            html.P("Select system response threshold:", className="control_label"),
+                            dcc.Input(id="response_threshold",
+                                      type="number",
+                                      placeholder="System response threshold",
+                                      min=0,
+                                      value=0.5,
+                                      className="dcc_control"),
                         ],
                                 className="pretty_container four columns",
                                 id="cross-filter-options",
@@ -301,8 +317,33 @@ def create_plots(augmented_data):
     # Pie chart of result types
     data_3 = augmented_data[augmented_data['variable'].isin(['Prediction_result'])]
     data_3 = data_3['value'].value_counts()
+    # Check if any value is missing
+    if not (data_3.index == 'False positive').any():
+        missing_entry = pd.Series({'False positive': 0}, index=['False positive'])
+        data_3 = pd.concat(data_3, missing_entry)
+
+    if not (data_3.index == 'False negative').any():
+        missing_entry = pd.Series({'False negative': 0}, index=['False negative'])
+        data_3 = pd.concat(data_3, missing_entry)
+
+    if not (data_3.index == 'Correct').any():
+        missing_entry = pd.Series({'Correct': 0}, index=['Correct'])
+        data_3 = pd.concat([data_3, missing_entry])
+
     data_4 = augmented_data[augmented_data['variable'].isin(['Response_result'])]
     data_4 = data_4['value'].value_counts()
+    # Check if any value is missing
+    if not (data_4.index == 'False positive').any():
+        missing_entry = pd.Series({'False positive': 0}, index=['False positive'])
+        data_4 = pd.concat(data_4, missing_entry)
+
+    if not (data_4.index == 'False negative').any():
+        missing_entry = pd.Series({'False negative': 0}, index=['False negative'])
+        data_4 = pd.concat(data_4, missing_entry)
+
+    if not (data_4.index == 'Correct').any():
+        missing_entry = pd.Series({'Correct': 0}, index=['Correct'])
+        data_4 = pd.concat([data_4, missing_entry])
 
     layout_pie = copy.deepcopy(layout)
 
@@ -359,12 +400,13 @@ def create_plots(augmented_data):
                Output('chosen_model_text', 'children'),
                Output('avg_acc_text', 'children')],
               [Input('model_window', 'value'),
-               Input('model_dimensionality', 'value')])
-def load_data(model_window, model_dimensionality):
+               Input('model_dimensionality', 'value'),
+               Input('model_checklist', 'value')])
+def load_data(model_window, model_dimensionality, model_checkbox):
     if model_window == "":  # Do nothing if button is clicked and input num is blank.
         return "", "No input", 0
 
-    df, chosen_model, max_acc = model_search(model_window, model_dimensionality)
+    df, chosen_model, max_acc = model_search(model_window, model_dimensionality, model_checkbox=model_checkbox)
 
     if isinstance(df, pd.DataFrame):
         return df.to_json(orient='split'), chosen_model, max_acc
@@ -382,14 +424,15 @@ def load_data(model_window, model_dimensionality):
          ],
         [Input('simulation_data', 'children'),
          Input('window_slider', 'value'),
-         Input('window_type', 'value')])
-def update_figure(simulation_data, window_size, window_type):
+         Input('window_type', 'value'),
+         Input('response_threshold', 'value')])
+def update_figure(simulation_data, window_size, window_type, response_threshold):
     if simulation_data == '':
         return dash.no_update, dash.no_update, dash.no_update, dash.no_update, 0, 0
 
     data = pd.read_json(simulation_data, orient='split')
 
-    augmented_df = prepare_data(data, window_size, window_type)
+    augmented_df = prepare_data(data, window_size, window_type, response_threshold)
 
     fig_0, fig_1, fig_2, fig_3 = create_plots(augmented_df)
 

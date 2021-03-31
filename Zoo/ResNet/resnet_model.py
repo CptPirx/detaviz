@@ -9,12 +9,13 @@ import tensorflow as tf
 
 
 class ResNetModel(Abstract_Classifier):
-    def __init__(self, window, dimensions, classes, optimizer, n_feature_maps):
+    def __init__(self, window, dimensions, classes, optimizer, n_feature_maps, config=None):
         self.window = window
         self.dimensions = dimensions
         self.classes = classes
         self.optimizer = optimizer
         self.n_feature_maps = n_feature_maps
+        self.config = config
 
         self.model = self.construct_model()
 
@@ -24,18 +25,30 @@ class ResNetModel(Abstract_Classifier):
         # BLOCK 1
 
         conv_x = k.layers.Conv1D(filters=self.n_feature_maps, kernel_size=8, padding='same')(input_layer)
+        # conv_x = k.layers.Conv1D(filters=self.config['conv_block1_filters'],
+        #                          kernel_size=self.config['conv_block1x_kernel'],
+        #                          padding='same')(input_layer)
         conv_x = k.layers.BatchNormalization()(conv_x)
         conv_x = k.layers.Activation('relu')(conv_x)
 
         conv_y = k.layers.Conv1D(filters=self.n_feature_maps, kernel_size=5, padding='same')(conv_x)
+        # conv_y = k.layers.Conv1D(filters=self.config['conv_block1_filters'],
+        #                          kernel_size=self.config['conv_block1y_kernel'],
+        #                          padding='same')(conv_x)
         conv_y = k.layers.BatchNormalization()(conv_y)
         conv_y = k.layers.Activation('relu')(conv_y)
 
         conv_z = k.layers.Conv1D(filters=self.n_feature_maps, kernel_size=3, padding='same')(conv_y)
+        # conv_z = k.layers.Conv1D(filters=self.config['conv_block1_filters'],
+        #                          kernel_size=self.config['conv_block1z_kernel'],
+        #                          padding='same')(conv_y)
         conv_z = k.layers.BatchNormalization()(conv_z)
 
         # expand channels for the sum
         shortcut_y = k.layers.Conv1D(filters=self.n_feature_maps, kernel_size=1, padding='same')(input_layer)
+        # shortcut_y = k.layers.Conv1D(filters=self.config['conv_block1_filters'],
+        #                              kernel_size=1,
+        #                              padding='same')(input_layer)
         shortcut_y = k.layers.BatchNormalization()(shortcut_y)
 
         output_block_1 = k.layers.add([shortcut_y, conv_z])

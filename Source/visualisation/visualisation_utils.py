@@ -19,7 +19,13 @@ def check_flag_value(file, flag):
         datafile = f.readlines()
     for line in datafile:
         if flag in line:
-            line_contents = int(line.split(sep=' ')[1])
+            line_contents = line.split(sep=' ')[1].strip()
+            if line_contents == 'true':
+                line_contents = 1
+            elif line_contents == 'false':
+                line_contents = 0
+            else:
+                line_contents = int(line_contents)
             break
         else:
             line_contents = None
@@ -49,7 +55,7 @@ def get_file_list(dirName):
     return allFiles
 
 
-def model_search(model_window=500, model_dimensionality=60, cycles=50000):
+def model_search(model_window=500, model_dimensionality=60, cycles=50000, model_checkbox=['binarize']):
     """
     Search for the best performing model for the given window size in the model Zoo
 
@@ -59,11 +65,13 @@ def model_search(model_window=500, model_dimensionality=60, cycles=50000):
         model dimensionality
     :param cycles: int,
         the length of the simulation to read
+    :param model_checkbox: list of strings,
+        additional model parameters
     :return: df,
         simulation data
     """
-    model_path = os.path.join(Path(__file__).parents[2], 'Zoo/Results/runs/')
-    results_path = os.path.join(Path(__file__).parents[2], 'Results/')
+    model_path = os.path.join(Path(__file__).parents[2], 'Zoo\\Results\\runs\\')
+    results_path = os.path.join(Path(__file__).parents[2], 'Results\\')
 
     # Get all files in the runs
     file_list = get_file_list(model_path)
@@ -74,11 +82,23 @@ def model_search(model_window=500, model_dimensionality=60, cycles=50000):
 
     # Read each flags file and select the ones with appropriate window size
     for f in flags_list:
-        window_size = check_flag_value(f, 'window')
-        dimensionality = check_flag_value(f, 'dimensionality')
-        if window_size == model_window and dimensionality == model_dimensionality:
+        if 'binarize' in model_checkbox:
+            binarize = 1
+        else:
+            binarize = 0
+
+        if 'screwdriver_only' in model_checkbox:
+            screwdriver_only = 1
+        else:
+            screwdriver_only = 0
+
+        window_size_flag = check_flag_value(f, 'window')
+        dimensionality_flag = check_flag_value(f, 'dimensionality')
+        binarize_flag = check_flag_value(f, 'binarize')
+        screwdriver_only_flag = check_flag_value(f, 'screwdriver_only')
+
+        if window_size_flag == model_window and dimensionality_flag == model_dimensionality and binarize_flag == binarize and (screwdriver_only_flag == screwdriver_only or screwdriver_only_flag is None):
             selected_flags.append(f)
-    print(selected_flags)
 
     if len(selected_flags) > 0:
         # Get the selected directories
@@ -91,7 +111,7 @@ def model_search(model_window=500, model_dimensionality=60, cycles=50000):
         # Read all test_metrics in those directories
         test_metrics = []
         for path in selected_dirs:
-            with open(path + '/test_metrics.json') as json_file:
+            with open(path + '\\test_metrics.json') as json_file:
                 metrics = json.load(json_file)
             f1 = metrics['f1_avg']
             acc = metrics['accuracy']
