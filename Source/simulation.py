@@ -16,6 +16,8 @@ import tqdm
 import click
 import tensorflow as tf
 import aursad
+import multiprocessing
+import logging
 import pandas as pd
 
 from tensorflow.keras.models import load_model
@@ -31,15 +33,16 @@ from Source.visualisation.visualisation import plot_simulation_history
 
 
 def validate_model_exists(ctx, param, value):
-    found = False
-    for x in os.listdir('../Zoo/Results/runs'):
-        if x.startswith(value):
-            ctx.params['model_dir'] = x
-            found = True
-            break
+    if ctx.params['run_mode'] == 'single':
+        found = False
+        for x in os.listdir('../Zoo/Results/runs'):
+            if x.startswith(value):
+                ctx.params['model_dir'] = x
+                found = True
+                break
 
-    if not found:
-        raise click.BadParameter('no such model exists')
+        if not found:
+            raise click.BadParameter('no such model exists')
 
 
 @click.command()
@@ -47,13 +50,56 @@ def validate_model_exists(ctx, param, value):
 @click.option('--cycle_count', default=50000, type=int, help='Number of simulation cycles.')
 @click.option('--binary_labels', default=True, type=bool, help='True for binary labels, False for multi-class')
 @click.option('--model_dir',
+              default=None,
               callback=validate_model_exists,
               help='The first symbols of folder name in Results/runs')
 @click.option('--window', default=500, type=int, help='Rolling window size')
 @click.option('--n_dim', default=60, type=int, help='Data dimensionality')
-def main(cycle_count, binary_labels, model_dir, window, n_dim):
+@click.option('--n_cpu', default=multiprocessing.cpu_count() - 1, type=int, help='Number of threads to use if running '
+                                                                                 'multiple simulations')
+@click.option('--run_mode', default='single', type=str, help='Determines how many simulations will be run: single will '
+                                                             'run 1 simulation with a specified model, all will run '
+                                                             'all models, fill will run all models that do not have'
+                                                             'simulation results yet.')
+@click.option('--verbose', default=0, type=int, help='Logging level, from 0 (debug) to 3 (error)')
+def main(cycle_count, binary_labels, model_dir, window, n_dim, n_cpu, run_mode):
     """
-    Run the system simulation
+    Starts the processes and runs the simulations
+
+    :param cycle_count:
+    :param binary_labels:
+    :param model_dir:
+    :param window:
+    :param n_dim:
+    :param n_cpu:
+    :param run_mode:
+    :return:
+    """
+    single_simulation(cycle_count=cycle_count,
+                      binary_labels=binary_labels,
+                      model_dir=model_dir,
+                      window=window,
+                      n_dim=n_dim,
+                      n_cpu=n_cpu,
+                      run_mode=run_mode)
+
+
+def setup_logging():
+    pass
+
+
+def single_simulation(cycle_count, binary_labels, model_dir, window, n_dim, n_cpu, run_mode):
+    """
+    Run a single system simulation
+
+    :param cycle_count:
+    :param binary_labels:
+    :param model_dir:
+    :param window:
+    :param n_dim:
+    :param n_cpu:
+    :param run_mode:
+    :return:
     """
 
     # The sensor domain
