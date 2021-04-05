@@ -1,66 +1,0 @@
-INFO: [guild] Running trial 590cd20059ea42f3a72f6f9bc7b8cae8: TABL:train (attention_constraint=None, attention_regularizer=None, binarize=yes, dev=yes, dimensionality=60, horizon=1, learning_rate=0.001, n_bl_layers=2, n_tabl_layers=1, optimizer=adam, prediction_mode=yes, projection_constraint=None, projection_regularizer=None, remote=no, screwdriver_only=yes, window=100)
-INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
-Loaded data
-Only screwdriver data taken
-Filtering samples
-There are 368 samples in total.
-The types and counts of different labels : 
- {0: 142, 2: 183, 1: 22, 3: 21}
-The types and counts of different labels as percentage of the total data : 
- {0: 0.39, 2: 0.5, 1: 0.06, 3: 0.06}
-Padding data:   0%|          | 0/368 [00:00<?, ?it/s]Padding data:  29%|██▊       | 105/368 [00:00<00:00, 1049.73it/s]Padding data:  58%|█████▊    | 214/368 [00:00<00:00, 1070.61it/s]Padding data:  88%|████████▊ | 323/368 [00:00<00:00, 1077.58it/s]Padding data: 100%|██████████| 368/368 [00:00<00:00, 1066.91it/s]
-Model: "model"
-_________________________________________________________________
-Layer (type)                 Output Shape              Param #   
-=================================================================
-input_1 (InputLayer)         [(None, 100, 7)]          0         
-_________________________________________________________________
-bl_1 (BL)                    (None, 120, 5)            12635     
-_________________________________________________________________
-activation_1 (Activation)    (None, 120, 5)            0         
-_________________________________________________________________
-dropout_1 (Dropout)          (None, 120, 5)            0         
-_________________________________________________________________
-bl_2 (BL)                    (None, 60, 2)             7330      
-_________________________________________________________________
-activation_2 (Activation)    (None, 60, 2)             0         
-_________________________________________________________________
-dropout_2 (Dropout)          (None, 60, 2)             0         
-_________________________________________________________________
-tabl (TABL)                  (None, 2)                 129       
-_________________________________________________________________
-activation_3 (Activation)    (None, 2)                 0         
-=================================================================
-Total params: 20,094
-Trainable params: 20,094
-Non-trainable params: 0
-_________________________________________________________________
-Epoch 1/2
-424/424 - 3s - loss: 0.6864
-Epoch 2/2
-424/424 - 2s - loss: 0.6690
-INFO: [tensorflow] Assets written to: model/assets
-Train f1_avg: 0.38167610021473247
-Test f1_avg: 0.382939788230246
-INFO: [guild] Running trial f10a411a190e4de19121fe73e6101556: TABL:train (attention_constraint=None, attention_regularizer=None, binarize=yes, dev=yes, dimensionality=60, horizon=1, learning_rate=0.001, n_bl_layers=2, n_tabl_layers=1, optimizer=adam, prediction_mode=no, projection_constraint=None, projection_regularizer=None, remote=no, screwdriver_only=yes, window=100)
-INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
-Loaded data
-Only screwdriver data taken
-Filtering samples
-There are 368 samples in total.
-The types and counts of different labels : 
- {0: 142, 2: 183, 1: 22, 3: 21}
-The types and counts of different labels as percentage of the total data : 
- {0: 0.39, 2: 0.5, 1: 0.06, 3: 0.06}
-Padding data:   0%|          | 0/368 [00:00<?, ?it/s]Padding data:  30%|██▉       | 109/368 [00:00<00:00, 1086.78it/s]Padding data:  60%|█████▉    | 220/368 [00:00<00:00, 1099.60it/s]Padding data:  90%|████████▉ | 330/368 [00:00<00:00, 1096.77it/s]Padding data: 100%|██████████| 368/368 [00:00<00:00, 1094.36it/s]
-Traceback (most recent call last):
-  File "/home/blez/Projects/anomaly_simulation/Zoo/Results/runs/f10a411a190e4de19121fe73e6101556/.guild/sourcecode/TABL/train.py", line 80, in <module>
-    _, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_generator(path=data_path,
-  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/aursad/aursad.py", line 141, in get_dataset_generator
-    train_generator, test_generator = create_window_generator(train_x=train_x,
-  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/aursad/utils.py", line 43, in create_window_generator
-    train_generator = k.preprocessing.sequence.TimeseriesGenerator(train_x, train_y,
-  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/keras_preprocessing/sequence.py", line 335, in __init__
-    raise ValueError('Data and targets have to be' +
-ValueError: Data and targets have to be of same length. Data length is 108560 while target length is 217119
-ERROR: [guild] Trial f10a411a190e4de19121fe73e6101556 exited with an error (1) - see log for details

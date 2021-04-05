@@ -1,6 +1,0 @@
-binarize: true
-dev: true
-prediction_mode:
-- true
-- false
-screwdriver_only: true

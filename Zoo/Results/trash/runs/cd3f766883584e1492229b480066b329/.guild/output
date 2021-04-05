@@ -1,20 +1,0 @@
-INFO: [numexpr.utils] NumExpr defaulting to 8 threads.
-Loaded data
-Filtering samples
-There are 368 samples in total.
-The types and counts of different labels : 
- {0: 142, 1: 22, 2: 183, 3: 21}
-The types and counts of different labels as percentage of the total data : 
- {0: 0.39, 1: 0.06, 2: 0.5, 3: 0.06}
-Reducing dimensionality
-Padding data:   0%|          | 0/368 [00:00<?, ?it/s]Padding data:  28%|██▊       | 103/368 [00:00<00:00, 1020.04it/s]Padding data:  57%|█████▋    | 208/368 [00:00<00:00, 1037.42it/s]Padding data:  85%|████████▌ | 313/368 [00:00<00:00, 1040.62it/s]Padding data: 100%|██████████| 368/368 [00:00<00:00, 1039.59it/s]
-Traceback (most recent call last):
-  File "/home/blez/Projects/anomaly_simulation/Zoo/Results/runs/cd3f766883584e1492229b480066b329/.guild/sourcecode/TABL/train.py", line 79, in <module>
-    _, train_y, _, test_y, train_generator, test_generator = aursad.get_dataset_generator(path=data_path,
-  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/aursad/aursad.py", line 131, in get_dataset_generator
-    train_generator, test_generator = create_window_generator(train_x=train_x,
-  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/aursad/utils.py", line 45, in create_window_generator
-    train_generator = k.preprocessing.sequence.TimeseriesGenerator(train_x, train_y,
-  File "/home/blez/anaconda3/envs/anomaly_detection/lib/python3.8/site-packages/keras_preprocessing/sequence.py", line 335, in __init__
-    raise ValueError('Data and targets have to be' +
-ValueError: Data and targets have to be of same length. Data length is 130903 while target length is 261806

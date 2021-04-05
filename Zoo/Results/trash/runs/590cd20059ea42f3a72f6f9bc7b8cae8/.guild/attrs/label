@@ -1,4 +1,0 @@
-dev attention_constraint=None attention_regularizer=None binarize=yes dev=yes dimensionality=60
-  horizon=1 learning_rate=0.001 n_bl_layers=2 n_tabl_layers=1 optimizer=adam prediction_mode=yes
-  projection_constraint=None projection_regularizer=None remote=no screwdriver_only=yes
-  window=100
