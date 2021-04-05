@@ -16,7 +16,7 @@ import tqdm
 import click
 import tensorflow as tf
 import aursad
-import multiprocessing
+import multiprocessing as mp
 import logging
 import pandas as pd
 
@@ -55,7 +55,7 @@ def validate_model_exists(ctx, param, value):
               help='The first symbols of folder name in Results/runs')
 @click.option('--window', default=500, type=int, help='Rolling window size')
 @click.option('--n_dim', default=60, type=int, help='Data dimensionality')
-@click.option('--n_cpu', default=multiprocessing.cpu_count() - 1, type=int, help='Number of threads to use if running '
+@click.option('--n_cpu', default=mp.cpu_count() - 1, type=int, help='Number of threads to use if running '
                                                                                  'multiple simulations')
 @click.option('--run_mode', default='single', type=str, help='Determines how many simulations will be run: single will '
                                                              'run 1 simulation with a specified model, all will run '
