@@ -1,0 +1,4 @@
+binarize: true
+remote: true
+screwdriver_only: true
+window: 500

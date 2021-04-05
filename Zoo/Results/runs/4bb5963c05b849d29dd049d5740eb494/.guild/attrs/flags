@@ -1,0 +1,11 @@
+binarize: true
+dev: false
+dimensionality: 60
+horizon: 1
+learning_rate: 0.001
+n_feature_maps: 64
+optimizer: adam
+prediction_mode: true
+remote: true
+screwdriver_only: true
+window: 100

@@ -1,0 +1,3 @@
+binary screwdriver_only binarize=yes dev=no dimensionality=60 horizon=1 learning_rate=0.001
+  n_feature_maps=64 optimizer=adam prediction_mode=yes remote=yes screwdriver_only=yes
+  window=300

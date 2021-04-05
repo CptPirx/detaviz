@@ -1,0 +1,148 @@
+- model: Pure_LSTM
+  description: LSTM classifier
+  operations:
+    train:
+      description: Train Pure_LSTM on sliding windows
+      main: LSTM.train
+      flags:
+        window:
+          description: The sliding window size
+          default: 100
+          choices: [100, 200, 500]
+        horizon:
+          description: Prediction horizon
+          default: 1
+        dimensionality:
+          description: Data dimensionality
+          default: 60
+        binarize:
+          description: Usebinary labels
+          default: False
+        n_layers:
+          description: Number of LSTM layers
+          default: 2
+        first_layer_size:
+          description: Number of units in the first layer
+          default: 256
+        optimizer:
+          description: Loss optimizer
+          default: 'adam'
+        learning_rate:
+          description: Initial learning rate
+          default: 0.001
+        dropout_rate:
+          description: Dropout rate
+          default: 0.1
+        dev:
+          description: Fast development run
+          default: True
+      output-scalars:
+        train_f1_avg: 'Train f1_avg: (\value)'
+        test_f1_avg: 'Test f1_avg: (\value)'
+
+- model: TABL
+  description: TABL classifier
+  operations:
+    train:
+      description: Train TABL on sliding windows
+      main: TABL.train
+      requrires:
+        - file: TABL.Layers.py TABL.tabl_model.py
+      flags:
+        window:
+          description: The sliding window size
+          default: 100
+        horizon:
+          description: Prediction horizon
+          default: 1
+        dimensionality:
+          description: Data dimensionality
+          default: 60
+        binarize:
+            description: Use binary labels
+            default: False
+        screwdriver_only:
+          description: Use screwdriver data only
+          default: False
+        prediction_mode:
+          description: If True train the model to predict the next label, if False classify the current sample
+          default: True
+        n_bl_layers:
+          description: Number of BL layers
+          default: 2
+        n_tabl_layers:
+          description: Number of TABL layers
+          default: 1
+        optimizer:
+          description: Loss optimizer
+          default: 'adam'
+        learning_rate:
+          description: Initial learning rate
+          default: 0.001
+        'projection_regularizer':
+          description: Projection regularizer
+          default: None
+        'attention_regularizer':
+          description: Attention regularizer
+          default: None
+        'attention_constraint':
+           description: Attention constraint
+           default: None
+        'projection_constraint':
+           description: Projection constraint
+           default: None
+        dev:
+          description: Fast development run
+          default: False
+        remote:
+          description: Run is on the remote
+          default: False
+      output-scalars:
+        train_f1_avg: 'Train f1_avg: (\value)'
+        test_f1_avg: 'Test f1_avg: (\value)'
+
+- model: ResNet
+  description: ResNet classifier
+  operations:
+    train:
+      description: Train ResNet on sliding windows
+      main: ResNet.train
+      requires:
+        - file: ResNet/resnet_model.py
+      flags:
+        window:
+          description: The sliding window size
+          default: 100
+        horizon:
+          description: Prediction horizon
+          default: 1
+        dimensionality:
+          description: Data dimensionality
+          default: 60
+        binarize:
+          description: Use binary labels
+          default: False
+        prediction_mode:
+          description: If True train the model to predict the next label, if False classify the current sample
+          default: True
+        screwdriver_only:
+          description: Use screwdriver data only
+          default: False
+        optimizer:
+          description: Loss optimizer
+          default: 'adam'
+        learning_rate:
+          description: Initial learning rate
+          default: 0.001
+        n_feature_maps:
+          description: Number of feature maps
+          default: 64
+        dev:
+          description: Fast development run
+          default: False
+        remote:
+          description: Run is on the remote
+          default: False
+      output-scalars:
+        train_f1_avg: 'Train f1_avg: (\value)'
+        test_f1_avg: 'Test f1_avg: (\value)'
