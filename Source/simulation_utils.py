@@ -32,8 +32,10 @@ def list_simulations(fill_mode=True, cycle_count=50000):
     :return: list of dictionaries,
         paths to models which will be simulated along with the information required for the simulation
     """
-    model_path = Path(os.path.join(Path(__file__).parents[1], 'Zoo\\Results\\runs\\'))
-    results_path = Path(os.path.join(Path(__file__).parents[1], 'Results\\'))
+    s = os.sep
+
+    model_path = os.path.join(Path(__file__).parents[1], s.join(['Zoo', 'Results', 'runs', '']))
+    results_path = os.path.join(Path(__file__).parents[1], s.join(['Results', '']))
 
     # Get all files in the runs
     file_list = get_file_list(model_path)
@@ -55,7 +57,6 @@ def list_simulations(fill_mode=True, cycle_count=50000):
 
         model_path = os.path.abspath(f)
         split_dir = model_path.split(os.sep)
-        s = os.sep
         model_path = s.join(split_dir[:-3])
         name = split_dir[-4]
 
