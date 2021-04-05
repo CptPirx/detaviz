@@ -2,18 +2,26 @@ __doc__ = """
 Script responsible for running the entire simulation.
 """
 
+__version__ = """ 
+v0.1.0 First release
+"""
+
 import os
-import sys
 
 # Tensorflow logging level
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
-import tensorflow as tf
-from tensorflow.keras.models import load_model
 
-# Allow memory growth
-physical_devices = tf.config.list_physical_devices('GPU')
-if len(physical_devices) > 0:
-    tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
+import sys
+import tqdm
+import click
+import tensorflow as tf
+import aursad
+import multiprocessing
+import logging
+import pandas as pd
+
+from tensorflow.keras.models import load_model
+from pathlib import Path, PurePath
 
 from sensor import Sensor
 from hapDev import HapDev
@@ -23,42 +31,76 @@ import Zoo.meta as meta
 from Zoo.TABL.Layers import BL, TABL
 from Source.visualisation.visualisation import plot_simulation_history
 
-from pathlib import Path, PurePath
 
-import tqdm
-import aursad
-import pandas as pd
+def validate_model_exists(ctx, param, value):
+    if ctx.params['run_mode'] == 'single':
+        found = False
+        for x in os.listdir('../Zoo/Results/runs'):
+            if x.startswith(value):
+                ctx.params['model_dir'] = x
+                found = True
+                break
+
+        if not found:
+            raise click.BadParameter('no such model exists')
 
 
-def main():
+@click.command()
+@click.version_option(version=__version__)
+@click.option('--cycle_count', default=50000, type=int, help='Number of simulation cycles.')
+@click.option('--binary_labels', default=True, type=bool, help='True for binary labels, False for multi-class')
+@click.option('--model_dir',
+              default=None,
+              callback=validate_model_exists,
+              help='The first symbols of folder name in Results/runs')
+@click.option('--window', default=500, type=int, help='Rolling window size')
+@click.option('--n_dim', default=60, type=int, help='Data dimensionality')
+@click.option('--n_cpu', default=multiprocessing.cpu_count() - 1, type=int, help='Number of threads to use if running '
+                                                                                 'multiple simulations')
+@click.option('--run_mode', default='single', type=str, help='Determines how many simulations will be run: single will '
+                                                             'run 1 simulation with a specified model, all will run '
+                                                             'all models, fill will run all models that do not have'
+                                                             'simulation results yet.')
+@click.option('--verbose', default=0, type=int, help='Logging level, from 0 (debug) to 3 (error)')
+def main(cycle_count, binary_labels, model_dir, window, n_dim, n_cpu, run_mode):
     """
+    Starts the processes and runs the simulations
 
+    :param cycle_count:
+    :param binary_labels:
+    :param model_dir:
+    :param window:
+    :param n_dim:
+    :param n_cpu:
+    :param run_mode:
     :return:
     """
-    # Define simulation parameters
-    print('Define the simulation parameters')
+    single_simulation(cycle_count=cycle_count,
+                      binary_labels=binary_labels,
+                      model_dir=model_dir,
+                      window=window,
+                      n_dim=n_dim,
+                      n_cpu=n_cpu,
+                      run_mode=run_mode)
 
-    # The cycle count
-    cycle_count = int(input('Define number of cycles. Default=1000: ') or 1000)
 
-    # Binary or full class data
-    binary_labels = bool(input('Use binary data? Default=False: ') or False)
+def setup_logging():
+    pass
 
-    # The model type
-    model_type = input('Enter the model type. Default=tabl: ') or 'tabl'
 
-    # The model source
-    while True:
-        model_dir = None
-        model_source = input('Enter the first symbols of folder name in Results/runs: ')
-        for x in os.listdir('../Zoo/Results/runs'):
-            if x.startswith(model_source):
-                model_dir = x
-        if model_dir is not None:
-            break
-        else:
-            print('No such folder')
-            continue
+def single_simulation(cycle_count, binary_labels, model_dir, window, n_dim, n_cpu, run_mode):
+    """
+    Run a single system simulation
+
+    :param cycle_count:
+    :param binary_labels:
+    :param model_dir:
+    :param window:
+    :param n_dim:
+    :param n_cpu:
+    :param run_mode:
+    :return:
+    """
 
     # The sensor domain
     # while True:
@@ -70,15 +112,9 @@ def main():
     #         break
     domain = 0
 
-    # The model's window size
-    window = int(input('Enter the model window size.Default=500: ') or 500)
-
     # The model's prediction horizon
     # horizon = int(input('Enter the horizon size. Default=1: ') or 1)
     horizon = 1
-
-    # The data's dimensionality
-    n_dim = int(input('Enter the data dimensionality. Default=60: ') or 60)
 
     # The model's buffer size
     # while True:
@@ -89,7 +125,6 @@ def main():
     #     else:
     #         break
     buffer = window
-
 
     # Whether to reduce dimensionality
     if n_dim < 125:
@@ -120,17 +155,19 @@ def main():
                     horizon=horizon)
 
     # Create a sensor
-    sensor = Sensor(domain=domain, buffer_size=buffer, dataset=test_x, dataset_labels=test_y)
+    sensor = Sensor(domain=domain,
+                    buffer_size=buffer,
+                    dataset=test_x,
+                    dataset_labels=test_y,
+                    label_counter=window)
     device.add_sensor(sensor)
 
     # Load the ML model
-    if model_type == 'tabl':
-        custom_objects = {'BL': BL,
-                          'TABL': TABL,
-                          'MaxNorm': tf.keras.constraints.max_norm}
-        model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'), custom_objects=custom_objects)
-    else:
-        model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'))
+    custom_objects = {'BL': BL,
+                      'TABL': TABL,
+                      'MaxNorm': tf.keras.constraints.max_norm}
+    model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'), custom_objects=custom_objects)
+    model = load_model(Path('../Zoo/Results/runs/' + model_dir + '/model'))
 
     device.receive_model(model)
 

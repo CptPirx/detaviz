@@ -4,18 +4,16 @@ Class emulating the sensor. Responsible for loading the data and sending it furt
 
 
 class Sensor(object):
-    def __init__(self, domain, buffer_size, dataset, dataset_labels):
+    def __init__(self, domain, buffer_size, dataset, dataset_labels, label_counter):
         """
         Initialisation
-        :param domain: int,
-            which data to use
+
         """
-        self.sensor_domain = domain
         self.id = domain
         self.dataset = dataset
         self.dataset_labels = dataset_labels
         self.sample_counter = 0
-        self.label_counter = 100
+        self.label_counter = label_counter
         self.buffer_size = buffer_size
 
     def send_sample(self):
