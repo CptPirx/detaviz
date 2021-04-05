@@ -77,7 +77,7 @@ def model_search(model_window=500, model_dimensionality=60, cycles=50000, model_
     file_list = get_file_list(model_path)
 
     # Get the run flags
-    flags_list = [f for f in file_list if 'flags' in f]
+    flags_list = [f for f in file_list if 'flags' in f and 'user_' not in f]
     selected_flags = []
 
     # Read each flags file and select the ones with appropriate window size
