@@ -288,7 +288,7 @@ def single_simulation(simulation_args):
     ), index_label='Cycle')
 
     # Plot the results
-    # plot_simulation_history(predicted_labels, true_labels, accuracy_list, run_times, results_path, domain, cycle_count)
+    plot_simulation_history(predicted_labels, true_labels, accuracy_list, run_times, results_path, domain, cycle_count)
 
 
 if __name__ == '__main__':

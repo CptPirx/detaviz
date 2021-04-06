@@ -59,7 +59,7 @@ def plot_simulation_history(predicted_labels, true_labels, accuracy_list, run_ti
     ),
             bbox_inches='tight')
 
-    plt.show()
+    # plt.show()
 
 
 if __name__ == '__main__':
