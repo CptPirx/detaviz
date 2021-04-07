@@ -4,12 +4,15 @@ Script responsible for running the entire simulation.
 
 __version__ = """ v0.1.0 First release"""
 __version__ = """ v0.2.0 Added multiprocessing and batch simulations"""
+__version__ = """ v0.2.1 Added logger"""
 
 import os
+
 # Tensorflow logging level
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 import tensorflow as tf
+
 physical_devices = tf.config.list_physical_devices('GPU')
 if len(physical_devices) > 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
@@ -21,7 +24,6 @@ import click
 import tensorflow as tf
 import aursad
 import multiprocessing as mp
-import logging
 import pandas as pd
 
 from tensorflow.keras.models import load_model
@@ -38,41 +40,51 @@ from simulation_utils import list_simulations, setup_logging, group_models
 
 
 def validate_model_dir(ctx, param, value):
-    if ctx.params['run_mode'] == 'single':
-        found = False
-        for x in os.listdir('../Zoo/Results/runs'):
-            if x.startswith(value):
-                ctx.params['model_dir'] = x
-                found = True
-                break
+    for x in os.listdir('../Zoo/Results/runs'):
+        if x.startswith(value):
+            value = x
+            return value
 
-        if not found:
-            raise click.BadParameter('no such model exists')
+    raise click.BadParameter('no such model exists')
 
 
 @click.command()
 @click.version_option(version=__version__)
-@click.option('--cycle_count', default=50000, type=int, help='Number of simulation cycles.')
-@click.option('--binary_labels', default=True, type=bool, help='True for binary labels, False for multi-class')
-@click.option('--model_dir',
-              default=None,
-              callback=validate_model_dir,
-              help='The first symbols of folder name in Results/runs')
-@click.option('--window', default=500, type=int, help='Rolling window size')
-@click.option('--n_dim', default=60, type=int, help='Data dimensionality')
-@click.option('--screwdriver_only', default=False, type=bool, help='If True use only the data from screwdriver sensors')
-@click.option('--n_cpu', default=mp.cpu_count() - 2, type=int, help='Number of threads to use if running'
-                                                                    ' multiple simulations')
+@click.option('--cycle_count', default=50000, type=int, help='Number of simulation cycles. Default: 50000')
+@click.option('--binary_labels', default=True, type=bool, help='True for binary labels, False for multi-class. '
+                                                               'Default: True')
+@click.option('--window', default=500, type=int, help='Rolling window size. Default: 500')
+@click.option('--n_dim', default=60, type=int, help='Data dimensionality. Default: 60')
+@click.option('--screwdriver_only', default=False, type=bool, help='If True use only the data from screwdriver sensors.'
+                                                                   ' Default: False')
+@click.option('--n_cpu', default=mp.cpu_count() - 2, type=int, help='Number of cpu cores to use if running'
+                                                                    ' multiple simulations: Default: max - 2')
 @click.option('--run_mode', default='single', type=str, help='Determines how many simulations will be run: single will '
                                                              'run 1 simulation with a specified model, all will run '
                                                              'all models, fill will run all models that do not have'
-                                                             'simulation results yet.')
-@click.option('--verbose', default=0, type=int, help='Logging level, from 0 (debug) to 3 (error)')
-def main(cycle_count, binary_labels, model_dir, window, n_dim, screwdriver_only, n_cpu, run_mode, verbose):
+                                                             'simulation results yet. Default: single')
+@click.option('--model_dir',
+              default='27760',
+              callback=validate_model_dir,
+              type=str,
+              help='The first symbols of folder name in Results/runs. Default: 27760')
+@click.option('--verbose', default=0, type=int, help='Logging level, from {0 (debug), 1 (info), 2 (warning), 3 (error)}'
+                                                     '. Default: 1')
+def main(cycle_count, binary_labels, window, n_dim, screwdriver_only, n_cpu, run_mode, model_dir, verbose):
     """
     Starts the processes and runs the simulations
     """
-    print(f'Running {run_mode} simulation mode')
+    logger = setup_logging(verbose)
+    logger.info('Simulation parameters: \n'
+                 f'Run mode: {run_mode} \n'
+                 f'Model signature: {model_dir} \n'
+                 f'Cycle count: {cycle_count} \n'
+                 f'Binary labels: {binary_labels} \n'
+                 f'Window size: {window} \n'
+                 f'Data dimensionality: {n_dim} \n'
+                 f'Screwdriver data only: {screwdriver_only} \n'
+                 f'Maximum cores used: {n_cpu} \n')
+    click.confirm('Confirm to run the simulation with the above parameters', abort=True)
 
     simulation_args = {'cycle_count': cycle_count,
                        'binary_labels': binary_labels,
@@ -87,6 +99,7 @@ def main(cycle_count, binary_labels, model_dir, window, n_dim, screwdriver_only,
         else:
             reduce_dim = False
 
+        logger.info('Loading data')
         _, _, test_x, test_y = aursad.get_dataset_numpy(path=Path(meta.data_path),
                                                         reduce_dimensionality=reduce_dim,
                                                         n_dimensions=n_dim,
@@ -103,14 +116,12 @@ def main(cycle_count, binary_labels, model_dir, window, n_dim, screwdriver_only,
                                                         onehot_labels=False,
                                                         binary_labels=binary_labels,
                                                         screwdriver_only=screwdriver_only)
+        logger.info('Loaded data')
         simulation_args['test_x'] = test_x
         simulation_args['test_y'] = test_y
         single_simulation(simulation_args)
     elif run_mode == 'fill':
-        print(f'Using at max {n_cpu} cores')
-
         model_list = list_simulations(fill_mode=True, cycle_count=cycle_count)
-        # model_list = model_list[:2]
         n_simulations = len(model_list)
 
         for i, d in enumerate(model_list):
@@ -120,7 +131,7 @@ def main(cycle_count, binary_labels, model_dir, window, n_dim, screwdriver_only,
         # concurrently
         grouped_models = group_models(model_list)
 
-        print(f'Running {n_simulations} simulations in {len(grouped_models)} groups')
+        logger.info(f'Running {n_simulations} simulations in {len(grouped_models)} groups')
 
         for k, v in tqdm.tqdm(grouped_models.items(), desc='Simulation groups'):
             # Whether to reduce dimensionality
@@ -153,8 +164,6 @@ def main(cycle_count, binary_labels, model_dir, window, n_dim, screwdriver_only,
             process_map(single_simulation, v, max_workers=n_cpu)
 
     elif run_mode == 'all':
-        print(f'Using at max {n_cpu} cores')
-
         model_list = list_simulations(fill_mode=True, cycle_count=cycle_count)
         # model_list = model_list[:2]
         n_simulations = len(model_list)
@@ -166,7 +175,7 @@ def main(cycle_count, binary_labels, model_dir, window, n_dim, screwdriver_only,
         # concurrently
         grouped_models = group_models(model_list)
 
-        print(f'Running {n_simulations} simulations in {len(grouped_models)} groups')
+        logger.info(f'Running {n_simulations} simulations in {len(grouped_models)} groups')
 
         for k, v in tqdm.tqdm(grouped_models.items(), desc='Simulation groups'):
             # Whether to reduce dimensionality
@@ -257,9 +266,7 @@ def single_simulation(simulation_args):
     # for i in tqdm.tqdm(range(cycle_count), desc='Running simulation cycles'):
     for i in range(cycle_count):
         if sensor.check_end():
-            print('Reached the end of the dataset!')
             break
-        # print("Cycle number {i}".format(i=i))
         accuracy, predicted_label, true_label, run_time, debug_results = device.run_one_cycle(domain)
         debug_times.append(debug_results)
         accuracy_list.append(accuracy)
@@ -292,5 +299,4 @@ def single_simulation(simulation_args):
 
 
 if __name__ == '__main__':
-    setup_logging()
     main()

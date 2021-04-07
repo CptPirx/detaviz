@@ -402,11 +402,11 @@ def create_plots(augmented_data):
               [Input('model_window', 'value'),
                Input('model_dimensionality', 'value'),
                Input('model_checklist', 'value')])
-def load_data(model_window, model_dimensionality, model_checkbox):
+def load_data(model_window, model_dimensionality, model_checklist):
     if model_window == "":  # Do nothing if button is clicked and input num is blank.
         return "", "No input", 0
 
-    df, chosen_model, max_acc = model_search(model_window, model_dimensionality, model_checkbox=model_checkbox)
+    df, chosen_model, max_acc = model_search(model_window, model_dimensionality, model_checkbox=model_checklist)
 
     if isinstance(df, pd.DataFrame):
         return df.to_json(orient='split'), chosen_model, max_acc
@@ -432,6 +432,9 @@ def update_figure(simulation_data, window_size, window_type, response_threshold)
 
     data = pd.read_json(simulation_data, orient='split')
 
+    if window_size == 0:
+        window_size = 1
+
     augmented_df = prepare_data(data, window_size, window_type, response_threshold)
 
     fig_0, fig_1, fig_2, fig_3 = create_plots(augmented_df)
@@ -443,5 +446,4 @@ def update_figure(simulation_data, window_size, window_type, response_threshold)
 
 # Main
 if __name__ == "__main__":
-    # app.run_server(debug=True)
     app.run_server(debug=True)

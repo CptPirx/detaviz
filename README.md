@@ -86,17 +86,35 @@ set several other parameters.
 /anomaly_simulation/Source>python simulation.py --help
 Usage: simulation.py [OPTIONS]
 
-  Run the system simulation
+  Starts the processes and runs the simulations
 
 Options:
-  --version                  Show the version and exit.
-  --cycle_count INTEGER      Number of simulation cycles.
-  --binary_labels BOOLEAN    True for binary labels, False for multi-class
-  --model_dir TEXT           The first symbols of folder name in Results/runs
-  --window INTEGER           Rolling window size
-  --n_dim INTEGER            Data dimensionality
+  --version                   Show the version and exit.
+  --cycle_count INTEGER       Number of simulation cycles. Default: 50000
+  --binary_labels BOOLEAN     True for binary labels, False for multi-class.
+                              Default: True
 
-  --help                     Show this message and exit.
+  --window INTEGER            Rolling window size. Default: 500
+  --n_dim INTEGER             Data dimensionality. Default: 60
+  --screwdriver_only BOOLEAN  If True use only the data from screwdriver
+                              sensors. Default: False
+
+  --n_cpu INTEGER             Number of cpu cores to use if running multiple
+                              simulations: Default: max - 2
+
+  --run_mode TEXT             Determines how many simulations will be run:
+                              single will run 1 simulation with a specified
+                              model, all will run all models, fill will run
+                              all models that do not havesimulation results
+                              yet. Default: single
+
+  --model_dir TEXT            The first symbols of folder name in
+                              Results/runs. Default: 27760
+
+  --verbose INTEGER           Logging level, from {0 (debug), 1 (info), 2
+                              (warning), 3 (error)}. Default: 1
+
+  --help                      Show this message and exit.
 ```
 
 This will run the simulation and save its results to anomaly_simulation/Results. 

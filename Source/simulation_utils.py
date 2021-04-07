@@ -1,10 +1,11 @@
 import logging
-import pandas as pd
+import sys
 import os
 
 from pathlib import Path
 
 from visualisation.visualisation_utils import get_file_list, check_flag_value
+from logger import ColorLogger
 
 
 def group_models(model_list):
@@ -94,5 +95,25 @@ def list_simulations(fill_mode=True, cycle_count=50000):
         return selected_models
 
 
-def setup_logging():
-    pass
+def setup_logging(verbose):
+    if verbose == 0:
+        verbose = logging.DEBUG
+    elif verbose == 1:
+        verbose = logging.INFO
+    elif verbose == 2:
+        verbose = logging.WARNING
+    elif verbose == 3:
+        verbose = logging.ERROR
+
+    logger = ColorLogger("simulation_logger", logging_level=verbose)
+    return logger
+    # logger = logging.getLogger()
+    # logger.handlers = []  # Removing default handler to avoid duplication of log messages
+    # logger.setLevel(logging.ERROR)
+    #
+    # h = logging.StreamHandler(sys.stderr)
+    #
+    # h.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+    # logger.addHandler(h)
+    #
+    # logger.setLevel(logging.ERROR)
