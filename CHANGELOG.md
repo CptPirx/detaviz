@@ -3,6 +3,10 @@ All notable changes will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.1] - 07/04/2021
+### Changed
+* Logging method changed from printing to logger
+
 ## [0.2.0] - 05/04/2021
 ### Added
 * Batch simulation
