@@ -55,15 +55,21 @@ Copy the IP address to your web browser. The visualisation may take a minute to 
 
 [web_app]: web_app.png 
 
-In the top left section two model parameters can be chosen:
+In the top left section model parameters can be chosen:
 * Model window size - describes how many previous samples the model takes into account to predict the class of the next sample
 * Model dimensionality - describes how many dimensions the input data has. Original data in the AURSAD dataset contains 125 dimensions, any number
 below that is achieved by applying PCA dimensionality reduction method.
+* Screwdriver data only - only the screwdriver's sensors data will be used
+* Binary data - binary labels will be used (normal and anomaly)
   
 The app then proceeds to find the best model with such parameters from those available under the anomaly_simulation/Zoo/Results/runs directory.
   
 The dropdown box and slider below the model controls provide the means to manipulate the parameters of the sliding window averages 
-with the aim of creating the  most accurate system response.
+with the aim of creating the most accurate system response.
+The threshold box changes the decision threshold value.
+The system calculates the mean label value in each window, and then applies that threshold to it.
+If the value exceed the threshold, the sample on which the window is centered is assigned an anomaly label, otherwise 
+it gets a normal label.
 
 The figures are described as follows:
 * The four figures below show the results of applying these methods on the raw model predictions output.
@@ -78,9 +84,9 @@ The figures are described as follows:
 ### Performing new simulations on the included, pre-trained models
 To run a new simulation using one of the available models, run the following in your terminal
 ```bash
-/anomaly_simulation/Source> python simulation.py 
+/anomaly_simulation/Source> python simulation.py --model_dir model_name
 ```
-The simulation requires the user to give the starting symbols of the model to use in the simulation, and allows to 
+The simulation requires the user to give the starting symbols of the mo/  \el to use in the simulation, and allows to 
 set several other parameters. 
 ```bash
 /anomaly_simulation/Source>python simulation.py --help
@@ -208,7 +214,7 @@ You are about to run ResNet:train as a batch (3 trials)
 Continue? (Y/n) # Tyoe Y and press enter to commence model training
 ```
 
-This will automatically queue and train 3 separate models with different window sizes.
+This will automatically queue and train 3 separate ResNet models with different window sizes.
 
 **Adding new model construction**
 To add a new model that is compatible with the project, please inspect and recreate the pattern of the files associated with the
